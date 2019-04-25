@@ -1,0 +1,5 @@
+.vscode
+docker-compose.debug.yml
+docker-compose.yml
+output.txt
+src/main
