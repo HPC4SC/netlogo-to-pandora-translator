@@ -55,44 +55,35 @@ namespace Boolean {
 
     /***********************/
 
-    struct printer : boost::static_visitor<void>
+    struct printer : boost::static_visitor<std::string>
     {
-        printer(std::ostream& os) : _os(os) {}
-        std::ostream& _os;
+        std::string operator()(const var& v) const { return v; }
 
-        //
-        void operator()(const var& v) const { _os << v; }
+        std::string operator()(const binop<op_and>& b) const { return print(" & ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_or >& b) const { return print(" | ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_xor>& b) const { return print(" ^ ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_g>& b)   const { return print(" > ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_ge>& b)  const { return print(" >= ", b.oper1, b.oper2); }
+        std::string operator()(const binop<op_l>& b)   const { return print(" < ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_le>& b)  const { return print(" <= ", b.oper1, b.oper2); }
+        std::string operator()(const binop<op_e>& b)   const { return print(" == ", b.oper1, b.oper2); }
+        std::string operator()(const binop<op_ne>& b)  const { return print(" != ", b.oper1, b.oper2); }
 
-        void operator()(const binop<op_and>& b) const { print(" & ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_or >& b) const { print(" | ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_xor>& b) const { print(" ^ ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_g>& b)   const { print(" > ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_ge>& b)  const { print(" >= ", b.oper1, b.oper2); }
-        void operator()(const binop<op_l>& b)   const { print(" < ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_le>& b)  const { print(" <= ", b.oper1, b.oper2); }
-        void operator()(const binop<op_e>& b)   const { print(" == ", b.oper1, b.oper2); }
-        void operator()(const binop<op_ne>& b)  const { print(" != ", b.oper1, b.oper2); }
-
-        void print(const std::string& op, const expr& l, const expr& r) const
+        std::string operator()(const unop<op_not>& u) const
         {
-            _os << "(";
-                boost::apply_visitor(*this, l);
-                _os << op;
-                boost::apply_visitor(*this, r);
-            _os << ")";
+            return "(!" + boost::apply_visitor(*this, u.oper1) + ")";
         }
 
-        void operator()(const unop<op_not>& u) const
+        std::string print(const std::string& op, const expr& l, const expr& r) const
         {
-            _os << "(";
-                _os << "!";
-                boost::apply_visitor(*this, u.oper1);
-            _os << ")";
+            return "(" + boost::apply_visitor(*this, l) + op + boost::apply_visitor(*this, r) + ")";
         }
     };
 
-    std::ostream& operator<<(std::ostream& os, const expr& e)
-    { boost::apply_visitor(printer(os), e); return os; }
+    std::string getString(const expr& e) {
+        std::string s = boost::apply_visitor(printer(), e);
+        return s;
+    }
 
     /********* GRAMMAR *********/
 
