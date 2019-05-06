@@ -43,10 +43,6 @@ namespace Arithmetic {
 
     struct printer : boost::static_visitor<std::string>
     {
-        printer(std::string& s) : _s(s) {}
-        std::string& _s;
-
-        //
         std::string operator()(const var& v) const { return v; }
         std::string operator()(const double& v) const { return boost::lexical_cast<std::string>(v);; }
 
@@ -62,8 +58,7 @@ namespace Arithmetic {
     };
 
     std::string getString(const expr& e) {
-        std::string s;
-        s = boost::apply_visitor(printer(s), e);
+        std::string s = boost::apply_visitor(printer(), e);
         return s;
     }
 
