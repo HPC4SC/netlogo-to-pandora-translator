@@ -1,10 +1,16 @@
+#include <boost/lexical_cast.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/variant/recursive_wrapper.hpp>
 
+#include <string>
+
 namespace qi    = boost::spirit::qi;
 namespace phx   = boost::phoenix;
+
+#ifndef ARITHMETIC_H
+#define ARITHMETIC_H
 
 namespace Arithmetic {
 
@@ -35,32 +41,31 @@ namespace Arithmetic {
 
     /***********************/
 
-    struct printer : boost::static_visitor<void>
+    struct printer : boost::static_visitor<std::string>
     {
-        printer(std::ostream& os) : _os(os) {}
-        std::ostream& _os;
+        printer(std::string& s) : _s(s) {}
+        std::string& _s;
 
         //
-        void operator()(const var& v) const { _os << v; }
-        void operator()(const double& v) const { _os << v; }
+        std::string operator()(const var& v) const { return v; }
+        std::string operator()(const double& v) const { return boost::lexical_cast<std::string>(v);; }
 
-        void operator()(const binop<op_sum>& b) const { print(" + ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_min>& b) const { print(" - ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_mul>& b) const { print(" * ",  b.oper1, b.oper2); }
-        void operator()(const binop<op_div>& b) const { print(" / ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_sum>& b) const { return print(" + ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_min>& b) const { return print(" - ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_mul>& b) const { return print(" * ",  b.oper1, b.oper2); }
+        std::string operator()(const binop<op_div>& b) const { return print(" / ",  b.oper1, b.oper2); }
 
-        void print(const std::string& op, const expr& l, const expr& r) const
+        std::string print(const std::string& op, const expr& l, const expr& r) const
         {
-            _os << "(";
-                boost::apply_visitor(*this, l);
-                _os << op;
-                boost::apply_visitor(*this, r);
-            _os << ")";
+            return "(" + boost::apply_visitor(*this, l) + op + boost::apply_visitor(*this, r) + ")";
         }
     };
 
-    std::ostream& operator<<(std::ostream& os, const expr& e)
-    { boost::apply_visitor(printer(os), e); return os; }
+    std::string getString(const expr& e) {
+        std::string s;
+        s = boost::apply_visitor(printer(s), e);
+        return s;
+    }
 
     /********* GRAMMAR *********/
 
@@ -71,15 +76,15 @@ namespace Arithmetic {
         {
             using namespace qi;
 
-            start = (product >> '+' >> start)       [ _val = phx::construct<binop<op_sum>>(_1, _2) ] |
-                    (product >> '-' >> start)       [ _val = phx::construct<binop<op_min>>(_1, _2) ] |
-                    product                         [ _val = _1 ];
-            product = (factor >> '*' >> product)    [ _val = phx::construct<binop<op_mul>>(_1, _2) ] |
-                    (factor >> '/' >> product)    [ _val = phx::construct<binop<op_div>>(_1, _2) ] |
-                    factor                        [ _val = _1 ];
-            factor = group                          [ _val = _1 ] |
-                    qi::double_                    [ _val = _1 ] |
-                    var_                           [ _val = _1 ];
+            start = (product >> '+' >> start)       [ _val = phx::construct<binop<op_sum>>(qi::_1, qi::_2) ] |
+                    (product >> '-' >> start)       [ _val = phx::construct<binop<op_min>>(qi::_1, qi::_2) ] |
+                    product                         [ _val = qi::_1 ];
+            product = (factor >> '*' >> product)    [ _val = phx::construct<binop<op_mul>>(qi::_1, qi::_2) ] |
+                    (factor >> '/' >> product)    [ _val = phx::construct<binop<op_div>>(qi::_1, qi::_2) ] |
+                    factor                        [ _val = qi::_1 ];
+            factor = group                          [ _val = qi::_1 ] |
+                    qi::double_                    [ _val = qi::_1 ] |
+                    var_                           [ _val = qi::_1 ];
             group %= '(' >> start >> ')';
             var_ = qi::lexeme[ +alpha ];
         }
@@ -92,7 +97,7 @@ namespace Arithmetic {
     /***************************/
 
 }
-
+/*
 int main ()
 {
     for (auto& input : std::list<std::string> {
@@ -108,7 +113,7 @@ int main ()
         try
         {
             Arithmetic::expr result;
-            bool ok = qi::phrase_parse(f,l,p > ';',qi::space,result);
+            bool ok = qi::phrase_parse(f, l, p > ';', qi::space, result);
 
             if (!ok)
                 std::cerr << "invalid input\n";
@@ -125,3 +130,5 @@ int main ()
 
     return 0;
 }
+*/
+#endif

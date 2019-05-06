@@ -6,6 +6,9 @@
 namespace qi    = boost::spirit::qi;
 namespace phx   = boost::phoenix;
 
+#ifndef BOOLEAN_H
+#define BOOLEAN_H
+
 namespace Boolean {
 
     /********* AST *********/
@@ -127,7 +130,7 @@ namespace Boolean {
     /***************************/
 
 }
-
+/*
 int main ()
 {
     for (auto& input : std::list<std::string> {
@@ -146,7 +149,7 @@ int main ()
             "a or b or c;",
             })
     {
-        auto f(std::begin(input)), l(std::end(input));
+        auto f(std::begin(input)),   l(std::end(input));
         Boolean::parser<decltype(f)> p;
 
         try
@@ -168,4 +171,6 @@ int main ()
     }
 
     return 0;
-}
+}*/
+
+#endif
