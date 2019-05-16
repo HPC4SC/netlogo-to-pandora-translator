@@ -7,13 +7,23 @@ namespace ast
 {
     struct unary;
     struct expression;
+    struct function_call;
+
+    struct identifier
+    {
+        identifier(std::string const& name = "") : name(name) {}
+        std::string name;
+    };
+
 
     typedef boost::variant<
         std::string,
         double,
         bool,
+        identifier,
         boost::recursive_wrapper<unary>,
-        boost::recursive_wrapper<expression>
+        boost::recursive_wrapper<expression>,
+        boost::recursive_wrapper<function_call>
     > operand;
 
     enum optoken
@@ -50,6 +60,12 @@ namespace ast
         operand first;
         std::list<operation> rest;
     };
+
+    struct function_call
+    {
+        identifier function_name;
+        std::list<expression> args;
+    };
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -68,6 +84,12 @@ BOOST_FUSION_ADAPT_STRUCT(
     ast::expression,
     (ast::operand, first)
     (std::list<ast::operation>, rest)
+);
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::function_call,
+    (ast::identifier, function_name)
+    (std::list<ast::expression>, args)
 );
 
 #endif

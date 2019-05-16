@@ -1,20 +1,14 @@
-#include <boost/lexical_cast.hpp>
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/phoenix.hpp>
-#include <boost/spirit/include/phoenix_operator.hpp>
-#include <boost/variant/recursive_wrapper.hpp>
-
-#include <string>
-
-#include "AST.hpp"
-
-namespace qi    = boost::spirit::qi;
-namespace phx   = boost::phoenix;
-
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
+#include <boost/spirit/include/qi.hpp>
+#include <boost/variant/recursive_wrapper.hpp>
+
+#include "AST.hpp"
+
 namespace parser {
+
+    namespace qi = boost::spirit::qi;
 
     /********* GRAMMAR *********/
 
@@ -26,11 +20,11 @@ namespace parser {
             using namespace qi;
 
             logical_or_op.add
-                ("||", ast::op_or)
+                ("or", ast::op_or)
                 ;
 
             logical_and_op.add
-                ("&&", ast::op_and)
+                ("and", ast::op_and)
                 ;
 
             equality_op.add
@@ -56,31 +50,53 @@ namespace parser {
                 ;
 
             unary_op.add
-                ("!", ast::op_not)
+                ("not", ast::op_not)
                 ;
+
+            keywords.add
+                ("true")
+                ("false")
+                ("if")
+                ("else")
+                ("while")
+                ("int")
+                ("void")
+                ("return")
+                ;
+
 
             expr = logical_or_expr.alias();
 
             logical_or_expr     %= logical_and_expr >> *(logical_or_op > logical_or_expr);
 
-            logical_and_expr    %= equality_expr >> *(logical_and_op >> logical_and_expr);
+            logical_and_expr    %= equality_expr >> *(logical_and_op > logical_and_expr);
 
-            equality_expr       %= relational_expr >> *(equality_op >> equality_expr);
+            equality_expr       %= relational_expr >> *(equality_op > equality_expr);
 
-            relational_expr     %= additive_expr >> *(relational_op >> relational_expr);
+            relational_expr     %= additive_expr >> *(relational_op > relational_expr);
 
-            additive_expr       %= multiplicative_expr >> *(additive_op >> additive_expr);
+            additive_expr       %= multiplicative_expr >> *(additive_op > additive_expr);
 
-            multiplicative_expr %= unary_expr >> *(multiplicative_op >> multiplicative_expr);
+            multiplicative_expr %= unary_expr >> *(multiplicative_op > multiplicative_expr);
 
             unary_expr          %= unary_op > primary_expr | primary_expr;
 
-            primary_expr %= var_    |
-                            double_ |
+            primary_expr %= double_ |
+                            function_call |
+                            identifier |
                             bool_   |
                             '(' >> expr >> ')';
 
-            var_ = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
+            function_call = 
+                (identifier >> '(')
+                >   argument_list
+                >   ')'
+                ;
+
+            argument_list = -(expr % ',');
+
+            identifier = !lexeme[keywords >> !(alnum | '_')] 
+                >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
             BOOST_SPIRIT_DEBUG_NODES(
                 (expr)
@@ -96,19 +112,23 @@ namespace parser {
         }
 
 
-        qi::rule<It, std::string(), Skipper> var_;
+        qi::rule<It, ast::operand(), Skipper> unary_expr, primary_expr;
+        qi::rule<It, ast::function_call(), Skipper> function_call;
+        qi::rule<It, std::list<ast::expression>(), Skipper> argument_list;
+        qi::rule<It, std::string(), Skipper> identifier;
         qi::rule<It, ast::expression(), Skipper> expr, 
             equality_expr, relational_expr,
             logical_or_expr, logical_and_expr,
             additive_expr, multiplicative_expr
             ;
-        qi::rule<It, ast::operand(), Skipper> unary_expr, primary_expr;
 
         qi::symbols<char, ast::optoken>
             logical_or_op, logical_and_op,
             equality_op, relational_op,
             additive_op, multiplicative_op, unary_op
             ;
+
+        qi::symbols<char> keywords;
     };
 }
 #endif
