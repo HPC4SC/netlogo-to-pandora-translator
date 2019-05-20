@@ -19,32 +19,31 @@ namespace parser {
 
             statement_ = variable_declaration |
                         assignment |
-                        compound_statement | 
+                        //compound_statement | 
                         if_statement |
                         while_statement |
                         return_statement;
 
             identifier = !expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
-            variable_declaration = lexeme["set" >> !(alnum | '_')] > identifier > -(expr) > ';';
+            variable_declaration = lexeme["let" >> !(alnum | '_')] > identifier > -(expr);
 
-            assignment = identifier > '=' > expr > ';';
+            assignment = lexeme["set" >> !(alnum | '_')] > identifier > expr;
 
-            if_statement = lit("if") > '(' > expr > ')' 
-                > statement_
-                > -( lexeme["else" >> !(alnum | '_')] > statement_ );
+            if_statement = 
+                    lexeme["if" >> !(alnum | '_')] > expr > '[' > statement_ > ']' 
+                        > -( lexeme["else" >> !(alnum | '_')] > statement_ )
+                |   lexeme["ifelse" >> !(alnum | '_')] > expr > '[' > statement_ > ']' > '[' > statement_ > ']';
 
-            while_statement = lit("while") > '(' > expr > ')' 
-                > statement_;
 
-            compound_statement = '{' >> -statement_list >> '}';
+            while_statement = lit("while") > '[' > expr > ']' > '[' > statement_ > ']';
 
-            return_statement = lexeme["return" >> !(alnum | '_')] > -expr > ';';
+            return_statement = lexeme["report" >> !(alnum | '_')] > expr;
         }
 
         expression<It, Skipper> expr;
 
-        qi::rule<It, ast::statement_list(), Skipper> statement_list, compound_statement;
+        qi::rule<It, ast::statement_list(), Skipper> statement_list;
         qi::rule<It, ast::statement(), Skipper > statement_;
         qi::rule<It, ast::variable_declaration(), Skipper> variable_declaration;
         qi::rule<It, ast::assignment(), Skipper> assignment;

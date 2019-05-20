@@ -121,6 +121,8 @@ namespace ast
         std::list<identifier> args;
         statement_list body;
     };
+
+    typedef std::list<function> function_list;
 }
 
 BOOST_FUSION_ADAPT_STRUCT(
