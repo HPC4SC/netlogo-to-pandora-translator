@@ -17,7 +17,7 @@ namespace parser {
             name = !body.expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
 
             identifier = name;
-            argument_list = -(identifier % ',');
+            argument_list = +identifier;
 
             start = lexeme[(string("to-report") | string("to"))
                         >> !(alnum | '_')]  // make sure we have whole words
