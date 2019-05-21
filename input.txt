@@ -1,4 +1,14 @@
-to-report function_name [a b]
+to setup
+    if a > b [ set color blue ]
+
+    ifelse a > b  [ set color blue ] [ set color red ]
+
+    while [a > b] [ set color blue ]
+
+    report a
+end
+
+to setup2
     if a > b [ set color blue ]
 
     ifelse a > b  [ set color blue ] [ set color red ]

@@ -82,18 +82,12 @@ namespace parser {
             unary_expr          %= unary_op > primary_expr | primary_expr;
 
             primary_expr %= double_ |
-                            function_call |
+                            //function_call |
                             identifier |
                             bool_   |
                             '(' >> expr >> ')';
 
-            function_call = 
-                (identifier >> '(')
-                >   argument_list
-                >   ')'
-                ;
-
-            argument_list = -(expr % ',');
+            //function_call = identifier >> *identifier;
 
             identifier = !lexeme[keywords >> !(alnum | '_')] 
                 >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
@@ -113,8 +107,7 @@ namespace parser {
 
 
         qi::rule<It, ast::operand(), Skipper> unary_expr, primary_expr;
-        qi::rule<It, ast::function_call(), Skipper> function_call;
-        qi::rule<It, std::list<ast::expression>(), Skipper> argument_list;
+        //qi::rule<It, ast::function_call(), Skipper> function_call;
         qi::rule<It, std::string(), Skipper> identifier;
         qi::rule<It, ast::expression(), Skipper> expr, 
             equality_expr, relational_expr,

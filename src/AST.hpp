@@ -9,21 +9,16 @@ namespace ast
     struct expression;
     struct function_call;
 
-    struct identifier
-    {
-        identifier(std::string const& name = "") : name(name) {}
-        std::string name;
-    };
 
 
     typedef boost::variant<
         std::string,
         double,
         bool,
-        identifier,
+        std::string,
         boost::recursive_wrapper<unary>,
-        boost::recursive_wrapper<expression>,
-        boost::recursive_wrapper<function_call>
+        boost::recursive_wrapper<expression>
+        //boost::recursive_wrapper<function_call>
     > operand;
 
     enum optoken
@@ -63,19 +58,19 @@ namespace ast
 
     struct function_call
     {
-        identifier function_name;
-        std::list<expression> args;
+        std::string function_name;
+        std::list<std::string> args;
     };
 
     struct assignment
     {
-        identifier lhs;
+        std::string lhs;
         expression rhs;
     };
 
     struct variable_declaration
     {
-        identifier lhs;
+        std::string lhs;
         boost::optional<expression> rhs;
     };
 
@@ -86,7 +81,8 @@ namespace ast
 
     typedef boost::variant<
             variable_declaration,
-            assignment, 
+            assignment,
+            //boost::recursive_wrapper<function_call>,
             boost::recursive_wrapper<if_statement>, 
             boost::recursive_wrapper<while_statement>, 
             boost::recursive_wrapper<return_statement>, 
@@ -117,8 +113,8 @@ namespace ast
     struct function
     {
         std::string return_type;
-        identifier function_name;
-        std::list<identifier> args;
+        std::string function_name;
+        std::list<std::string> args;
         statement_list body;
     };
 
@@ -145,19 +141,19 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::function_call,
-    (ast::identifier, function_name)
-    (std::list<ast::expression>, args)
+    (std::string, function_name)
+    (std::list<std::string>, args)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::variable_declaration,
-    (ast::identifier, lhs)
+    (std::string, lhs)
     (boost::optional<ast::expression>, rhs)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::assignment,
-    (ast::identifier, lhs)
+    (std::string, lhs)
     (ast::expression, rhs)
 );
 
@@ -182,8 +178,8 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     ast::function,
     (std::string, return_type)
-    (ast::identifier, function_name)
-    (std::list<ast::identifier>, args)
+    (std::string, function_name)
+    (std::list<std::string>, args)
     (ast::statement_list, body)
 );
 

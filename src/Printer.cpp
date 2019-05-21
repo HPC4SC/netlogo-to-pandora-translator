@@ -14,7 +14,6 @@ namespace testing {
     std::string getString(ast::operation& op);
     std::string getString(ast::unary& op);
     std::string getString(ast::optoken& opt);
-    std::string getString(ast::identifier& op);
     std::string getString(ast::function_call& op);
 
     struct visitor : boost::static_visitor<std::string>
@@ -23,7 +22,7 @@ namespace testing {
         std::string operator()(double& v) const { return boost::lexical_cast<std::string>(v); }
         std::string operator()(bool& b) const { return b ? "True" : "False"; }
 
-        std::string operator()(ast::identifier& e) const { return getString(e); }
+        std::string operator()(std::string& e) const { return e; }
         std::string operator()(ast::function_call& e) const { return getString(e); }
         std::string operator()(ast::expression& e) const { return getString(e); }
         std::string operator()(ast::unary& e) const { return getString(e); }
@@ -46,11 +45,7 @@ namespace testing {
 
         return result;
     }
-
-    std::string getString(ast::identifier& op) {
-        return op.name;
-    }
-
+    
     std::string getString(ast::function_call& op) {
         auto it = op.args.begin();
         std::string args = getString(*it);
