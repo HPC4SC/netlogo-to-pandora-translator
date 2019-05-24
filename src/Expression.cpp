@@ -10,8 +10,7 @@
 namespace parser {
 
     namespace qi = boost::spirit::qi;
-
-    /********* GRAMMAR *********/
+    namespace phx = boost::phoenix;
 
     template <typename It, typename Skipper = qi::space_type>
         struct expression : qi::grammar<It, ast::expression(), Skipper>
@@ -83,14 +82,22 @@ namespace parser {
             unary_expr          %= unary_op > primary_expr | primary_expr;
 
             primary_expr %= double_ |
-                            //function_call |
-                            identifier |
-                            bool_   |
-                            '(' >> expr >> ')';
+                            bool_ |
+                            '(' >> expr >> ')' |
+                            function_call |
+                            identifier;
 
-            //function_call = identifier >> *identifier;
+            function_call = 
+                function_name >> 
+                repeat( phx::ref(n_args) )[identifier];
 
-            identifier = !lexeme[keywords >> !(alnum | '_')] 
+            function_name = 
+                !lexeme[keywords >> !(alnum | '_')] >> 
+                &lexeme[f_args [phx::ref(n_args) = _1] >> !(alnum | '_')] >> 
+                raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
+
+            identifier = 
+                !lexeme[keywords >> !(alnum | '_')] 
                 >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
             BOOST_SPIRIT_DEBUG_NODES(
@@ -108,8 +115,9 @@ namespace parser {
 
 
         qi::rule<It, ast::operand(), Skipper> unary_expr, primary_expr;
-        //qi::rule<It, ast::function_call(), Skipper> function_call;
+        qi::rule<It, ast::function_call(), Skipper> function_call;
         qi::rule<It, std::string(), Skipper> identifier;
+        qi::rule<It, std::string(), Skipper> function_name;
         qi::rule<It, ast::expression(), Skipper> expr, 
             equality_expr, relational_expr,
             logical_or_expr, logical_and_expr,
@@ -121,8 +129,6 @@ namespace parser {
             equality_op, relational_op,
             additive_op, multiplicative_op, unary_op
             ;
-
-        qi::symbols<char> keywords;
     };
 }
 #endif

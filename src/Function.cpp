@@ -13,6 +13,7 @@ namespace parser {
 
     void store_function (std::string name, std::list<std::string> args) {
         f_args.add(name, args.size());
+        std::cout << name << " " <<  args.size() << std::endl;
     }
 
     template <typename It, typename Skipper = qi::space_type>
@@ -22,7 +23,7 @@ namespace parser {
         {
             using namespace qi;
 
-            name = !body.expr.keywords >> !lexeme[f_args >> !(alnum | '_')] >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
+            name = !keywords >> !lexeme[f_args >> !(alnum | '_')] >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
 
             identifier = name;
             argument_list = *identifier;

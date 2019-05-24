@@ -17,8 +17,8 @@ namespace ast
         bool,
         std::string,
         boost::recursive_wrapper<unary>,
-        boost::recursive_wrapper<expression>
-        //boost::recursive_wrapper<function_call>
+        boost::recursive_wrapper<expression>,
+        boost::recursive_wrapper<function_call>
     > operand;
 
     enum optoken
@@ -82,7 +82,7 @@ namespace ast
     typedef boost::variant<
             variable_declaration,
             assignment,
-            //boost::recursive_wrapper<function_call>,
+            boost::recursive_wrapper<function_call>,
             boost::recursive_wrapper<if_statement>, 
             boost::recursive_wrapper<while_statement>, 
             boost::recursive_wrapper<return_statement>, 

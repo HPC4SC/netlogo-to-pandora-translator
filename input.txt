@@ -1,4 +1,4 @@
-to setup [ ]
+to setup [ a b ]
     if a > b [ set color blue ]
 
     ifelse a > b  [ set color blue ] [ set color red ]
@@ -8,8 +8,10 @@ to setup [ ]
     report a
 end
 
-to setup [ ]
-    if a > b [ set color blue ]
+to setup2 [ ]
+    setup a b
+
+    if setup a b > b [ set color blue ]
 
     ifelse a > b  [ set color blue ] [ set color red ]
 
