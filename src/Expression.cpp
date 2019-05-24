@@ -5,6 +5,7 @@
 #include <boost/variant/recursive_wrapper.hpp>
 
 #include "AST.hpp"
+#include "Globals.cpp"
 
 namespace parser {
 

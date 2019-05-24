@@ -11,10 +11,8 @@ namespace parser {
     namespace qi = boost::spirit::qi;
     namespace phx = boost::phoenix;
 
-    int num_args;
-
-    void load_size (std::list<std::string> l) {
-        num_args = l.size();
+    void store_function (std::string name, std::list<std::string> args) {
+        f_args.add(name, args.size());
     }
 
     template <typename It, typename Skipper = qi::space_type>
@@ -27,17 +25,17 @@ namespace parser {
             name = !body.expr.keywords >> !lexeme[f_args >> !(alnum | '_')] >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
 
             identifier = name;
-            argument_list = +identifier [ phx::bind(&load_size, _val) ] ;
+            argument_list = *identifier;
 
             start = +function_;
 
             function_ = (
                         lexeme[(string("to-report") | string("to")) >> !(alnum | '_')]  // make sure we have whole words
                     >   identifier 
-                    >   -('[' > argument_list > ']') 
+                    >   ('[' > argument_list > ']')
                     >   body
                     >   lexeme[string("end") >> !(alnum | '_')]
-                ) [ phx::bind(f_args.add, _2, num_args) ];
+                ) [ phx::bind(&store_function, _2, _3) ];
         }
 
         statement<It> body;
