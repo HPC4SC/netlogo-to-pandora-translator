@@ -25,7 +25,7 @@ namespace parser {
                         while_statement |
                         return_statement;
 
-            identifier = !keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
+            identifier = !keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '?')]];
 
             variable_declaration = lexeme["let" >> !(alnum | '_')] > identifier > -(expr);
 
