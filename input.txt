@@ -9,6 +9,14 @@ to get-sick []
   set remaining-immunity 0
 end
 
+globals
+  [ %infected            
+    %immune             
+    lifespan            
+    chance-reproduce    
+    carrying-capacity   
+    immunity-duration ]
+
 to get-healthy []
   set sick? false
   set remaining-immunity 0

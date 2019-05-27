@@ -128,11 +128,11 @@ namespace ast
         std::list<std::string> args;
         statement_list body;
     };
-
     
     struct parser
     {
         std::list<agent> agents;
+        std::list<std::string> globals;
         std::list<function> functions;
     };
 }
@@ -146,6 +146,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     ast::parser,
     (std::list<ast::agent>, agents)
+    (std::list<std::string>, globals)
     (std::list<ast::function>, functions)
 )
 
