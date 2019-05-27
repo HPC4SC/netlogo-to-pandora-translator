@@ -17,9 +17,9 @@ namespace parser {
     }
 
     template <typename It, typename Skipper = qi::space_type>
-    struct function : qi::grammar<It, ast::function_list(), Skipper>
+    struct function : qi::grammar<It, ast::function(), Skipper>
     {
-        function()  : function::base_type(start)
+        function()  : function::base_type(function_)
         {
             using namespace qi;
 
@@ -27,8 +27,6 @@ namespace parser {
 
             identifier = name;
             argument_list = *identifier;
-
-            start = +function_;
 
             function_ = (
                         lexeme[(string("to-report") | string("to")) >> !(alnum | '_')]  // make sure we have whole words
@@ -44,7 +42,6 @@ namespace parser {
         qi::rule<It, std::string(), Skipper > identifier;
         qi::rule<It, std::list<std::string>(), Skipper > argument_list;
         qi::rule<It, ast::function(), Skipper > function_;
-        qi::rule<It, ast::function_list(), Skipper > start;
     };
 }
 

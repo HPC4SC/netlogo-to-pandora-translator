@@ -1,21 +1,29 @@
-to setup [ a b ]
-    if a > b [ set color blue ]
+turtles-own
+  [ sick?               
+    remaining-immunity   
+    sick-time          
+    age ]   
 
-    ifelse a > b  [ set color blue ] [ set color red ]
-
-    while [a > b] [ set color blue ]
-
-    report a
+to get-sick []
+  set sick? true
+  set remaining-immunity 0
 end
 
-to setup2 [ ]
-    setup a b
+to get-healthy []
+  set sick? false
+  set remaining-immunity 0
+  set sick-time 0
+end
 
-    if setup a b > b [ set color blue ]
+to become-immune []
+  set sick? false
+  set sick-time 0
+  set remaining-immunity immunity-duration
+end
 
-    ifelse a > b  [ set color blue ] [ set color red ]
-
-    while [a > b] [ set color blue ]
-
-    report a
+to setup-constants []
+  set lifespan 50 * 52
+  set carrying-capacity 300
+  set chance-reproduce 1
+  set immunity-duration 52
 end

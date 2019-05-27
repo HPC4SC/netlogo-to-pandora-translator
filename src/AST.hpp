@@ -9,7 +9,18 @@ namespace ast
     struct expression;
     struct function_call;
 
+    enum agent_type {
+        turtle,
+        patch,
+        link,
+        observer
+    };
 
+    struct agent
+    {
+        agent_type type;
+        std::list<std::string> attributes;
+    };
 
     typedef boost::variant<
         std::string,
@@ -118,8 +129,25 @@ namespace ast
         statement_list body;
     };
 
-    typedef std::list<function> function_list;
+    
+    struct parser
+    {
+        std::list<agent> agents;
+        std::list<function> functions;
+    };
 }
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::agent,
+    (ast::agent_type, type)
+    (std::list<std::string>, attributes)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::parser,
+    (std::list<ast::agent>, agents)
+    (std::list<ast::function>, functions)
+)
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::operation,

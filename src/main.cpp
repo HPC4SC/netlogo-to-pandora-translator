@@ -1,6 +1,7 @@
 #include "./Expression.cpp"
 #include "./Statement.cpp"
 #include "./Function.cpp"
+#include "./Parser.cpp"
 //#include "./Printer.cpp"
 
 #include <fstream>
@@ -41,12 +42,12 @@ int main (int argc, char **argv)
     iterator_type iter = source_code.begin();
     iterator_type end = source_code.end();
     
-    ast::function_list ast;
-    parser::function<iterator_type> expr;
+    ast::parser ast;
+    parser::parser<iterator_type> parser;
 
     try
     {
-        bool ok = qi::phrase_parse(iter, end, expr, qi::space, ast);
+        bool ok = qi::phrase_parse(iter, end, parser, qi::space, ast);
 
         /*std::string s = testing::getString(ast);
 
