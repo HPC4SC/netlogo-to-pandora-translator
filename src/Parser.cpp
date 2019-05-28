@@ -17,7 +17,7 @@ namespace parser {
             turtle.add("link-own", ast::turtle);
             turtle.add("observer-own", ast::turtle);
 
-            variable = !keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '?')]];
+            variable = !keywords >> raw[lexeme[(alpha | '_' | '%') >> *(alnum | '_' | '-' | '?' | '%')]];
 
             agents = *(turtle >
                 '[' > +variable > ']');
