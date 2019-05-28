@@ -25,7 +25,7 @@ namespace parser {
             globals = lit("globals") >
                 '[' > +variable > ']';
 
-            start = *agent ^ globals >> 
+            start = *agent >> globals >>
                 +function_;
         }
 
