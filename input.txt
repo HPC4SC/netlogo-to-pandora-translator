@@ -4,11 +4,6 @@ turtles-own
     sick-time          
     age ]   
 
-to get-sick []
-  set sick? true
-  set remaining-immunity 0
-end
-
 globals
   [ %infected            
     %immune             
@@ -16,6 +11,11 @@ globals
     chance-reproduce    
     carrying-capacity   
     immunity-duration ]
+
+to get-sick []
+  set sick? true
+  set remaining-immunity 0
+end
 
 to get-healthy []
   set sick? false

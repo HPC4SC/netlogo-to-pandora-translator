@@ -2,6 +2,7 @@
 #define AST_HPP
 
 #include <boost/variant/recursive_wrapper.hpp>
+#include <boost/tuple/tuple.hpp>
 
 namespace ast
 {
@@ -129,10 +130,18 @@ namespace ast
         statement_list body;
     };
     
+    typedef std::list<agent> agent_list;
+    typedef std::list<std::string> global_list;
+
+    struct configuration
+    {
+        agent_list agents;
+        global_list globals;
+    };
+
     struct parser
     {
-        std::list<agent> agents;
-        std::list<std::string> globals;
+        configuration config;
         std::list<function> functions;
     };
 }
@@ -144,9 +153,14 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
+    ast::configuration,
+    (ast::agent_list, agents)
+    (ast::global_list, globals)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
     ast::parser,
-    (std::list<ast::agent>, agents)
-    (std::list<std::string>, globals)
+    (ast::configuration, config)
     (std::list<ast::function>, functions)
 )
 

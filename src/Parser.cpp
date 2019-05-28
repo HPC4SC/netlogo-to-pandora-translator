@@ -19,20 +19,20 @@ namespace parser {
 
             variable = !keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '?')]];
 
-            agent = turtle >
-                '[' > +variable > ']';
+            agents = *(turtle >
+                '[' > +variable > ']');
 
             globals = lit("globals") >
                 '[' > +variable > ']';
 
-            start = *agent >> globals >>
+            start = (agents ^ globals) >>
                 +function_;
         }
 
         function<It> function_;
 
         qi::rule<It, std::string(), Skipper > variable;
-        qi::rule<It, ast::agent(), Skipper > agent;
+        qi::rule<It, std::list<ast::agent>(), Skipper > agents;
         qi::rule<It, std::list<std::string>(), Skipper > globals;
         qi::rule<It, ast::parser(), Skipper > start;
 
