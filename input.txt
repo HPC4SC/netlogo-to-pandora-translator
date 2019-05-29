@@ -1,41 +1,39 @@
-turtles-own
-  [ sick?               
-    remaining-immunity   
-    sick-time          
-    age ]   
+patches-own
+[
+  vote
+  total
+]
 
-globals
-  [ %infected            
-    %immune             
-    lifespan            
-    chance-reproduce    
-    carrying-capacity   
-    immunity-duration ]
-
-to get-sick []
-  if total = 5
-    [ ifelse award-close-calls-to-loser?
-      [ set vote 0 ]
-      [ set vote 1 ] ]
-  set sick? true
-  set remaining-immunity 0
+to recolor-patch []
+  ifelse vote = 0
+    [ set pcolor green ]
+    [ set pcolor blue ]
 end
 
-to get-healthy []
-  set sick? false
-  set remaining-immunity 0
-  set sick-time 0
+to setup []
+  ask patches
+    [ set vote 2
+      recolor-patch ]
 end
 
-to become-immune []
-  set sick? false
-  set sick-time 0
-  set remaining-immunity immunity-duration
-end
-
-to setup-constants []
-  set lifespan 50 * 52
-  set carrying-capacity 300
-  set chance-reproduce 1
-  set immunity-duration 52
+to go []
+  let any-votes-changed? false
+  ask patches
+    [ let previous-vote vote
+      if total > 5 [ set vote 1 ]
+      if total < 3 [ set vote 0 ]
+      if total = 4
+        [ if change-vote-if-tied?
+          [ set vote (1 - vote) ] ]
+      if total = 5
+        [ ifelse award-close-calls-to-loser?
+          [ set vote 0 ]
+          [ set vote 1 ] ]
+      if total = 3
+        [ ifelse award-close-calls-to-loser?
+          [ set vote 1 ]
+          [ set vote 0 ] ]
+      if vote != previous-vote
+        [ set any-votes-changed? true ]
+      recolor-patch ]
 end

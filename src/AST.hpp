@@ -90,14 +90,16 @@ namespace ast
     struct while_statement;
     struct statement_list;
     struct return_statement;
+    struct ask;
 
     typedef boost::variant<
             variable_declaration,
             assignment,
             boost::recursive_wrapper<function_call>,
-            boost::recursive_wrapper<if_statement>, 
-            boost::recursive_wrapper<while_statement>, 
-            boost::recursive_wrapper<return_statement>, 
+            boost::recursive_wrapper<ask>,
+            boost::recursive_wrapper<if_statement>,
+            boost::recursive_wrapper<while_statement>,
+            boost::recursive_wrapper<return_statement>,
             boost::recursive_wrapper<statement_list>
         >
     statement;
@@ -107,14 +109,14 @@ namespace ast
     struct if_statement
     {
         expression condition;
-        statement then;
-        boost::optional<statement> else_;
+        statement_list then;
+        boost::optional<statement_list> else_;
     };
 
     struct while_statement
     {
         expression condition;
-        statement body;
+        statement_list body;
     };
 
     struct return_statement
@@ -127,6 +129,12 @@ namespace ast
         std::string return_type;
         std::string function_name;
         std::list<std::string> args;
+        statement_list body;
+    };
+
+    struct ask
+    {
+        agent_type type;
         statement_list body;
     };
     
@@ -203,14 +211,14 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     ast::if_statement,
     (ast::expression, condition)
-    (ast::statement, then)
-    (boost::optional<ast::statement>, else_)
+    (ast::statement_list, then)
+    (boost::optional<ast::statement_list>, else_)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::while_statement,
     (ast::expression, condition)
-    (ast::statement, body)
+    (ast::statement_list, body)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -223,6 +231,12 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::string, return_type)
     (std::string, function_name)
     (std::list<std::string>, args)
+    (ast::statement_list, body)
+);
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::ask,
+    (ast::agent_type, type)
     (ast::statement_list, body)
 );
 

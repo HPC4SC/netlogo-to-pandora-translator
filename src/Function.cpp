@@ -33,12 +33,12 @@ namespace parser {
                         lexeme[(string("to-report") | string("to")) >> !(alnum | '_')]  // make sure we have whole words
                     >   identifier 
                     >   ('[' > argument_list > ']')
-                    >   body
+                    >   +statement_
                     >   lexeme[string("end") >> !(alnum | '_')]
                 ) [ phx::bind(&store_function, _2, _3) ];
         }
 
-        statement<It> body;
+        statement<It> statement_;
 
         qi::rule<It, std::string(), Skipper > name;
         qi::rule<It, std::string(), Skipper > identifier;

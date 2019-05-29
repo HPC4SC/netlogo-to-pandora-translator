@@ -13,13 +13,13 @@ namespace parser {
             using namespace qi;
 
             turtle.add("turtles-own", ast::turtle);
-            turtle.add("patch-own", ast::turtle);
-            turtle.add("link-own", ast::turtle);
-            turtle.add("observer-own", ast::turtle);
+            patch.add("patches-own", ast::patch);
+            link.add("link-own", ast::link);
+            observer.add("observer-own", ast::observer);
 
-            variable = !keywords >> raw[lexeme[(alpha | '_' | '%') >> *(alnum | '_' | '-' | '?' | '%')]];
+            variable = raw[lexeme[(alpha | '_' | '%') >> *(alnum | '_' | '-' | '?' | '%')]];
 
-            agents = *(turtle >
+            agents = *( (turtle | patch ) >
                 '[' > +variable > ']');
 
             globals = lit("globals") >

@@ -59,10 +59,8 @@ namespace parser {
                 ("false")
                 ("if")
                 ("else")
+                ("ifelse")
                 ("while")
-                ("int")
-                ("void")
-                ("return")
                 ;
 
 
