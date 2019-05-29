@@ -4,6 +4,7 @@
 #include "AST.hpp"
 #include "Expression.cpp"
 #include "Globals.cpp"
+#include "Variable.cpp"
 
 namespace parser {
 
@@ -25,15 +26,13 @@ namespace parser {
                         while_statement |
                         return_statement;
 
-            identifier = !keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '?')]];
+            variable_declaration = lexeme["let" >> !(alnum | '_')] > var > -(expr);
 
-            variable_declaration = lexeme["let" >> !(alnum | '_')] > identifier > -(expr);
-
-            assignment = lexeme["set" >> !(alnum | '_')] > identifier > expr;
+            assignment = lexeme["set" >> !(alnum | '_')] > var > expr;
 
             function_call = 
                 function_name >> 
-                repeat( phx::ref(n_args) )[identifier];
+                repeat( phx::ref(n_args) )[var];
 
             function_name = 
                 !lexeme[keywords >> !(alnum | '_')] >> 
@@ -52,6 +51,7 @@ namespace parser {
         }
 
         expression<It, Skipper> expr;
+        variable<It> var;
 
         qi::rule<It, ast::statement_list(), Skipper> statement_list;
         qi::rule<It, ast::statement(), Skipper > statement_;
@@ -61,7 +61,6 @@ namespace parser {
         qi::rule<It, ast::if_statement(), Skipper> if_statement;
         qi::rule<It, ast::while_statement(), Skipper> while_statement;
         qi::rule<It, ast::return_statement(), Skipper> return_statement;
-        qi::rule<It, std::string(), Skipper> identifier;
         qi::rule<It, std::string(), Skipper> function_name;
     };
 }

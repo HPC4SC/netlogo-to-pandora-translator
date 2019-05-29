@@ -6,6 +6,7 @@
 
 #include "AST.hpp"
 #include "Globals.cpp"
+#include "Variable.cpp"
 
 namespace parser {
 
@@ -28,7 +29,7 @@ namespace parser {
                 ;
 
             equality_op.add
-                ("==", ast::op_equal)
+                ("=", ast::op_equal)
                 ("!=", ast::op_not_equal)
                 ;
 
@@ -85,20 +86,16 @@ namespace parser {
                             bool_ |
                             '(' >> expr >> ')' |
                             function_call |
-                            identifier;
+                            var;
 
             function_call = 
                 function_name >> 
-                repeat( phx::ref(n_args) )[identifier];
+                repeat( phx::ref(n_args) )[var];
 
             function_name = 
                 !lexeme[keywords >> !(alnum | '_')] >> 
                 &lexeme[f_args [phx::ref(n_args) = _1] >> !(alnum | '_')] >> 
                 raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
-
-            identifier = 
-                !lexeme[keywords >> !(alnum | '_')] 
-                >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
             BOOST_SPIRIT_DEBUG_NODES(
                 (expr)
@@ -113,10 +110,10 @@ namespace parser {
             );
         }
 
+        variable<It> var;
 
         qi::rule<It, ast::operand(), Skipper> unary_expr, primary_expr;
         qi::rule<It, ast::function_call(), Skipper> function_call;
-        qi::rule<It, std::string(), Skipper> identifier;
         qi::rule<It, std::string(), Skipper> function_name;
         qi::rule<It, ast::expression(), Skipper> expr, 
             equality_expr, relational_expr,

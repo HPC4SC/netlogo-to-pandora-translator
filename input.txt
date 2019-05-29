@@ -13,6 +13,10 @@ globals
     immunity-duration ]
 
 to get-sick []
+  if total = 5
+    [ ifelse award-close-calls-to-loser?
+      [ set vote 0 ]
+      [ set vote 1 ] ]
   set sick? true
   set remaining-immunity 0
 end

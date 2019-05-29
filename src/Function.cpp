@@ -3,6 +3,7 @@
 
 #include "Statement.cpp"
 #include "Globals.cpp"
+#include "Variable.cpp"
 
 #include <boost/spirit/include/phoenix.hpp>
 
@@ -38,6 +39,7 @@ namespace parser {
         }
 
         statement<It> body;
+
         qi::rule<It, std::string(), Skipper > name;
         qi::rule<It, std::string(), Skipper > identifier;
         qi::rule<It, std::list<std::string>(), Skipper > argument_list;
