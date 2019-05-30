@@ -126,7 +126,6 @@ namespace ast
 
     struct function
     {
-        std::string return_type;
         std::string function_name;
         std::list<std::string> args;
         statement_list body;
