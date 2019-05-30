@@ -27,8 +27,7 @@ namespace parser {
                         assignment |
                         function_call | 
                         if_statement |
-                        while_statement |
-                        return_statement;
+                        while_statement;
 
             variable_declaration = lexeme["let" >> !(alnum | '_')] > var >> -(expr);
 
@@ -51,8 +50,6 @@ namespace parser {
 
             while_statement = lit("while") > '[' > expr > ']' > '[' > +statement_ > ']';
 
-            return_statement = lexeme["report" >> !(alnum | '_')] > expr;
-
             ask = lexeme["ask" >> !(alnum | '_')] > (turtle | patch | link) > '[' > +statement_ > ']';
         }
 
@@ -66,7 +63,6 @@ namespace parser {
         qi::rule<It, ast::ask(), skipper<It> > ask;
         qi::rule<It, ast::if_statement(), skipper<It> > if_statement;
         qi::rule<It, ast::while_statement(), skipper<It> > while_statement;
-        qi::rule<It, ast::return_statement(), skipper<It> > return_statement;
         qi::rule<It, std::string(), skipper<It> > function_name;
 
         

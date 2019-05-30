@@ -29,20 +29,25 @@ namespace parser {
             identifier = name;
             argument_list = *identifier;
 
+            return_statement = lexeme["report" >> !(alnum | '_')] > expr;
+
             function_ = (
                         lexeme[(string("to-report") | string("to")) >> !(alnum | '_')]  // make sure we have whole words
                     >   identifier 
                     >   ('[' > argument_list > ']')
                     >   +statement_
+                    >   -return_statement
                     >   lexeme[string("end") >> !(alnum | '_')]
                 ) [ phx::bind(&store_function, _2, _3) ];
         }
 
+        expression<It> expr;
         statement<It> statement_;
 
         qi::rule<It, std::string(), skipper<It> > name;
         qi::rule<It, std::string(), skipper<It> > identifier;
         qi::rule<It, std::list<std::string>(), skipper<It> > argument_list;
+        qi::rule<It, ast::return_statement(), skipper<It> > return_statement;
         qi::rule<It, ast::function(), skipper<It> > function_;
     };
 }

@@ -99,7 +99,6 @@ namespace ast
             boost::recursive_wrapper<ask>,
             boost::recursive_wrapper<if_statement>,
             boost::recursive_wrapper<while_statement>,
-            boost::recursive_wrapper<return_statement>,
             boost::recursive_wrapper<statement_list>
         >
     statement;
@@ -129,6 +128,7 @@ namespace ast
         std::string function_name;
         std::list<std::string> args;
         statement_list body;
+        return_statement return_;
     };
 
     struct ask
