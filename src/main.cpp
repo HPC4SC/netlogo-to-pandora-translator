@@ -2,6 +2,7 @@
 #include "./Statement.cpp"
 #include "./Function.cpp"
 #include "./Parser.cpp"
+#include "./Skipper.cpp"
 //#include "./Printer.cpp"
 
 #include <fstream>
@@ -44,10 +45,11 @@ int main (int argc, char **argv)
     
     ast::parser ast;
     parser::parser<iterator_type> parser;
+    parser::skipper<iterator_type> skipper;
 
     try
     {
-        bool ok = qi::phrase_parse(iter, end, parser, qi::space, ast);
+        bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
 
         /*std::string s = testing::getString(ast);
 

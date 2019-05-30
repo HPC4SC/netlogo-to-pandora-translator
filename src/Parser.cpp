@@ -5,8 +5,8 @@
 
 namespace parser {
 
-    template <typename It, typename Skipper = qi::space_type>
-    struct parser : qi::grammar<It, ast::parser(), Skipper>
+    template <typename It>
+    struct parser : qi::grammar<It, ast::parser(), skipper<It> >
     {
         parser()  : parser::base_type(start)
         {
@@ -31,10 +31,10 @@ namespace parser {
 
         function<It> function_;
 
-        qi::rule<It, std::string(), Skipper > variable;
-        qi::rule<It, std::list<ast::agent>(), Skipper > agents;
-        qi::rule<It, std::list<std::string>(), Skipper > globals;
-        qi::rule<It, ast::parser(), Skipper > start;
+        qi::rule<It, std::string(), skipper<It> > variable;
+        qi::rule<It, std::list<ast::agent>(), skipper<It> > agents;
+        qi::rule<It, std::list<std::string>(), skipper<It> > globals;
+        qi::rule<It, ast::parser(), skipper<It> > start;
 
         qi::symbols<char, ast::agent_type> turtle, patch, link, observer;
     };

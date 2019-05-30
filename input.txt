@@ -13,7 +13,7 @@ end
 to setup []
   ask patches
     [ set vote 2
-      recolor-patch ]
+      recolor-patch ] ;; A comment
 end
 
 to go []

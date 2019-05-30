@@ -10,8 +10,8 @@ namespace parser {
 
     namespace qi = boost::spirit::qi;
 
-    template <typename It, typename Skipper = qi::space_type>
-    struct statement : qi::grammar<It, ast::statement(), Skipper>
+    template <typename It>
+    struct statement : qi::grammar<It, ast::statement(), skipper<It> >
     {
         statement()  : statement::base_type(statement_)
         {
@@ -56,18 +56,18 @@ namespace parser {
             ask = lexeme["ask" >> !(alnum | '_')] > (turtle | patch | link) > '[' > +statement_ > ']';
         }
 
-        expression<It, Skipper> expr;
+        expression<It> expr;
         variable<It> var;
 
-        qi::rule<It, ast::statement(), Skipper > statement_;
-        qi::rule<It, ast::variable_declaration(), Skipper> variable_declaration;
-        qi::rule<It, ast::assignment(), Skipper> assignment;
-        qi::rule<It, ast::function_call(), Skipper> function_call;
-        qi::rule<It, ast::ask(), Skipper> ask;
-        qi::rule<It, ast::if_statement(), Skipper> if_statement;
-        qi::rule<It, ast::while_statement(), Skipper> while_statement;
-        qi::rule<It, ast::return_statement(), Skipper> return_statement;
-        qi::rule<It, std::string(), Skipper> function_name;
+        qi::rule<It, ast::statement(), skipper<It> > statement_;
+        qi::rule<It, ast::variable_declaration(), skipper<It> > variable_declaration;
+        qi::rule<It, ast::assignment(), skipper<It> > assignment;
+        qi::rule<It, ast::function_call(), skipper<It> > function_call;
+        qi::rule<It, ast::ask(), skipper<It> > ask;
+        qi::rule<It, ast::if_statement(), skipper<It> > if_statement;
+        qi::rule<It, ast::while_statement(), skipper<It> > while_statement;
+        qi::rule<It, ast::return_statement(), skipper<It> > return_statement;
+        qi::rule<It, std::string(), skipper<It> > function_name;
 
         
         qi::symbols<char, ast::agent_type> turtle, patch, link, observer;

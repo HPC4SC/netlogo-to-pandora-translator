@@ -17,8 +17,8 @@ namespace parser {
         std::cout << name << " " <<  args.size() << std::endl;
     }
 
-    template <typename It, typename Skipper = qi::space_type>
-    struct function : qi::grammar<It, ast::function(), Skipper>
+    template <typename It>
+    struct function : qi::grammar<It, ast::function(), skipper<It> >
     {
         function()  : function::base_type(function_)
         {
@@ -40,10 +40,10 @@ namespace parser {
 
         statement<It> statement_;
 
-        qi::rule<It, std::string(), Skipper > name;
-        qi::rule<It, std::string(), Skipper > identifier;
-        qi::rule<It, std::list<std::string>(), Skipper > argument_list;
-        qi::rule<It, ast::function(), Skipper > function_;
+        qi::rule<It, std::string(), skipper<It> > name;
+        qi::rule<It, std::string(), skipper<It> > identifier;
+        qi::rule<It, std::list<std::string>(), skipper<It> > argument_list;
+        qi::rule<It, ast::function(), skipper<It> > function_;
     };
 }
 

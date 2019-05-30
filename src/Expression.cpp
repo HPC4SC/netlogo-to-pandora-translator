@@ -7,14 +7,15 @@
 #include "AST.hpp"
 #include "Globals.cpp"
 #include "Variable.cpp"
+#include "Skipper.cpp"
 
 namespace parser {
 
     namespace qi = boost::spirit::qi;
     namespace phx = boost::phoenix;
 
-    template <typename It, typename Skipper = qi::space_type>
-        struct expression : qi::grammar<It, ast::expression(), Skipper>
+    template <typename It>
+        struct expression : qi::grammar<It, ast::expression(), skipper<It> >
     {
         expression() : expression::base_type(expr)
         {
@@ -110,10 +111,10 @@ namespace parser {
 
         variable<It> var;
 
-        qi::rule<It, ast::operand(), Skipper> unary_expr, primary_expr;
-        qi::rule<It, ast::function_call(), Skipper> function_call;
-        qi::rule<It, std::string(), Skipper> function_name;
-        qi::rule<It, ast::expression(), Skipper> expr, 
+        qi::rule<It, ast::operand(), skipper<It> > unary_expr, primary_expr;
+        qi::rule<It, ast::function_call(), skipper<It> > function_call;
+        qi::rule<It, std::string(), skipper<It> > function_name;
+        qi::rule<It, ast::expression(), skipper<It> > expr, 
             equality_expr, relational_expr,
             logical_or_expr, logical_and_expr,
             additive_expr, multiplicative_expr
