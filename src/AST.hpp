@@ -90,13 +90,17 @@ namespace ast
     struct while_statement;
     struct statement_list;
     struct return_statement;
-    struct ask;
+    struct ask_agentset;
+    struct ask_agent;
+    struct create_agentset;
 
     typedef boost::variant<
             variable_declaration,
             assignment,
             boost::recursive_wrapper<function_call>,
-            boost::recursive_wrapper<ask>,
+            boost::recursive_wrapper<ask_agentset>,
+            boost::recursive_wrapper<ask_agent>,
+            boost::recursive_wrapper<create_agentset>,
             boost::recursive_wrapper<if_statement>,
             boost::recursive_wrapper<while_statement>,
             boost::recursive_wrapper<statement_list>
@@ -131,14 +135,27 @@ namespace ast
         return_statement return_;
     };
 
-    struct ask
+    struct ask_agentset
     {
         agent_type type;
+        statement_list body;
+    };
+
+    struct ask_agent
+    {
+        agent_type type;
+        expression id;
         statement_list body;
     };
     
     typedef std::list<agent> agent_list;
     typedef std::list<std::string> global_list;
+
+    struct create_agentset {
+        agent_type type;
+        expression quantity;
+        statement_list body;
+    };
 
     struct configuration
     {
@@ -152,6 +169,13 @@ namespace ast
         std::list<function> functions;
     };
 }
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::create_agentset,
+    (ast::agent_type, type)
+    (ast::expression, quantity)
+    (ast::statement_list, body)
+)
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::agent,
@@ -234,8 +258,15 @@ BOOST_FUSION_ADAPT_STRUCT(
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
-    ast::ask,
+    ast::ask_agentset,
     (ast::agent_type, type)
+    (ast::statement_list, body)
+);
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::ask_agent,
+    (ast::agent_type, type)
+    (ast::expression, id)
     (ast::statement_list, body)
 );
 

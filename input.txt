@@ -17,6 +17,12 @@ to setup []
 end
 
 to go []
+   create-turtles 5
+      [ 
+        set sick-time 0
+        set remaining-immunity 0
+        set size 1.5  ;; easier to see
+      ]
   let any-votes-changed? false
   ask patches
     [ let previous-vote vote
