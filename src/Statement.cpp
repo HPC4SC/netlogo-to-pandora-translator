@@ -6,6 +6,7 @@
 #include "Globals.cpp"
 #include "Variable.cpp"
 #include "FunctionCall.cpp"
+#include "AgentsetExpression.cpp"
 
 namespace parser {
 
@@ -64,7 +65,7 @@ namespace parser {
             while_statement = lit("while") > '[' > expr > ']' > '[' > +statement_ > ']';
 
             ask_agent = lexeme["ask" >> !(alnum | '_')] >> lexeme[agent >> !(alnum | '_')] > expr > '[' > +statement_ > ']';
-            ask_agentset = lexeme["ask" >> !(alnum | '_')] >> lexeme[agentset >> !(alnum | '_')] > '[' > +statement_ > ']';
+            ask_agentset = lexeme["ask" >> !(alnum | '_')] >> agentset_expression_ > '[' > +statement_ > ']';
 
             create_agentset = "create-" > agentset > expr > -('[' > +statement_ > ']');
 
@@ -78,6 +79,7 @@ namespace parser {
         expression<It> expr;
         variable<It> var;
         function_call<It> function_call_;
+        agentset_expression<It> agentset_expression_;
 
         qi::rule<It, ast::statement(), skipper<It> > statement_;
         qi::rule<It, ast::variable_declaration(), skipper<It> > variable_declaration;

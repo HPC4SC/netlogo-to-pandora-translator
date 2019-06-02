@@ -11,7 +11,7 @@ to recolor-patch []
 end
 
 to setup []
-  ask patches
+  ask turtles with [ sick? ]
     [ set vote 2
       fd 1
       setxy random 5 random 5

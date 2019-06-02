@@ -128,6 +128,47 @@ namespace ast
         >
     statement;
 
+
+
+
+
+
+    // Agentset Expression
+
+    struct base_agentset;
+    struct n_of_agentset;
+    struct agentset_with_reporter;
+
+    typedef boost::variant<
+            base_agentset,
+            boost::recursive_wrapper<n_of_agentset>,
+            boost::recursive_wrapper<agentset_with_reporter>
+        >
+    agentset_expression;
+
+    struct base_agentset {
+        agent_type type;
+    };
+
+    struct n_of_agentset {
+        expression expr;
+        agentset_expression agentset_expr;
+    };
+
+    struct agentset_with_reporter {
+        agentset_expression agentset_expr;
+        expression expr;
+    };
+
+
+
+
+
+
+
+
+
+
     struct statement_list : std::list<statement> {};
 
     struct if_statement
@@ -158,7 +199,7 @@ namespace ast
 
     struct ask_agentset
     {
-        agent_type type;
+        agentset_expression type;
         statement_list body;
     };
 
@@ -208,6 +249,28 @@ namespace ast
         std::list<function> functions;
     };
 }
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::n_of_agentset,
+    (ast::expression, expr)
+    (ast::agentset_expression, agentset_expr)
+) 
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::base_agentset,
+    (ast::agent_type, type)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::agentset_with_reporter,
+    (ast::agentset_expression, agentset_expr)
+    (ast::expression, expr)
+)
+
+
+
+
+
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::setxy_statement,
@@ -320,7 +383,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::ask_agentset,
-    (ast::agent_type, type)
+    (ast::agentset_expression, type)
     (ast::statement_list, body)
 );
 
