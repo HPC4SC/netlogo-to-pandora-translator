@@ -17,6 +17,12 @@ namespace ast
         observer
     };
 
+    enum move_dir {
+        left,
+        right,
+        forward
+    };
+
     struct agent
     {
         agent_type type;
@@ -93,6 +99,7 @@ namespace ast
     struct ask_agentset;
     struct ask_agent;
     struct create_agentset;
+    struct move_statement;
 
     typedef boost::variant<
             variable_declaration,
@@ -101,6 +108,7 @@ namespace ast
             boost::recursive_wrapper<ask_agentset>,
             boost::recursive_wrapper<ask_agent>,
             boost::recursive_wrapper<create_agentset>,
+            boost::recursive_wrapper<move_statement>,
             boost::recursive_wrapper<if_statement>,
             boost::recursive_wrapper<while_statement>,
             boost::recursive_wrapper<statement_list>
@@ -157,6 +165,11 @@ namespace ast
         statement_list body;
     };
 
+    struct move_statement {
+        move_dir direction;
+        expression quantity;
+    };
+
     struct configuration
     {
         agent_list agents;
@@ -169,6 +182,12 @@ namespace ast
         std::list<function> functions;
     };
 }
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::move_statement,
+    (ast::move_dir, direction)
+    (ast::expression, quantity)
+)
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::create_agentset,

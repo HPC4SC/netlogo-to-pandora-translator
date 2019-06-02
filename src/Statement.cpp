@@ -17,7 +17,14 @@ namespace parser {
         statement()  : statement::base_type(statement_)
         {
             using namespace qi;
-            
+
+            direction.add("lt", ast::left);
+            direction.add("left", ast::left);
+            direction.add("rt", ast::right);
+            direction.add("right", ast::right);
+            direction.add("fd", ast::forward);
+            direction.add("forward", ast::forward);
+
             agent.add("turtle", ast::turtle);
             agent.add("patch", ast::patch);
             agent.add("link", ast::link);
@@ -30,6 +37,7 @@ namespace parser {
                         ask_agentset |
                         ask_agent |
                         create_agentset |
+                        move_statement |
                         variable_declaration |
                         assignment |
                         function_call_ | 
@@ -52,6 +60,8 @@ namespace parser {
             ask_agentset = lexeme["ask" >> !(alnum | '_')] >> lexeme[agentset >> !(alnum | '_')] > '[' > +statement_ > ']';
 
             create_agentset = "create-" > agentset > expr > -('[' > +statement_ > ']');
+
+            move_statement = direction >> expr;
         }
 
         expression<It> expr;
@@ -66,8 +76,7 @@ namespace parser {
         qi::rule<It, ast::if_statement(), skipper<It> > if_statement;
         qi::rule<It, ast::while_statement(), skipper<It> > while_statement;
         qi::rule<It, ast::create_agentset(), skipper<It> > create_agentset;
-        
-        qi::symbols<char, ast::agent_type> agent, agentset;
+        qi::rule<It, ast::move_statement(), skipper<It> > move_statement;
     };
 }
 
