@@ -4,11 +4,9 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/variant/recursive_wrapper.hpp>
 
-#include "AST.hpp"
-#include "Globals.cpp"
-#include "Variable.cpp"
-#include "Skipper.cpp"
 #include "FunctionCall.cpp"
+#include "Variable.cpp"
+#include "AST.hpp"
 
 namespace parser {
 
@@ -87,6 +85,7 @@ namespace parser {
                             '(' >> expr >> ')' |
                             function_call_ |
                             random_statement |
+                            count_agentset |
                             var;
 
             random_statement = "random" > expr;
@@ -108,6 +107,7 @@ namespace parser {
         function_call<It> function_call_;
 
         qi::rule<It, ast::random_statement(), skipper<It> > random_statement;
+        qi::rule<It, ast::count_agentset(), skipper<It> > count_agentset;
 
         qi::rule<It, ast::operand(), skipper<It> > unary_expr, primary_expr;
         qi::rule<It, ast::expression(), skipper<It> > expr, 

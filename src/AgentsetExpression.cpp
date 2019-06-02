@@ -1,15 +1,16 @@
 #ifndef AGENTSET_EXPRESSION_HPP
 #define AGENTSET_EXPRESSION_HPP
 
-#include "AST.hpp"
 #include "Expression.cpp"
-#include "Globals.cpp"
-#include "Variable.cpp"
 #include "FunctionCall.cpp"
+#include "Variable.cpp"
+#include "Globals.cpp"
+#include "AST.hpp"
 
 namespace parser {
 
     namespace qi = boost::spirit::qi;
+    namespace phx = boost::phoenix;
 
     template <typename It>
     struct agentset_expression : qi::grammar<It, ast::agentset_expression(), skipper<It> >

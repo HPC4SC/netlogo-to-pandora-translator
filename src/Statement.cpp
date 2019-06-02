@@ -1,12 +1,12 @@
 #ifndef STATEMENT_HPP
 #define STATEMENT_HPP
 
-#include "AST.hpp"
-#include "Expression.cpp"
-#include "Globals.cpp"
-#include "Variable.cpp"
-#include "FunctionCall.cpp"
 #include "AgentsetExpression.cpp"
+#include "Expression.cpp"
+#include "FunctionCall.cpp"
+#include "Variable.cpp"
+#include "Globals.cpp"
+#include "AST.hpp"
 
 namespace parser {
 

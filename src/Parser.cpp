@@ -1,9 +1,15 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include "Statement.cpp"
+#include "Function.cpp"
+#include "Variable.cpp"
+#include "AST.hpp"
+#include "Skipper.cpp"
+
+#include <boost/spirit/include/qi.hpp>
 
 namespace parser {
+    namespace qi = boost::spirit::qi;
 
     template <typename It>
     struct parser : qi::grammar<It, ast::parser(), skipper<It> >
@@ -17,6 +23,7 @@ namespace parser {
             link.add("link-own", ast::link);
             observer.add("observer-own", ast::observer);
 
+            // TODO: Check why using Variable.cpp here slows down a lot the parser
             variable = raw[lexeme[(alpha | '_' | '%') >> *(alnum | '_' | '-' | '?' | '%')]];
 
             agents = *( (turtle | patch ) >

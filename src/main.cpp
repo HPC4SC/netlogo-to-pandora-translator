@@ -1,10 +1,9 @@
-#include "./Expression.cpp"
-#include "./Statement.cpp"
-#include "./Function.cpp"
 #include "./Parser.cpp"
 #include "./Skipper.cpp"
+#include "./AST.hpp"
 //#include "./Printer.cpp"
 
+#include <boost/spirit/include/qi.hpp>
 #include <fstream>
 
 namespace qi = boost::spirit::qi;

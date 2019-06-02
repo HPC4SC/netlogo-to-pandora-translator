@@ -1,8 +1,11 @@
 #ifndef AST_HPP
 #define AST_HPP
 
+#include <boost/optional.hpp>
+#include <boost/variant/variant.hpp>
 #include <boost/variant/recursive_wrapper.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <list>
 
 namespace ast
 {
@@ -10,6 +13,7 @@ namespace ast
     struct expression;
     struct function_call;
     struct random_statement;
+    struct count_agentset;
 
     enum agent_type {
         turtle,
@@ -45,7 +49,8 @@ namespace ast
         boost::recursive_wrapper<unary>,
         boost::recursive_wrapper<expression>,
         boost::recursive_wrapper<function_call>,
-        boost::recursive_wrapper<random_statement>
+        boost::recursive_wrapper<random_statement>,
+        boost::recursive_wrapper<count_agentset>
     > operand;
 
     enum optoken
@@ -178,6 +183,9 @@ namespace ast
 
 
 
+    struct count_agentset {
+        agentset_expression agentset_expr;
+    };
 
 
 
@@ -291,7 +299,10 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 
 
-
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::count_agentset,
+    (ast::agentset_expression, agentset_expr)
+) 
 
 
 BOOST_FUSION_ADAPT_STRUCT(

@@ -1,6 +1,8 @@
 #ifndef GLOBALS_CPP
 #define GLOBALS_CPP
 
+#include "AST.hpp"
+
 #include <boost/spirit/include/qi.hpp>
 
 namespace parser {

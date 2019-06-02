@@ -3,6 +3,7 @@
 
 #include "Globals.cpp"
 #include "Variable.cpp"
+#include "AST.hpp"
 
 #include <boost/spirit/include/phoenix.hpp>
 

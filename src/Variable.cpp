@@ -4,7 +4,7 @@
 #include "Globals.cpp"
 #include "Skipper.cpp"
 
-#include <boost/spirit/include/phoenix.hpp>
+#include <boost/spirit/include/qi.hpp>
 
 namespace parser {
 
