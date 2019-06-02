@@ -136,17 +136,25 @@ namespace ast
     // Agentset Expression
 
     struct base_agentset;
+    struct agentset_here;
+    struct other_agentset;
     struct n_of_agentset;
     struct agentset_with_reporter;
 
     typedef boost::variant<
             base_agentset,
+            agentset_here,
             boost::recursive_wrapper<n_of_agentset>,
-            boost::recursive_wrapper<agentset_with_reporter>
+            boost::recursive_wrapper<agentset_with_reporter>,
+            boost::recursive_wrapper<other_agentset>
         >
     agentset_expression;
 
     struct base_agentset {
+        agent_type type;
+    };
+
+    struct agentset_here {
         agent_type type;
     };
 
@@ -158,6 +166,10 @@ namespace ast
     struct agentset_with_reporter {
         agentset_expression agentset_expr;
         expression expr;
+    };
+
+    struct other_agentset {
+        agentset_expression agentset_expr;
     };
 
 
@@ -262,10 +274,20 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
+    ast::agentset_here,
+    (ast::agent_type, type)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
     ast::agentset_with_reporter,
     (ast::agentset_expression, agentset_expr)
     (ast::expression, expr)
 )
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::other_agentset,
+    (ast::agentset_expression, agentset_expr)
+) 
 
 
 
