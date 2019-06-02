@@ -33,11 +33,18 @@ namespace parser {
             agentset.add("patches", ast::patch);
             agentset.add("links", ast::link);
 
+            single_word_callback.add("die", ast::die);
+            single_word_callback.add("clear-all", ast::clear_all);
+            single_word_callback.add("tick", ast::tick);
+            single_word_callback.add("reset-ticks", ast::reset_ticks);
+
             statement_ = 
                         ask_agentset |
                         ask_agent |
                         create_agentset |
                         move_statement |
+                        setxy_statement |
+                        single_word_statement |
                         variable_declaration |
                         assignment |
                         function_call_ | 
@@ -62,6 +69,10 @@ namespace parser {
             create_agentset = "create-" > agentset > expr > -('[' > +statement_ > ']');
 
             move_statement = direction >> expr;
+
+            setxy_statement = "setxy" >> expr >> expr;
+
+            single_word_statement = single_word_callback;
         }
 
         expression<It> expr;
@@ -77,6 +88,8 @@ namespace parser {
         qi::rule<It, ast::while_statement(), skipper<It> > while_statement;
         qi::rule<It, ast::create_agentset(), skipper<It> > create_agentset;
         qi::rule<It, ast::move_statement(), skipper<It> > move_statement;
+        qi::rule<It, ast::setxy_statement(), skipper<It> > setxy_statement;
+        qi::rule<It, ast::single_word_statement(), skipper<It> > single_word_statement;
     };
 }
 

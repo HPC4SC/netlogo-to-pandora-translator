@@ -14,11 +14,16 @@ to setup []
   ask patches
     [ set vote 2
       fd 1
+      setxy random 5 random 5
+      die
+      clear-all
+      tick
+      reset-ticks
       recolor-patch ] ;; A comment
 end
 
 to go []
-   create-turtles 5
+   create-turtles random 5
       [ 
         set sick-time 0
         set remaining-immunity 0

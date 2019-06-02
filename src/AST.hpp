@@ -9,6 +9,7 @@ namespace ast
     struct unary;
     struct expression;
     struct function_call;
+    struct random_statement;
 
     enum agent_type {
         turtle,
@@ -21,6 +22,13 @@ namespace ast
         left,
         right,
         forward
+    };
+
+    enum callback_keyword {
+        die,
+        clear_all,
+        tick,
+        reset_ticks
     };
 
     struct agent
@@ -36,7 +44,8 @@ namespace ast
         std::string,
         boost::recursive_wrapper<unary>,
         boost::recursive_wrapper<expression>,
-        boost::recursive_wrapper<function_call>
+        boost::recursive_wrapper<function_call>,
+        boost::recursive_wrapper<random_statement>
     > operand;
 
     enum optoken
@@ -100,10 +109,14 @@ namespace ast
     struct ask_agent;
     struct create_agentset;
     struct move_statement;
+    struct setxy_statement;
+    struct single_word_statement;
 
     typedef boost::variant<
             variable_declaration,
             assignment,
+            single_word_statement,
+            setxy_statement,
             boost::recursive_wrapper<function_call>,
             boost::recursive_wrapper<ask_agentset>,
             boost::recursive_wrapper<ask_agent>,
@@ -165,9 +178,22 @@ namespace ast
         statement_list body;
     };
 
+    struct random_statement {
+        expression value;
+    };
+
     struct move_statement {
         move_dir direction;
         expression quantity;
+    };
+
+    struct setxy_statement {
+        expression x;
+        expression y;
+    };
+
+    struct single_word_statement {
+        callback_keyword keyword;
     };
 
     struct configuration
@@ -182,6 +208,22 @@ namespace ast
         std::list<function> functions;
     };
 }
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::setxy_statement,
+    (ast::expression, x)
+    (ast::expression, y)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::random_statement,
+    (ast::expression, value)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::single_word_statement,
+    (ast::callback_keyword, keyword)
+)
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::move_statement,

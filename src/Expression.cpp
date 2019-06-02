@@ -86,7 +86,10 @@ namespace parser {
                             bool_ |
                             '(' >> expr >> ')' |
                             function_call_ |
+                            random_statement |
                             var;
+
+            random_statement = "random" > expr;
 
             BOOST_SPIRIT_DEBUG_NODES(
                 (expr)
@@ -103,6 +106,8 @@ namespace parser {
 
         variable<It> var;
         function_call<It> function_call_;
+
+        qi::rule<It, ast::random_statement(), skipper<It> > random_statement;
 
         qi::rule<It, ast::operand(), skipper<It> > unary_expr, primary_expr;
         qi::rule<It, ast::expression(), skipper<It> > expr, 

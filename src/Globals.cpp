@@ -11,6 +11,7 @@ namespace parser {
     qi::symbols<char> keywords;
     qi::symbols<char, ast::agent_type> agent, agentset;
     qi::symbols<char, ast::move_dir> direction;
+    qi::symbols<char, ast::callback_keyword> single_word_callback;
 }
 
 #endif
