@@ -8,6 +8,7 @@
 #include "Globals.cpp"
 #include "Variable.cpp"
 #include "Skipper.cpp"
+#include "FunctionCall.cpp"
 
 namespace parser {
 
@@ -84,17 +85,8 @@ namespace parser {
             primary_expr %= double_ |
                             bool_ |
                             '(' >> expr >> ')' |
-                            function_call |
+                            function_call_ |
                             var;
-
-            function_call = 
-                function_name >> 
-                repeat( phx::ref(n_args) )[var];
-
-            function_name = 
-                !lexeme[keywords >> !(alnum | '_')] >> 
-                &lexeme[f_args [phx::ref(n_args) = _1] >> !(alnum | '_')] >> 
-                raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
 
             BOOST_SPIRIT_DEBUG_NODES(
                 (expr)
@@ -110,10 +102,9 @@ namespace parser {
         }
 
         variable<It> var;
+        function_call<It> function_call_;
 
         qi::rule<It, ast::operand(), skipper<It> > unary_expr, primary_expr;
-        qi::rule<It, ast::function_call(), skipper<It> > function_call;
-        qi::rule<It, std::string(), skipper<It> > function_name;
         qi::rule<It, ast::expression(), skipper<It> > expr, 
             equality_expr, relational_expr,
             logical_or_expr, logical_and_expr,
