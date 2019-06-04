@@ -1,78 +1,65 @@
-#include "TypeInference.hpp"
+#ifndef TYPE_INFERENCE_CPP
+#define TYPE_INFERENCE_CPP
+
 #include "AST.hpp"
 
-namespace Inference {
+namespace inference {
 
-    // Base cases
-    enum Types Inferer::infer (std::string expr) {
-        return string_type;
-    }
+    enum Types {
+        string_type,
+        double_type,
+        bool_type,
+        undefined_type,
+        void_type
+    };
 
-    enum Types Inferer::infer (double expr) {
-        return double_type;
-    }
+    std::map<std::string, enum Types> function_types;
+    std::map<std::string, enum Types> variable_types;
 
-    enum Types Inferer::infer (bool expr) {
-        return bool_type;
-    }
+    struct Inferer : boost::static_visitor<enum Types> {
+        Inferer () {}
 
-    // Recursive cases
-    enum Types Inferer::infer (ast::count_agentset expr) {
-return bool_type;
-    }
+        Types operator()(double& expr) const { return double_type; }
+        Types operator()(bool& expr) const { return bool_type; }
+        Types operator()(std::string& expr) const { return string_type; }
+        Types operator()(ast::unary& expr) const { return bool_type; }
+        Types operator()(ast::random_statement& expr) const { return double_type; }
+        Types operator()(ast::count_agentset& expr) const { return double_type; }
 
-    enum Types Inferer::infer (ast::random_statement expr) {
-return bool_type;
-    }
+        Types operator()(ast::variable& expr) const { 
+            auto it = variable_types.find(expr.name);
+            if (it == variable_types.end())
+                return undefined_type;
 
-    enum Types Inferer::infer (ast::function_call expr) {
-return bool_type;
-    }
+            return it->second;
+        }
+        Types operator()(ast::function_call& expr) const { 
+            auto it = function_types.find(expr.function_name);
+            if (it == function_types.end())
+                return undefined_type;
 
-    enum Types Inferer::infer (ast::unary expr) {
-return bool_type;
-    }
+            return it->second;
+        }
+        Types operator()(ast::expression& expr) const {
+            Types first_type = boost::apply_visitor(*this, expr.first);
+            // If there is only one node
+            if (expr.rest.empty())
+                return first_type;
 
-    enum Types Inferer::infer (ast::variable expr) {
-return bool_type;
-    }
-
-    enum Types Inferer::infer (ast::operation expr) {
-return bool_type;
-    }
-
-    enum Types Inferer::infer (ast::expression expr) {
-        enum Types first_type = this->infer(expr.first);
-
-        // If there is only one node
-        if (expr.rest.empty())
-            return first_type;
-
-        // Then, there is an operator
-        enum Types second_type;
-        for (auto it = expr.rest.begin(); it != expr.rest.end(); ++it) {
+            // Then, there is an operator
+            auto it = expr.rest.begin();
             switch (it->operator_) {
-                // Boolean expressions (always return boolean)
-                case ast::op_not:
-                case ast::op_equal:
-                case ast::op_not_equal:
-                case ast::op_less:
-                case ast::op_less_equal:
-                case ast::op_greater:
-                case ast::op_greater_equal:
-                case ast::op_and:
-                case ast::op_or: return bool_type; break;
-
                 // Arithmetic expressions (could be numeric or string)
                 case ast::op_plus:
                 case ast::op_minus:
                 case ast::op_times:
-                case ast::op_divide: second_type = this->infer(*it); break;
+                case ast::op_divide: return double_type;
+
+                // Boolean expressions (always return boolean)
+                default: return bool_type;
             }
         }
-        if (first_type == second_type)
-            return first_type;
-        else
-            throw std::logic_error("TypeInference: Types don't match.");
-    }
+    };
 }
+
+#endif

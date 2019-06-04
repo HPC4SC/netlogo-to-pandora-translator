@@ -1,7 +1,7 @@
 #include "Parser.cpp"
 #include "Skipper.cpp"
 #include "AST.hpp"
-#include "TypeInference.hpp"
+#include "TypeInference.cpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <fstream>
@@ -42,14 +42,17 @@ int main (int argc, char **argv)
     iterator_type iter = source_code.begin();
     iterator_type end = source_code.end();
     
-    ast::parser ast;
-    parser::parser<iterator_type> parser;
+    ast::expression ast;
+    parser::expression<iterator_type> parser;
     parser::skipper<iterator_type> skipper;
+
+    inference::Inferer inferer;
 
     try
     {
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
-
+        inference::Types type = inferer(ast);
+        std::cout << type << std::endl;
         /*std::string s = testing::getString(ast);
 
         if (!ok)
