@@ -42,7 +42,6 @@ namespace ast
     };
 
     typedef boost::variant<
-        std::string,
         double,
         bool,
         std::string,

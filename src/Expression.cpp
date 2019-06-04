@@ -80,13 +80,16 @@ namespace parser {
 
             unary_expr          %= unary_op > primary_expr | primary_expr;
 
-            primary_expr %= double_ |
+            primary_expr %= string_parser |
+                            double_ |
                             bool_ |
                             '(' >> expr >> ')' |
                             function_call_ |
                             random_statement |
                             count_agentset |
                             var;
+
+            string_parser = lexeme["\"" > *(char_ - "\"") > "\""];
 
             random_statement = "random" > expr;
 
@@ -105,6 +108,8 @@ namespace parser {
 
         variable<It> var;
         function_call<It> function_call_;
+
+        qi::rule<It, std::string(), skipper<It> > string_parser;
 
         qi::rule<It, ast::random_statement(), skipper<It> > random_statement;
         qi::rule<It, ast::count_agentset(), skipper<It> > count_agentset;

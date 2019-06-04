@@ -12,7 +12,7 @@ end
 
 to setup []
   ask other turtles with [ sick? ]
-    [ set vote 2
+    [ set vote "2"
       fd 1
       setxy random 5 random 5
       die
