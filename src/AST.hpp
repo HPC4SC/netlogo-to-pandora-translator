@@ -60,8 +60,6 @@ namespace ast
         op_minus,
         op_times,
         op_divide,
-        op_positive,
-        op_negative,
         op_not,
         op_equal,
         op_not_equal,
