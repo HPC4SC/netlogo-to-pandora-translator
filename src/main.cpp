@@ -1,7 +1,7 @@
-#include "./Parser.cpp"
-#include "./Skipper.cpp"
-#include "./AST.hpp"
-//#include "./Printer.cpp"
+#include "Parser.cpp"
+#include "Skipper.cpp"
+#include "AST.hpp"
+#include "TypeInference.hpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <fstream>
