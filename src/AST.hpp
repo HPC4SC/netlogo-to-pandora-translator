@@ -14,6 +14,7 @@ namespace ast
     struct function_call;
     struct random_statement;
     struct count_agentset;
+    struct variable;
 
     enum agent_type {
         turtle,
@@ -45,6 +46,7 @@ namespace ast
         double,
         bool,
         std::string,
+        boost::recursive_wrapper<variable>,
         boost::recursive_wrapper<unary>,
         boost::recursive_wrapper<expression>,
         boost::recursive_wrapper<function_call>,
@@ -90,19 +92,23 @@ namespace ast
     struct function_call
     {
         std::string function_name;
-        std::list<std::string> args;
+        std::list<variable> args;
     };
 
-    struct assignment
-    {
+    struct variable {
         std::string name;
-        expression value;
     };
 
     struct variable_declaration
     {
-        std::string name;
+        variable name;
         boost::optional<expression> value;
+    };
+
+    struct assignment
+    {
+        variable name;
+        expression value;
     };
 
     struct if_statement;
@@ -372,18 +378,23 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     ast::function_call,
     (std::string, function_name)
-    (std::list<std::string>, args)
+    (std::list<ast::variable>, args)
+);
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::variable,
+    (std::string, name)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::variable_declaration,
-    (std::string, name)
+    (ast::variable, name)
     (boost::optional<ast::expression>, value)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::assignment,
-    (std::string, name)
+    (ast::variable, name)
     (ast::expression, value)
 );
 
