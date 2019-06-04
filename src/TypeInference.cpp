@@ -59,6 +59,46 @@ namespace inference {
                 default: return bool_type;
             }
         }
+
+        Types operator()(ast::variable_declaration& expr) const {
+            std::string name = expr.name.name;
+
+            if (expr.value) {
+                Types type = boost::apply_visitor(*this, expr.value);
+                variable_types[name] = type;
+                return type;
+            }
+
+            variable_types[name] = undefined_type;
+            return undefined_type; 
+        }
+        Types operator()(ast::assignment& expr) const {
+            std::string name = expr.name.name;
+            Types type = boost::apply_visitor(*this, expr.value);
+            variable_types[name] = type;
+            return type;
+        }
+        Types operator()(ast::single_word_statement& expr) const { return void_type; }
+        Types operator()(ast::setxy_statement& expr) const { return void_type; }
+        Types operator()(ast::ask_agentset& expr) const { return void_type; }
+        Types operator()(ast::ask_agent& expr) const { return void_type; }
+        Types operator()(ast::create_agentset& expr) const { return void_type; }
+        Types operator()(ast::move_statement& expr) const { return void_type; }
+        Types operator()(ast::if_statement& expr) const {
+            boost::apply_visitor(*this, expr.then);
+            if (expr.else_) boost::apply_visitor(*this, expr.else_);
+
+            return void_type; 
+        }
+        Types operator()(ast::while_statement& expr) const {
+            boost::apply_visitor(*this, expr.body);
+
+            return void_type; 
+        }
+        Types operator()(ast::statement_list& expr) const {
+            BOOST_FOREACH(ast::statement const& st, expr) boost::apply_visitor(*this, st);
+            return void_type; 
+        }
     };
 }
 
