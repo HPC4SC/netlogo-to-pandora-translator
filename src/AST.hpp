@@ -95,14 +95,14 @@ namespace ast
 
     struct assignment
     {
-        std::string lhs;
-        expression rhs;
+        std::string name;
+        expression value;
     };
 
     struct variable_declaration
     {
-        std::string lhs;
-        boost::optional<expression> rhs;
+        std::string name;
+        boost::optional<expression> value;
     };
 
     struct if_statement;
@@ -377,14 +377,14 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::variable_declaration,
-    (std::string, lhs)
-    (boost::optional<ast::expression>, rhs)
+    (std::string, name)
+    (boost::optional<ast::expression>, value)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::assignment,
-    (std::string, lhs)
-    (ast::expression, rhs)
+    (std::string, name)
+    (ast::expression, value)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
