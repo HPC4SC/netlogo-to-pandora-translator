@@ -42,17 +42,26 @@ int main (int argc, char **argv)
     iterator_type iter = source_code.begin();
     iterator_type end = source_code.end();
     
-    ast::expression ast;
-    parser::expression<iterator_type> parser;
+    ast::statement_list ast;
+    parser::statement<iterator_type> parser;
     parser::skipper<iterator_type> skipper;
 
     inference::Inferer inferer;
 
     try
     {
-        bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
+        bool ok = qi::phrase_parse(iter, end, *parser, skipper, ast);
         inference::Types type = inferer(ast);
+        
         std::cout << type << std::endl;
+        std::cout << "Variables:" << std::endl;
+        for (auto it = inference::variable_types.begin(); it != inference::variable_types.end(); ++it) {
+            std::cout << it->first << " -> " << it->second << std::endl;
+        }
+        std::cout << "Functions:" << std::endl;
+        for (auto it = inference::function_types.begin(); it != inference::function_types.end(); ++it) {
+            std::cout << it->first << " -> " << it->second << std::endl;
+        }
         /*std::string s = testing::getString(ast);
 
         if (!ok)

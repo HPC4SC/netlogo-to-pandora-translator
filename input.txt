@@ -1,1 +1,3 @@
-5 * 4 > 3 / 2
+set sick? false
+set remaining-immunity 0
+set sick-time 0
