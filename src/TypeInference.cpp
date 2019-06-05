@@ -16,6 +16,7 @@ namespace inference {
     std::map<std::string, enum Types> function_types;
     std::map<std::string, std::list<enum Types> > function_args_types;
     std::map<std::string, enum Types> variable_types;
+    std::map<std::string, enum Types> global_variable_types;
 
     struct Inferer : boost::static_visitor<enum Types> {
         Inferer () {}
@@ -39,11 +40,17 @@ namespace inference {
         ////
 
         Types operator()(const ast::variable& expr) const { 
-            auto it = variable_types.find(expr.name);
-            if (it == variable_types.end())
-                return undefined_type;
+            auto global_var = global_variable_types.find(expr.name);
+            if (global_var != global_variable_types.end()) {
+                return global_var->second;
+            }
 
-            return it->second;
+            auto local_var = variable_types.find(expr.name);
+            if (local_var != variable_types.end()) {
+                return local_var->second;
+            }
+
+            return undefined_type;
         }
         Types operator()(const ast::function_call& expr) const { 
             auto it = function_types.find(expr.function_name);
@@ -53,7 +60,20 @@ namespace inference {
             std::list<Types> args_types;
             for (auto it = expr.args.begin(); it != expr.args.end(); ++it) {
                 std::string var_name = (*it).name;
-                args_types.push_back(variable_types[var_name]);
+                
+                auto global_var = global_variable_types.find(var_name);
+                if (global_var != global_variable_types.end()) {
+                    auto var = *global_var;
+                    args_types.push_back(var.second);
+                }
+
+                auto local_var = variable_types.find(var_name);
+                if (local_var != variable_types.end()) {
+                    auto var = *local_var;
+                    args_types.push_back(var.second);
+                }
+
+                args_types.push_back(undefined_type);
             }
 
             return it->second;
@@ -113,7 +133,27 @@ namespace inference {
             return void_type; 
         }
 
+        Types operator()(const ast::function& expr) const {
+            variable_types.clear();
 
+            this->setFunctionArgumentTypes(expr.function_name, expr.args);
+            (*this)(expr.body); // Find local variables on the body and annotate types
+            if (expr.return_.expr) {
+                (*this)(*(expr.return_.expr));
+            }
+            return void_type;
+        }
+
+
+
+        void setFunctionArgumentTypes (std::string name, std::list<std::string> args) const {
+            std::list<Types> arg_types = function_args_types[name];
+            auto it2 = arg_types.begin();
+            for (auto it = args.begin(); it != args.end(); ++it) {
+                variable_types[*it] = *it2;
+                ++it2;
+            }
+        }
     };
 }
 
