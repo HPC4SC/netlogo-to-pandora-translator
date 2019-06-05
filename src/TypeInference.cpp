@@ -14,6 +14,7 @@ namespace inference {
     };
 
     std::map<std::string, enum Types> function_types;
+    std::map<std::string, std::list<enum Types> > function_args_types;
     std::map<std::string, enum Types> variable_types;
 
     struct Inferer : boost::static_visitor<enum Types> {
@@ -48,6 +49,12 @@ namespace inference {
             auto it = function_types.find(expr.function_name);
             if (it == function_types.end())
                 return undefined_type;
+
+            std::list<Types> args_types;
+            for (auto it = expr.args.begin(); it != expr.args.end(); ++it) {
+                std::string var_name = (*it).name;
+                args_types.push_back(variable_types[var_name]);
+            }
 
             return it->second;
         }
@@ -106,7 +113,7 @@ namespace inference {
             return void_type; 
         }
 
-        
+
     };
 }
 

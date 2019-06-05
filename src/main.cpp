@@ -62,6 +62,14 @@ int main (int argc, char **argv)
         for (auto it = inference::function_types.begin(); it != inference::function_types.end(); ++it) {
             std::cout << it->first << " -> " << it->second << std::endl;
         }
+        std::cout << "Function args:" << std::endl;
+        for (auto it = inference::function_args_types.begin(); it != inference::function_args_types.end(); ++it) {
+            std::cout << it->first << " -> ";
+            for (auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
+                std::cout << *it2 << " ";
+            }
+            std::cout << std::endl;
+        }
         /*std::string s = testing::getString(ast);
 
         if (!ok)
