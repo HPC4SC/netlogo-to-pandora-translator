@@ -212,10 +212,12 @@ namespace ast
         boost::optional<expression> expr;
     };
 
+    typedef boost::optional<std::list<std::string>> function_args;
+
     struct function
     {
         std::string function_name;
-        std::list<std::string> args;
+        function_args args;
         statement_list body;
         return_statement return_;
     };
@@ -418,7 +420,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     ast::function,
     (std::string, function_name)
-    (std::list<std::string>, args)
+    (ast::function_args, args)
     (ast::statement_list, body)
     (ast::return_statement, return_)
 );

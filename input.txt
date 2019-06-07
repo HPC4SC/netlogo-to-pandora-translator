@@ -6,18 +6,19 @@ globals
     carrying-capacity    ;; the number of turtles that can be in the world at one time
     immunity-duration ]  ;; how many weeks immunity lasts
 
-to setup-constants []
+to setup-constants
   set lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
   set carrying-capacity 300
   set chance-reproduce 1
   set immunity-duration 52
 end
 
-to go []
+to go
   ask turtles [
     set lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
     set carrying-capacity 300
     set chance-reproduce 1
     set immunity-duration 52
   ]
+  report 5
 end

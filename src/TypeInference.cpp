@@ -143,7 +143,10 @@ namespace inference {
         Types operator()(const ast::function& expr) const {
             //variable_types.clear();
 
-            this->setFunctionArgumentTypes(expr.function_name, expr.args);
+            if (expr.args) {
+                this->setFunctionArgumentTypes(expr.function_name, *(expr.args));
+            }
+            
             (*this)(expr.body); // Find local variables on the body and annotate types
             if (expr.return_.expr) {
                 Types ret_type = (*this)(*(expr.return_.expr));

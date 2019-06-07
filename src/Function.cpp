@@ -13,9 +13,11 @@ namespace parser {
     namespace qi = boost::spirit::qi;
     namespace phx = boost::phoenix;
 
-    ast::function store_function (std::string name, std::list<std::string> args, ast::statement_list body, ast::return_statement return_) {
-        f_args.add(name, args.size());
-        std::cout << name << " " <<  args.size() << std::endl;
+    ast::function store_function (std::string name, ast::function_args args, ast::statement_list body, ast::return_statement return_) {
+        int num_args = args ? (*args).size() : 0;
+        f_args.add(name, num_args);
+        
+        std::cout << name << " " << num_args << std::endl;
         ast::function ret_value = { name, args, body, return_ };
         return ret_value;
     }
@@ -30,7 +32,7 @@ namespace parser {
             name = !keywords >> !lexeme[f_args >> !(alnum | '_')] >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '%')]];
 
             identifier = name;
-            argument_list = *identifier;
+            argument_list = -('[' > *identifier > ']');
 
             return_statement = -(lit("report") > expr);
 
@@ -39,7 +41,7 @@ namespace parser {
             function_ = (
                     (lit("to-report") | lit("to") )
                 >   identifier 
-                >   ('[' > argument_list > ']')
+                >   argument_list
                 >   body_
                 >   return_statement
                 >   lexeme[string("end") >> !(alnum | '_')]
@@ -51,7 +53,7 @@ namespace parser {
 
         qi::rule<It, std::string(), skipper<It> > name;
         qi::rule<It, std::string(), skipper<It> > identifier;
-        qi::rule<It, std::list<std::string>(), skipper<It> > argument_list;
+        qi::rule<It, ast::function_args(), skipper<It> > argument_list;
         qi::rule<It, ast::return_statement(), skipper<It> > return_statement;
         qi::rule<It, ast::statement_list(), skipper<It> > body_;
         qi::rule<It, ast::function(), skipper<It> > function_, command, reporter;
