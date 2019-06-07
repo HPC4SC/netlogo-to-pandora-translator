@@ -7,7 +7,7 @@ globals
     immunity-duration ]  ;; how many weeks immunity lasts
 
 to setup-constants
-  set lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
+  set lifespan random-xcor      ;; 50 times 52 weeks = 50 years = 2600 weeks old
   set carrying-capacity 300
   set chance-reproduce 1
   set immunity-duration 52

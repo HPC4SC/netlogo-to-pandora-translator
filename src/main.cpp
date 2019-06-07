@@ -48,6 +48,12 @@ int main (int argc, char **argv)
 
     inference::Inferer inferer;
 
+    parser::f_args.add("random-xcor", 0);
+    parser::f_args.add("random-ycor", 0);
+
+    inference::function_types["random-xcor"] = inference::double_type;
+    inference::function_types["random-ycor"] = inference::double_type;
+
     try
     {
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
