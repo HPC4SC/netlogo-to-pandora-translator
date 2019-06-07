@@ -1,3 +1,14 @@
-set sick? false
-set remaining-immunity 0
-set sick-time 0
+globals
+  [ %infected            ;; what % of the population is infectious
+    %immune              ;; what % of the population is immune
+    lifespan             ;; the lifespan of a turtle
+    chance-reproduce     ;; the probability of a turtle generating an offspring each tick
+    carrying-capacity    ;; the number of turtles that can be in the world at one time
+    immunity-duration ]  ;; how many weeks immunity lasts
+
+to setup-constants []
+  set lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
+  set carrying-capacity 300
+  set chance-reproduce 1
+  set immunity-duration 52
+end

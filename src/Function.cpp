@@ -13,9 +13,11 @@ namespace parser {
     namespace qi = boost::spirit::qi;
     namespace phx = boost::phoenix;
 
-    void store_function (std::string name, std::list<std::string> args) {
+    ast::function store_function (std::string name, std::list<std::string> args, ast::statement_list body, ast::return_statement return_) {
         f_args.add(name, args.size());
         std::cout << name << " " <<  args.size() << std::endl;
+        ast::function ret_value = { name, args, body, return_ };
+        return ret_value;
     }
 
     template <typename It>
@@ -30,26 +32,18 @@ namespace parser {
             identifier = name;
             argument_list = *identifier;
 
-            return_statement = lexeme["report" >> !(alnum | '_')] > expr;
+            return_statement = -(lit("report") > expr);
 
-            command = (
-                    lexeme[string("to") >> !(alnum | '_')]
+            body_ = +statement_;
+
+            function_ = (
+                    (lit("to-report") | lit("to") )
                 >   identifier 
                 >   ('[' > argument_list > ']')
-                >   +statement_
-                >   lexeme[string("end") >> !(alnum | '_')]
-            ) [ phx::bind(&store_function, _2, _3) ];
-
-            reporter = (
-                    lexeme[string("to-report") >> !(alnum | '_')]
-                >   identifier 
-                >   ('[' > argument_list > ']')
-                >   +statement_
+                >   body_
                 >   return_statement
                 >   lexeme[string("end") >> !(alnum | '_')]
-            ) [ phx::bind(&store_function, _2, _3) ];
-
-            function_ = command | reporter;
+            ) [ _val = phx::bind(&store_function, _1, _2, _3, _4) ];
         }
 
         expression<It> expr;
@@ -59,6 +53,7 @@ namespace parser {
         qi::rule<It, std::string(), skipper<It> > identifier;
         qi::rule<It, std::list<std::string>(), skipper<It> > argument_list;
         qi::rule<It, ast::return_statement(), skipper<It> > return_statement;
+        qi::rule<It, ast::statement_list(), skipper<It> > body_;
         qi::rule<It, ast::function(), skipper<It> > function_, command, reporter;
     };
 }

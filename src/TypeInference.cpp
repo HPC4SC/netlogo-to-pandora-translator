@@ -114,7 +114,14 @@ namespace inference {
         Types operator()(const ast::assignment& expr) const {
             std::string name = expr.name.name;
             Types type = (*this)(expr.value);
-            variable_types[name] = type;
+
+            auto global_var = global_variable_types.find(name);
+            if (global_var != global_variable_types.end()) {
+                global_variable_types[name] = type;
+            }
+            else {
+                variable_types[name] = type;
+            }
             return type;
         }
         Types operator()(const ast::if_statement& expr) const {
@@ -134,12 +141,44 @@ namespace inference {
         }
 
         Types operator()(const ast::function& expr) const {
-            variable_types.clear();
+            //variable_types.clear();
 
             this->setFunctionArgumentTypes(expr.function_name, expr.args);
             (*this)(expr.body); // Find local variables on the body and annotate types
             if (expr.return_.expr) {
-                (*this)(*(expr.return_.expr));
+                Types ret_type = (*this)(*(expr.return_.expr));
+                function_types[expr.function_name] = ret_type;
+                return ret_type;
+            }
+            function_types[expr.function_name] = void_type;
+            return void_type;
+        }
+
+        Types operator()(const ast::agent& expr) const {
+            for (auto it = expr.attributes.begin(); it != expr.attributes.end(); ++it) {
+                global_variable_types[*it] = undefined_type;
+            }
+
+            return void_type;
+        }
+
+        Types operator()(const ast::configuration& expr) const {
+            for (auto it = expr.agents.begin(); it != expr.agents.end(); ++it) {
+                (*this)(*it);
+            }
+
+            for (auto it = expr.globals.begin(); it != expr.globals.end(); ++it) {
+                global_variable_types[*it] = undefined_type;
+            }
+            
+            return void_type;
+        }
+
+
+        Types operator()(const ast::parser& expr) const {
+            (*this)(expr.config);
+            for (auto it = expr.functions.begin(); it != expr.functions.end(); ++it) {
+                (*this)(*it);
             }
             return void_type;
         }

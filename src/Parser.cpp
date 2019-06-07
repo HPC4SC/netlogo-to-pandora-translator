@@ -26,14 +26,15 @@ namespace parser {
             // TODO: Check why using Variable.cpp here slows down a lot the parser
             variable = raw[lexeme[(alpha | '_' | '%') >> *(alnum | '_' | '-' | '?' | '%')]];
 
-            agents = *( (turtle | patch ) >
+            agents = *( (turtle | patch ) >>
                 '[' > +variable > ']');
 
-            globals = lit("globals") >
+            globals = lit("globals") >>
                 '[' > +variable > ']';
 
-            start = (agents ^ globals) >>
-                +function_;
+            functions = +function_;
+
+            start = (agents ^ globals) >> functions;
         }
 
         function<It> function_;
@@ -41,6 +42,7 @@ namespace parser {
         qi::rule<It, std::string(), skipper<It> > variable;
         qi::rule<It, std::list<ast::agent>(), skipper<It> > agents;
         qi::rule<It, std::list<std::string>(), skipper<It> > globals;
+        qi::rule<It, ast::function_list(), skipper<It> > functions;
         qi::rule<It, ast::parser(), skipper<It> > start;
 
         qi::symbols<char, ast::agent_type> turtle, patch, link, observer;

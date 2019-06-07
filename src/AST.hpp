@@ -235,6 +235,7 @@ namespace ast
     
     typedef std::list<agent> agent_list;
     typedef std::list<std::string> global_list;
+    typedef std::list<function> function_list;
 
     struct create_agentset {
         agent_type type;
@@ -269,7 +270,7 @@ namespace ast
     struct parser
     {
         configuration config;
-        std::list<function> functions;
+        function_list functions;
     };
 }
 
@@ -352,7 +353,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     ast::parser,
     (ast::configuration, config)
-    (std::list<ast::function>, functions)
+    (ast::function_list, functions)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -416,10 +417,10 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::function,
-    (std::string, return_type)
     (std::string, function_name)
     (std::list<std::string>, args)
     (ast::statement_list, body)
+    (ast::return_statement, return_)
 );
 
 BOOST_FUSION_ADAPT_STRUCT(
