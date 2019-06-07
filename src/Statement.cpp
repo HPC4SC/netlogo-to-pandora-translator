@@ -52,20 +52,19 @@ namespace parser {
                         if_statement |
                         while_statement;
 
-            variable_declaration = lexeme["let" >> !(alnum | '_')] > var >> -(expr);
+            variable_declaration = lit("let") > var >> -(expr);
 
-            assignment = lexeme["set" >> !(alnum | '_')] > var > expr;
+            assignment = lit("set") > var > expr;
 
             if_statement = 
-                    lexeme["if" >> !(alnum | '_')] > expr > '[' > +statement_ > ']' 
-                        > -( lexeme["else" >> !(alnum | '_')] > +statement_ )
-                |   lexeme["ifelse" >> !(alnum | '_')] > expr > '[' > +statement_ > ']' > '[' > +statement_ > ']';
+                    "if" > expr > '[' > +statement_ > ']' > -( "else" > +statement_ )
+                |   "ifelse" > expr > '[' > +statement_ > ']' > '[' > +statement_ > ']';
 
 
             while_statement = lit("while") > '[' > expr > ']' > '[' > +statement_ > ']';
 
-            ask_agent = lexeme["ask" >> !(alnum | '_')] >> lexeme[agent >> !(alnum | '_')] > expr > '[' > +statement_ > ']';
-            ask_agentset = lexeme["ask" >> !(alnum | '_')] >> agentset_expression_ > '[' > +statement_ > ']';
+            ask_agent = "ask" >> agent >> expr >> '[' >> +statement_ >> ']';
+            ask_agentset = "ask" >> agentset_expression_ >> '[' >> +statement_ >> ']';
 
             create_agentset = "create-" > agentset > expr > -('[' > +statement_ > ']');
 

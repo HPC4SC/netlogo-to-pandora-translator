@@ -12,3 +12,12 @@ to setup-constants []
   set chance-reproduce 1
   set immunity-duration 52
 end
+
+to go []
+  ask turtles [
+    set lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
+    set carrying-capacity 300
+    set chance-reproduce 1
+    set immunity-duration 52
+  ]
+end
