@@ -2,7 +2,7 @@
 to-report funcname
   let lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
   let carrying-capacity 300
-  let chance-reproduce 1
+  let chance-reproduce "asd"
   let immunity-duration 52
   report immunity-duration
 end

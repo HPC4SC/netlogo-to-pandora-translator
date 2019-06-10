@@ -20,7 +20,7 @@ namespace generator {
     {
         std::string operator()(double& v) const { return boost::lexical_cast<std::string>(v); }
         std::string operator()(bool& b) const { return b ? "true" : "false"; }
-        std::string operator()(std::string& v) const { return v; }
+        std::string operator()(std::string& v) const { return  "\"" + v + "\""; }
         std::string operator()(ast::variable& e) const { return e.name; }
         std::string operator()(ast::unary& e) const { return getString(e); }
         std::string operator()(ast::expression& e) const { return getString(e); }
