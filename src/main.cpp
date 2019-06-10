@@ -2,7 +2,7 @@
 #include "Skipper.cpp"
 #include "AST.hpp"
 #include "TypeInference.cpp"
-#include "Printer.cpp"
+#include "FunctionGenerator.cpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <fstream>
@@ -43,8 +43,8 @@ int main (int argc, char **argv)
     iterator_type iter = source_code.begin();
     iterator_type end = source_code.end();
     
-    ast::expression ast;
-    parser::expression<iterator_type> parser;
+    ast::function ast;
+    parser::function<iterator_type> parser;
     parser::skipper<iterator_type> skipper;
 
     inference::Inferer inferer;
@@ -55,15 +55,11 @@ int main (int argc, char **argv)
     inference::function_types["random-xcor"] = inference::double_type;
     inference::function_types["random-ycor"] = inference::double_type;
 
-    generator::visitor printer;
-
     try
     {
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
-        std::cout << printer(ast) << std::endl;
-/*
         inference::Types type = inferer(ast);
-        
+ /*
         std::cout << type << std::endl;
         std::cout << "Variables:" << std::endl;
         for (auto it = inference::variable_types.begin(); it != inference::variable_types.end(); ++it) {
@@ -81,7 +77,8 @@ int main (int argc, char **argv)
             }
             std::cout << std::endl;
         }
-*/
+ */
+        std::cout << generator::getString(ast) << std::endl;
     } catch (const qi::expectation_failure<iterator_type>& e)
     {
         std::cerr << "expectation_failure at '" << std::string(e.first, e.last) << "'\n";

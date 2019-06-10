@@ -61,6 +61,8 @@ namespace parser {
                 ("else")
                 ("ifelse")
                 ("while")
+                ("let")
+                ("set")
                 ;
 
 

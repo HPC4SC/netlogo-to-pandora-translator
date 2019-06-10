@@ -140,6 +140,11 @@ namespace inference {
             return void_type; 
         }
 
+        Types operator()(const ast::statement& expr) const {
+            boost::apply_visitor(*this, expr);
+            return void_type; 
+        }
+
         Types operator()(const ast::function& expr) const {
             //variable_types.clear();
 

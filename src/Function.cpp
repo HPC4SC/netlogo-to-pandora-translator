@@ -17,7 +17,6 @@ namespace parser {
         int num_args = args ? (*args).size() : 0;
         f_args.add(name, num_args);
         
-        std::cout << name << " " << num_args << std::endl;
         ast::function ret_value = { name, args, body, return_ };
         return ret_value;
     }

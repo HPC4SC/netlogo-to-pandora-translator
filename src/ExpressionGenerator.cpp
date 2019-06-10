@@ -16,7 +16,7 @@ namespace generator {
     std::string getString(ast::random_statement& op);
     std::string getString(ast::variable& op);
 
-    struct visitor : boost::static_visitor<std::string>
+    struct expression_visitor : boost::static_visitor<std::string>
     {
         std::string operator()(double& v) const { return boost::lexical_cast<std::string>(v); }
         std::string operator()(bool& b) const { return b ? "true" : "false"; }
@@ -30,7 +30,7 @@ namespace generator {
 
     std::string getString(ast::expression& e) {
         std::string result;
-        std::string s = boost::apply_visitor(visitor(), e.first);
+        std::string s = boost::apply_visitor(expression_visitor(), e.first);
 
         if (e.rest.size() > 0) {
             result = "( " + s;
@@ -46,7 +46,6 @@ namespace generator {
         return result;
     }
 
-    
     std::string getString(ast::variable& op) {
         return op.name;
     }
@@ -66,12 +65,12 @@ namespace generator {
     }
 
     std::string getString(ast::unary& op) {
-        std::string s = boost::apply_visitor(visitor(), op.operand_);
+        std::string s = boost::apply_visitor(expression_visitor(), op.operand_);
         return getString(op.operator_) + s;
     }
 
     std::string getString(ast::operation& op) {
-        std::string s = boost::apply_visitor(visitor(), op.operand_);
+        std::string s = boost::apply_visitor(expression_visitor(), op.operand_);
         return " " + getString(op.operator_) + " " + s;
     }
 
