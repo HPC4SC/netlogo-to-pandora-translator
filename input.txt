@@ -1,8 +1,16 @@
 
-to-report funcname
+to-report setup
   let lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
   let carrying-capacity 300
   let chance-reproduce "asd"
   let immunity-duration 52
+  report immunity-duration
+end
+
+to-report setup-vars
+  let lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
+  let carrying-capacity 300
+  let chance-reproduce lifespan
+  let immunity-duration "52"
   report immunity-duration
 end

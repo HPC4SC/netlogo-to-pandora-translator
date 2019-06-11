@@ -146,7 +146,7 @@ namespace inference {
         }
 
         Types operator()(const ast::function& expr) const {
-            //variable_types.clear();
+            variable_types.clear();
 
             if (expr.args) {
                 this->setFunctionArgumentTypes(expr.function_name, *(expr.args));
@@ -159,6 +159,12 @@ namespace inference {
                 return ret_type;
             }
             function_types[expr.function_name] = void_type;
+            return void_type;
+        }
+
+        Types operator()(const ast::function_list& expr) const {
+            for (auto it = expr.begin(); it != expr.end(); ++it)
+                (*this)(*it);
             return void_type;
         }
 

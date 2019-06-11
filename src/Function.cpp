@@ -28,7 +28,7 @@ namespace parser {
         {
             using namespace qi;
 
-            name = !keywords >> !lexeme[f_args >> !(alnum | '_')] >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '%')]];
+            name = !(keywords >> ' ') >> !(f_args >> ' ') >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '%')]];
 
             identifier = name;
             argument_list = -('[' > *identifier > ']');

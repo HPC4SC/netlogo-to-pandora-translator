@@ -61,4 +61,12 @@ namespace generator {
 
         return res;
     }
+
+    std::string getString(ast::function_list& e) {
+
+        std::string res = "";
+        for (auto it = e.begin(); it != e.end(); ++it)
+            res += getString(*it);
+        return res;
+    }
 }

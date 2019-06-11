@@ -43,7 +43,7 @@ int main (int argc, char **argv)
     iterator_type iter = source_code.begin();
     iterator_type end = source_code.end();
     
-    ast::function ast;
+    ast::function_list ast;
     parser::function<iterator_type> parser;
     parser::skipper<iterator_type> skipper;
 
@@ -57,7 +57,7 @@ int main (int argc, char **argv)
 
     try
     {
-        bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
+        bool ok = qi::phrase_parse(iter, end, *parser, skipper, ast);
         inference::Types type = inferer(ast);
  /*
         std::cout << type << std::endl;
