@@ -78,7 +78,10 @@ int main (int argc, char **argv)
             std::cout << std::endl;
         }
  */
-        std::cout << generator::getString(ast) << std::endl;
+        std::ofstream myfile;
+        myfile.open("build/output.cpp");
+        myfile << generator::getString(ast);
+        myfile.close();
     } catch (const qi::expectation_failure<iterator_type>& e)
     {
         std::cerr << "expectation_failure at '" << std::string(e.first, e.last) << "'\n";

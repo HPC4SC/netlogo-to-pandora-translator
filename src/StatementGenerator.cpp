@@ -29,7 +29,7 @@ namespace generator {
     };
 
     std::string statement_visitor::operator()(ast::variable_declaration& e) const {
-        std::string var_name = e.name.name;
+        std::string var_name = removeInvalidChars(e.name.name);
         inference::Types type = inference::variable_types[var_name];
 
         std::string result = "";
@@ -48,7 +48,7 @@ namespace generator {
     }
 
     std::string statement_visitor::operator()(ast::assignment& e) const {  
-        return e.name.name + " = " + getString(e.value) + ";\n";
+        return removeInvalidChars(e.name.name) + " = " + getString(e.value) + ";\n";
     }
 
     std::string statement_visitor::operator()(ast::single_word_statement& e) const {

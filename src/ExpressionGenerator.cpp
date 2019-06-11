@@ -4,6 +4,7 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/variant/recursive_wrapper.hpp>
 #include <string>
+#include <algorithm>
 
 #include "AST.hpp"
 
@@ -16,12 +17,19 @@ namespace generator {
     std::string getString(ast::random_statement& op);
     std::string getString(ast::variable& op);
 
+    std::string removeInvalidChars (std::string name) {
+        name.erase(std::remove(name.begin(), name.end(), '-'), name.end());
+        name.erase(std::remove(name.begin(), name.end(), '?'), name.end());
+        name.erase(std::remove(name.begin(), name.end(), '%'), name.end());
+        return name;
+    }
+
     struct expression_visitor : boost::static_visitor<std::string>
     {
         std::string operator()(double& v) const { return boost::lexical_cast<std::string>(v); }
         std::string operator()(bool& b) const { return b ? "true" : "false"; }
         std::string operator()(std::string& v) const { return  "\"" + v + "\""; }
-        std::string operator()(ast::variable& e) const { return e.name; }
+        std::string operator()(ast::variable& e) const { return removeInvalidChars(e.name); }
         std::string operator()(ast::unary& e) const { return getString(e); }
         std::string operator()(ast::expression& e) const { return getString(e); }
         std::string operator()(ast::function_call& e) const { return getString(e); }
@@ -57,7 +65,7 @@ namespace generator {
         for (it; it != op.args.end(); ++it) {
             args += ", " + getString(*it);
         }
-        return op.function_name + "(" + args + ")";
+        return removeInvalidChars(op.function_name) + "(" + args + ")";
     }
 
     std::string getString(ast::random_statement& op) {

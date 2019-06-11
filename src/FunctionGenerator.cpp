@@ -50,7 +50,7 @@ namespace generator {
     }
 
     std::string getString(ast::function& e) {
-        std::string f_name = e.function_name;
+        std::string f_name = removeInvalidChars(e.function_name);
         inference::Types f_type = inference::function_types[f_name];
 
         std::string res = getString(f_type) + " " + f_name + getString(f_name, e.args);
