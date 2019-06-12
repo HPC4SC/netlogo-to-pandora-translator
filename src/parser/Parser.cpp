@@ -7,9 +7,18 @@
 #include "Skipper.cpp"
 
 #include <boost/spirit/include/qi.hpp>
+#include <map>
 
 namespace parser {
     namespace qi = boost::spirit::qi;
+
+    ast::function_list generate_function_map (std::vector<ast::function, std::allocator<ast::function> > functions) {
+        ast::function_list ret;
+        for (auto it = functions.begin(); it != functions.end(); ++it) {
+            ret[it->function_name] = *it;
+        }
+        return ret;
+    }
 
     template <typename It>
     struct parser : qi::grammar<It, ast::main(), skipper<It> >
@@ -32,7 +41,7 @@ namespace parser {
             globals = lit("globals") >>
                 '[' > +variable > ']';
 
-            functions = +function_;
+            functions = (+function_) [ _val = phx::bind(&generate_function_map, _1) ];
 
             start = (agents ^ globals) >> functions;
         }

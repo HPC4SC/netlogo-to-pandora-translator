@@ -69,7 +69,7 @@ namespace generator {
 
         std::string res = "";
         for (auto it = e.begin(); it != e.end(); ++it)
-            res += getString(*it);
+            res += getString(it->second);
         return res;
     }
 }

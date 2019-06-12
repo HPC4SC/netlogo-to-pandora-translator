@@ -164,7 +164,7 @@ namespace inference {
 
         Types operator()(const ast::function_list& expr) const {
             for (auto it = expr.begin(); it != expr.end(); ++it)
-                (*this)(*it);
+                (*this)(it->second);
             return void_type;
         }
 
@@ -192,7 +192,7 @@ namespace inference {
         Types operator()(const ast::main& expr) const {
             (*this)(expr.config);
             for (auto it = expr.functions.begin(); it != expr.functions.end(); ++it) {
-                (*this)(*it);
+                (*this)(it->second);
             }
             return void_type;
         }

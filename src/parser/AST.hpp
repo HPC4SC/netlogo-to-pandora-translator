@@ -6,6 +6,7 @@
 #include <boost/variant/recursive_wrapper.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <list>
+#include <map>
 
 namespace ast
 {
@@ -236,7 +237,7 @@ namespace ast
     
     typedef std::list<agent> agent_list;
     typedef std::list<std::string> global_list;
-    typedef std::list<function> function_list;
+    typedef std::map<std::string, function> function_list;
 
     struct create_agentset {
         agent_type type;
