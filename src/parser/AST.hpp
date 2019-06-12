@@ -268,7 +268,7 @@ namespace ast
         global_list globals;
     };
 
-    struct parser
+    struct main
     {
         configuration config;
         function_list functions;
@@ -352,7 +352,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
-    ast::parser,
+    ast::main,
     (ast::configuration, config)
     (ast::function_list, functions)
 )

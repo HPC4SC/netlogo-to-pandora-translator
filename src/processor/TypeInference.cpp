@@ -1,7 +1,7 @@
 #ifndef TYPE_INFERENCE_CPP
 #define TYPE_INFERENCE_CPP
 
-#include "AST.hpp"
+#include "../parser/AST.hpp"
 
 namespace inference {
 
@@ -189,7 +189,7 @@ namespace inference {
         }
 
 
-        Types operator()(const ast::parser& expr) const {
+        Types operator()(const ast::main& expr) const {
             (*this)(expr.config);
             for (auto it = expr.functions.begin(); it != expr.functions.end(); ++it) {
                 (*this)(*it);

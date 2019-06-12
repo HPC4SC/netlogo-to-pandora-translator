@@ -1,3 +1,6 @@
+#ifndef STATEMENT_GEN
+#define STATEMENT_GEN
+
 #include <boost/lexical_cast.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix.hpp>
@@ -6,8 +9,8 @@
 #include <string>
 
 #include "ExpressionGenerator.cpp"
-#include "TypeInference.cpp"
-#include "AST.hpp"
+#include "../processor/TypeInference.cpp"
+#include "../parser/AST.hpp"
 
 namespace generator {
     std::string getString(ast::statement& e);
@@ -130,3 +133,5 @@ return "";
         return ret;
     }
 }
+
+#endif

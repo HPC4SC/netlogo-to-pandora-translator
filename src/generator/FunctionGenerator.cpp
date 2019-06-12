@@ -1,3 +1,6 @@
+#ifndef FUNCTION_GEN
+#define FUNCTION_GEN
+
 #include <boost/lexical_cast.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix.hpp>
@@ -6,8 +9,8 @@
 #include <string>
 
 #include "StatementGenerator.cpp"
-#include "TypeInference.cpp"
-#include "AST.hpp"
+#include "../processor/TypeInference.cpp"
+#include "../parser/AST.hpp"
 
 namespace generator {
     std::string getString(inference::Types type) {
@@ -70,3 +73,5 @@ namespace generator {
         return res;
     }
 }
+
+#endif

@@ -12,7 +12,7 @@ namespace parser {
     namespace qi = boost::spirit::qi;
 
     template <typename It>
-    struct parser : qi::grammar<It, ast::parser(), skipper<It> >
+    struct parser : qi::grammar<It, ast::main(), skipper<It> >
     {
         parser()  : parser::base_type(start)
         {
@@ -43,7 +43,7 @@ namespace parser {
         qi::rule<It, std::list<ast::agent>(), skipper<It> > agents;
         qi::rule<It, std::list<std::string>(), skipper<It> > globals;
         qi::rule<It, ast::function_list(), skipper<It> > functions;
-        qi::rule<It, ast::parser(), skipper<It> > start;
+        qi::rule<It, ast::main(), skipper<It> > start;
 
         qi::symbols<char, ast::agent_type> turtle, patch, link, observer;
     };

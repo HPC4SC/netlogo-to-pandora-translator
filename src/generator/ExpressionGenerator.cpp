@@ -1,3 +1,6 @@
+#ifndef EXPRESSION_GEN
+#define EXPRESSION_GEN
+
 #include <boost/lexical_cast.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix.hpp>
@@ -6,7 +9,7 @@
 #include <string>
 #include <algorithm>
 
-#include "AST.hpp"
+#include "../parser/AST.hpp"
 
 namespace generator {
     std::string getString(ast::expression& e);
@@ -101,3 +104,5 @@ namespace generator {
         return "undf";
     }
 }
+
+#endif

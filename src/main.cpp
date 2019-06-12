@@ -1,8 +1,9 @@
-#include "Parser.cpp"
-#include "Skipper.cpp"
-#include "AST.hpp"
-#include "TypeInference.cpp"
-#include "FunctionGenerator.cpp"
+#include "parser/Parser.cpp"
+#include "parser/Skipper.cpp"
+#include "parser/AST.hpp"
+#include "processor/TypeInference.cpp"
+#include "generator/FunctionGenerator.cpp"
+#include "generator/MainGenerator.cpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <fstream>
@@ -43,8 +44,8 @@ int main (int argc, char **argv)
     iterator_type iter = source_code.begin();
     iterator_type end = source_code.end();
     
-    ast::function_list ast;
-    parser::function<iterator_type> parser;
+    ast::main ast;
+    parser::parser<iterator_type> parser;
     parser::skipper<iterator_type> skipper;
 
     inference::Inferer inferer;
@@ -57,8 +58,9 @@ int main (int argc, char **argv)
 
     try
     {
-        bool ok = qi::phrase_parse(iter, end, *parser, skipper, ast);
-        inference::Types type = inferer(ast);
+        bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
+        inferer(ast);
+        generator::generate(ast);
  /*
         std::cout << type << std::endl;
         std::cout << "Variables:" << std::endl;
@@ -80,7 +82,7 @@ int main (int argc, char **argv)
  */
         std::ofstream myfile;
         myfile.open("build/output.cpp");
-        myfile << generator::getString(ast);
+        myfile << generator::getString(ast.functions);
         myfile.close();
     } catch (const qi::expectation_failure<iterator_type>& e)
     {
