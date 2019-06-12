@@ -10,18 +10,39 @@
 
 #include "FunctionGenerator.cpp"
 #include "GlobalsGenerator.cpp"
+#include "TurtleClassGenerator.cpp"
 #include "../processor/TypeInference.cpp"
 #include "../parser/AST.hpp"
 
 namespace generator {
 
-    void generate(ast::configuration& e) {
+    void generate_config(ast::configuration& e) {
         generate(e.globals);
-        // generate the Agent constructor here
+
+        for (auto it = e.agents.begin(); it != e.agents.end(); ++it) {
+            switch(it->type) {
+                case ast::turtle: generateTurtle(*it); break;
+                case ast::patch: break;
+            }
+        }
+    }
+
+    void generate_setup(ast::function& f) {
+        
+    }
+
+    void generate_go(ast::function& f) {
+
     }
 
     void generate(ast::main& e) {
-        generate(e.config);
+        generate_config(e.config);
+
+        if (e.functions.find("setup") != e.functions.end())
+            generate_setup(e.functions["setup"]);
+
+        if (e.functions.find("go") != e.functions.end())
+            generate_go(e.functions["go"]);
     }
 
 }

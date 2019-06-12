@@ -16,6 +16,7 @@ namespace parser {
     ast::function store_function (std::string name, ast::function_args args, ast::statement_list body, ast::return_statement return_) {
         int num_args = args ? (*args).size() : 0;
         f_args.add(name, num_args);
+        std::cout << name << " - " << num_args << std::endl;
         
         ast::function ret_value = { name, args, body, return_ };
         return ret_value;
