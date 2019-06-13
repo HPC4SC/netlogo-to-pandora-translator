@@ -63,10 +63,13 @@ namespace generator {
     
     std::string getString(ast::function_call& op) {
         auto it = op.args.begin();
-        std::string args = getString(*it);
-        ++it;
-        for (it; it != op.args.end(); ++it) {
-            args += ", " + getString(*it);
+        std::string args = "";
+        if (it != op.args.end()) {
+            args = getString(*it);
+            ++it;
+            for (it; it != op.args.end(); ++it) {
+                args += ", " + getString(*it);
+            }
         }
         return removeInvalidChars(op.function_name) + "(" + args + ")";
     }

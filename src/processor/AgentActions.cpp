@@ -33,10 +33,11 @@ namespace processor {
         void operator()(const ast::statement_list& e) const { }
         void operator()(const ast::function_call& e) const {
             func_queue.push(e.function_name);
-            std::cout << e.function_name << std::endl;
         }
         void operator()(const ast::ask_agentset& e) const { 
-            agent_actions["Action" + actionId] = e;
+            std::string action_name = "Action" + std::to_string(actionId);
+            agent_actions[action_name] = e;
+            ++actionId;
             std::cout << "Action: " << actionId << std::endl;
         }
         void operator()(const ast::ask_agent& e) const { 
@@ -47,14 +48,12 @@ namespace processor {
     void findAgentActions(ast::main& e) {
         FindAgentAction findAgentAction;
         func_queue.push("go");
-        std::cout << "go"<< std::endl;
         while (!func_queue.empty()) {
-            std::cout << "a"<< std::endl;
             std::string f_name = func_queue.front();
             ast::function f = e.functions[f_name];
-            std::cout << "Size: " << f.body.size() << std::endl;
-            BOOST_FOREACH(ast::statement const& st, f.body)
-                findAgentAction(st);
+            for (auto it = f.body.begin(); it != f.body.end(); ++it) {
+                boost::apply_visitor(findAgentAction, *it);
+            }
             func_queue.pop();
         }
     }

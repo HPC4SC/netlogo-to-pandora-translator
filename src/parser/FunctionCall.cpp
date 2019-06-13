@@ -12,6 +12,18 @@ namespace parser {
     namespace qi = boost::spirit::qi;
     namespace phx = boost::phoenix;
 
+    std::string check (std::string name) {
+        std::cout << "Check: " << name << std::endl;
+        n_args = f_args.at(name);
+        return name;
+    }
+
+    ast::function_call store (std::string name, std::vector<ast::variable> args) {
+        std::list<ast::variable> myList(args.begin(), args.end());
+        ast::function_call ret = { name, myList };
+        return ret;
+    }
+
     template <typename It>
     struct function_call : qi::grammar<It, ast::function_call(), skipper<It> >
     {
@@ -20,13 +32,18 @@ namespace parser {
             using namespace qi;
 
             function_name = 
-                !lexeme[keywords >> !(alnum | '_')] >> 
-                &lexeme[f_args [phx::ref(n_args) = _1] >> !(alnum | '_')] >> 
-                raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-')]];
+                (
+                    &f_args >> 
+                    raw[lexeme[*(alnum | '_' | '-' | '?' | '%')]]
+                );
 
-            start = 
-                function_name >> 
-                repeat( phx::ref(n_args) )[var];
+            start = (
+                function_name [ _1 = phx::bind(&check, _1) ] >> 
+                repeat( phx::ref(n_args) )[var]
+            ) [ _val = phx::bind(&store, _1, _2) ]
+            ;
+
+
         }
         
         variable<It> var;

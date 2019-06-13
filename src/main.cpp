@@ -1,3 +1,5 @@
+#define _GLIBCXX_USE_CXX11_ABI 0
+
 #include "parser/Parser.cpp"
 #include "parser/Skipper.cpp"
 #include "parser/AST.hpp"
@@ -63,7 +65,7 @@ int main (int argc, char **argv)
     {
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
         inferer(ast);
-        processor::FindAgentAction(ast);
+        processor::findAgentActions(ast);
         generator::generate(ast);
  /*
         std::cout << type << std::endl;

@@ -11,6 +11,7 @@
 #include "FunctionGenerator.cpp"
 #include "GlobalsGenerator.cpp"
 #include "TurtleClassGenerator.cpp"
+#include "ActionClassGenerator.cpp"
 #include "../processor/TypeInference.cpp"
 #include "../processor/AgentActions.cpp"
 #include "../parser/AST.hpp"
@@ -34,6 +35,9 @@ namespace generator {
 
     void generate_go(ast::function& f) {
 
+        for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
+            generateAction(it->first, (it->second).body);
+        }
     }
 
     void generate(ast::main& e) {
