@@ -33,13 +33,13 @@ namespace generator {
 
     std::string statement_visitor::operator()(ast::variable_declaration& e) const {
         std::string var_name = removeInvalidChars(e.name.name);
-        inference::Types type = inference::variable_types[var_name];
+        processor::Types type = processor::variable_types[var_name];
 
         std::string result = "";
         switch(type) {
-            case inference::string_type: result += "std::string " + var_name; break;
-            case inference::double_type: result += "double " + var_name; break;
-            case inference::bool_type: result += "bool " + var_name; break;
+            case processor::string_type: result += "std::string " + var_name; break;
+            case processor::double_type: result += "double " + var_name; break;
+            case processor::bool_type: result += "bool " + var_name; break;
             default: result += "auto " + var_name; break;
         }
 

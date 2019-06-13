@@ -1,9 +1,12 @@
 #include "parser/Parser.cpp"
 #include "parser/Skipper.cpp"
 #include "parser/AST.hpp"
-#include "processor/TypeInference.cpp"
+
 #include "generator/FunctionGenerator.cpp"
 #include "generator/MainGenerator.cpp"
+
+#include "processor/TypeInference.cpp"
+#include "processor/AgentActions.cpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <fstream>
@@ -48,31 +51,32 @@ int main (int argc, char **argv)
     parser::parser<iterator_type> parser;
     parser::skipper<iterator_type> skipper;
 
-    inference::Inferer inferer;
+    processor::Inferer inferer;
 
     parser::f_args.add("random-xcor", 0);
     parser::f_args.add("random-ycor", 0);
 
-    inference::function_types["random-xcor"] = inference::double_type;
-    inference::function_types["random-ycor"] = inference::double_type;
+    processor::function_types["random-xcor"] = processor::double_type;
+    processor::function_types["random-ycor"] = processor::double_type;
 
     try
     {
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
         inferer(ast);
+        processor::FindAgentAction(ast);
         generator::generate(ast);
  /*
         std::cout << type << std::endl;
         std::cout << "Variables:" << std::endl;
-        for (auto it = inference::variable_types.begin(); it != inference::variable_types.end(); ++it) {
+        for (auto it = processor::variable_types.begin(); it != processor::variable_types.end(); ++it) {
             std::cout << it->first << " -> " << it->second << std::endl;
         }
         std::cout << "Functions:" << std::endl;
-        for (auto it = inference::function_types.begin(); it != inference::function_types.end(); ++it) {
+        for (auto it = processor::function_types.begin(); it != processor::function_types.end(); ++it) {
             std::cout << it->first << " -> " << it->second << std::endl;
         }
         std::cout << "Function args:" << std::endl;
-        for (auto it = inference::function_args_types.begin(); it != inference::function_args_types.end(); ++it) {
+        for (auto it = processor::function_args_types.begin(); it != processor::function_args_types.end(); ++it) {
             std::cout << it->first << " -> ";
             for (auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
                 std::cout << *it2 << " ";

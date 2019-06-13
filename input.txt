@@ -58,3 +58,19 @@ to setup
   setup-turtles
   reset-ticks
 end
+
+;;Turtle counting variables are advanced.
+to get-older ;; turtle procedure
+  ;; Turtles die of old age once their age exceeds the
+  ;; lifespan (set at 50 years in this model).
+  set age age + 1
+  if age > lifespan [ die ]
+  if immune? [ set remaining-immunity remaining-immunity - 1 ]
+  if sick? [ set sick-time sick-time + 1 ]
+end
+
+to go
+  ask turtles [
+    get-older
+  ]
+end

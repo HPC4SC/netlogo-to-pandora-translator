@@ -12,6 +12,7 @@
 #include "GlobalsGenerator.cpp"
 #include "TurtleClassGenerator.cpp"
 #include "../processor/TypeInference.cpp"
+#include "../processor/AgentActions.cpp"
 #include "../parser/AST.hpp"
 
 namespace generator {

@@ -13,12 +13,12 @@
 #include "../parser/AST.hpp"
 
 namespace generator {
-    std::string getString(inference::Types type) {
+    std::string getString(processor::Types type) {
         switch(type) {
-            case inference::string_type: return "std::string";
-            case inference::double_type: return "double";
-            case inference::bool_type: return "bool";
-            case inference::void_type: return "void";
+            case processor::string_type: return "std::string";
+            case processor::double_type: return "double";
+            case processor::bool_type: return "bool";
+            case processor::void_type: return "void";
             default: return "auto";
         }
     }
@@ -35,7 +35,7 @@ namespace generator {
 
         if (e) {
             std::list<std::string> args = *e;
-            std::list<inference::Types> arg_types = inference::function_args_types[f_name];
+            std::list<processor::Types> arg_types = processor::function_args_types[f_name];
 
             auto it = args.begin();
             auto it_args = arg_types.begin();
@@ -54,7 +54,7 @@ namespace generator {
 
     std::string getString(ast::function& e) {
         std::string f_name = removeInvalidChars(e.function_name);
-        inference::Types f_type = inference::function_types[f_name];
+        processor::Types f_type = processor::function_types[f_name];
 
         std::string res = getString(f_type) + " " + f_name + getString(f_name, e.args);
         res += " {\n";

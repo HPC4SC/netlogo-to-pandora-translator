@@ -1,6 +1,8 @@
 #ifndef AGENT_GEN
 #define AGENT_GEN
 
+#include "../processor/AgentActions.cpp"
+
 namespace generator {
 
     std::string getClassInit() {
@@ -8,6 +10,10 @@ namespace generator {
                                 "#define __TurtleAgent_hxx__\n"
                                 "#include <Agent.hxx>\n"
                                 "#include <string>\n";
+        
+        for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
+            output += "#include <" + it->first + ".cxx>\n";
+        }
         // for each element on the actions list:
         // output += "#include <" + actionName + ".cxx>\n";
         return output;
@@ -22,11 +28,11 @@ namespace generator {
         for (auto it = myAgent.attributes.begin(); it != myAgent.attributes.end(); ++it) {
             std::string name = removeInvalidChars(*it);
 
-            inference::Types t = inference::global_variable_types[*it];
+            processor::Types t = processor::global_variable_types[*it];
             switch(t) {
-                case inference::string_type: result += "std::string " + name + ";\n"; break;
-                case inference::double_type: result += "double " + name + ";\n"; break;
-                case inference::bool_type: result += "bool " + name + ";\n"; break;
+                case processor::string_type: result += "std::string " + name + ";\n"; break;
+                case processor::double_type: result += "double " + name + ";\n"; break;
+                case processor::bool_type: result += "bool " + name + ";\n"; break;
                 default: result += "auto " + name + ";\n"; break;
             }
         }
@@ -44,7 +50,7 @@ namespace generator {
 
     std::string generateClass(ast::agent myAgent) {
         std::string ret = "class Turtle : public Engine::Agent {\n";
-        ret += "public:\n"
+        ret += "public:\n";
         ret += getAttributes(myAgent);
         ret += "Turtle(const std::string & id) : Agent(id) {}\n";
         ret += "~Turtle() {}\n";

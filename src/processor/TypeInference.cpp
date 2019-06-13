@@ -3,7 +3,7 @@
 
 #include "../parser/AST.hpp"
 
-namespace inference {
+namespace processor {
 
     enum Types {
         string_type,
