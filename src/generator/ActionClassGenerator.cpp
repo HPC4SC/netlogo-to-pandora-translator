@@ -11,12 +11,19 @@ namespace generator {
         return ret + "}\n";
     }
 
-    std::string getAxiliaryFunctions (ast::statement_list body) {
+    std::string getAuxiliaryFunctions (ast::statement_list body) {
+        std::string ret = "";
 
-        // This function will look at any function_call on the body of the action
-        // if exists any function call, it will include it in the code of the class
+        for (auto it = body.begin(); it != body.end(); ++it) {
+            if ((*it).which() == 4) { // Id 4 is the function_call id inside the statement variant
+                ast::function_call f_call = boost::get<ast::function_call>(*it);
+                std::string f_name = f_call.function_name;
+
+                ret += getString(parser::f_list[f_name]);
+            }
+        }
         
-        return "";
+        return ret;
     }
 
     std::string generateClass(std::string actionName, ast::statement_list body) {
@@ -24,8 +31,8 @@ namespace generator {
         ret += "public:\n";
         ret += actionName + "(const std::string & id) : Agent(id) {}\n";
         ret += "~" + actionName + "() {}\n";
+        ret += getAuxiliaryFunctions(body);
         ret += generateExecute(body);
-        ret += getAxiliaryFunctions(body);
         ret += "};\n";
         return ret;
     }
@@ -44,7 +51,7 @@ namespace generator {
         output += "#endif\n";
 
         std::ofstream myfile;
-        myfile.open("build/" + actionName + ".cpp");
+        myfile.open("build/" + actionName + ".cxx");
         myfile << output;
         myfile.close();
     }

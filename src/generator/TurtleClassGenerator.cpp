@@ -14,8 +14,7 @@ namespace generator {
         for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
             output += "#include <" + it->first + ".cxx>\n";
         }
-        // for each element on the actions list:
-        // output += "#include <" + actionName + ".cxx>\n";
+
         return output;
     }
 
@@ -43,7 +42,9 @@ namespace generator {
         std::string ret = "void selectActions() {\n";
 
         // for each element on the actions list:
-        // ret += "_actions.push_back(new " + actionName + "());"
+        for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
+            ret += "_actions.push_back(new " + it->first + "());";
+        }
 
         return ret + "}\n";
     }
@@ -63,7 +64,7 @@ namespace generator {
         std::string output = getClassInit() + generateClass(myAgent) + getClassEnd();
 
         std::ofstream myfile;
-        myfile.open("build/Turtle.cpp");
+        myfile.open("build/Turtle.cxx");
         myfile << output;
         myfile.close();
     }
