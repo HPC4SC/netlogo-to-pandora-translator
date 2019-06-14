@@ -33,7 +33,19 @@ namespace generator {
         ret += "public:\n";
         ret += actionName + "(const std::string & id) : Agent(id) {}\n";
         ret += "~" + actionName + "() {}\n";
-        ret += getAuxiliaryFunctions(body);
+
+        /*
+            AuxiliaryFunctions s'han de moure a la clase Turtle i de manera recursiva buscar totes les functionCalls
+            dins de tots els ask.
+
+            A les auxiliaryFunctions, si es troba un ask s'ha de fer un loop per les turtles i afegir el seu 
+            context (turtle.function_name(), per exemple)
+
+            El generateExecute només ha de cridar a les funcions de la turtle,
+            per tant s'ha de afegir el context del agent a cada crida/variable que s'accedeixi (agent.function_name(), per exemple)
+        */
+
+        //ret += getAuxiliaryFunctions(body);
         ret += generateExecute(body);
         ret += "};\n";
         return ret;
