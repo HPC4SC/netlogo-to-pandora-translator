@@ -59,6 +59,15 @@ to setup
   reset-ticks
 end
 
+to recursive-one ;; turtle procedure
+  ;; Turtles die of old age once their age exceeds the
+  ;; lifespan (set at 50 years in this model).
+  set age age + 1
+  if age > lifespan [ die ]
+  if immune? [ set remaining-immunity remaining-immunity - 1 ]
+  if sick? [ set sick-time sick-time + 1 ]
+end
+
 ;;Turtle counting variables are advanced.
 to get-older ;; turtle procedure
   ;; Turtles die of old age once their age exceeds the
@@ -67,6 +76,7 @@ to get-older ;; turtle procedure
   if age > lifespan [ die ]
   if immune? [ set remaining-immunity remaining-immunity - 1 ]
   if sick? [ set sick-time sick-time + 1 ]
+  recursive-one
 end
 
 to go

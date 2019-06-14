@@ -18,8 +18,10 @@ namespace generator {
             if ((*it).which() == 4) { // Id 4 is the function_call id inside the statement variant
                 ast::function_call f_call = boost::get<ast::function_call>(*it);
                 std::string f_name = f_call.function_name;
+                ast::function f = parser::f_list[f_name];
 
-                ret += getString(parser::f_list[f_name]);
+                ret += getAuxiliaryFunctions(f.body); // Recursively search for more auxiliary functions
+                ret += getString(f);
             }
         }
         
