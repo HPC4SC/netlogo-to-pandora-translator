@@ -57,8 +57,8 @@ namespace parser {
             assignment = lit("set") > var > expr;
 
             if_statement = 
-                    "if" > expr > '[' > +statement_ > ']' > -( "else" > +statement_ )
-                |   "ifelse" > expr > '[' > +statement_ > ']' > '[' > +statement_ > ']';
+                    "if" >> expr >> '[' > +statement_ > ']' > -( "else" > +statement_ )
+                |   "ifelse" >> expr >> '[' > +statement_ > ']' > '[' > +statement_ > ']';
 
 
             while_statement = lit("while") > '[' > expr > ']' > '[' > +statement_ > ']';
