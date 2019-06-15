@@ -69,8 +69,6 @@ namespace generator {
     }
 
     std::string statement_visitor::operator()(ast::function_call& e) const {
-        std::cout << "Name: " << e.function_name << std::endl;
-        std::cout << "Size: " << e.args.size() << std::endl;
         return getString(e) + ";\n";
     }
 

@@ -43,10 +43,20 @@ namespace generator {
 
         // for each element on the actions list:
         for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
-            ret += "_actions.push_back(new " + it->first + "());";
+            ret += "_actions.push_back(new " + it->first + "());\n";
         }
 
         return ret + "}\n";
+    }
+
+    std::string getAuxFunctions() {
+        std::string ret = "";
+        for (auto it = processor::agent_aux_functions.begin(); it != processor::agent_aux_functions.end(); ++it) {
+            std::string f_name = *it;
+            ast::function f = f_list[f_name];
+            ret += generator::getString(f);
+        }
+        return ret;
     }
 
     std::string generateClass(ast::agent myAgent) {
@@ -56,6 +66,7 @@ namespace generator {
         ret += "Turtle(const std::string & id) : Agent(id) {}\n";
         ret += "~Turtle() {}\n";
         ret += getSelectActions();
+        ret += getAuxFunctions();
         ret += "};\n";
         return ret;
     }

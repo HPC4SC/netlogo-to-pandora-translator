@@ -1,7 +1,7 @@
 #ifndef FUNCTION_CALL_HPP
 #define FUNCTION_CALL_HPP
 
-#include "Globals.cpp"
+#include "../Globals.cpp"
 #include "Variable.cpp"
 #include "AST.hpp"
 
@@ -13,7 +13,6 @@ namespace parser {
     namespace phx = boost::phoenix;
 
     std::string check (std::string name) {
-        std::cout << "Check: " << name << std::endl;
         n_args = f_args.at(name);
         return name;
     }

@@ -1,7 +1,7 @@
 #ifndef VARIABLE_HPP
 #define VARIABLE_HPP
 
-#include "Globals.cpp"
+#include "../Globals.cpp"
 #include "AST.hpp"
 #include "Skipper.cpp"
 

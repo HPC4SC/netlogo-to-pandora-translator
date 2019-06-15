@@ -14,10 +14,22 @@
 #include <queue>
 
 namespace processor {
-    
-    int actionId = 0;
-    std::map<std::string, ast::ask_agentset> agent_actions;
-    std::queue<std::string> func_queue;
+
+    std::string getNewActionId () {
+        std::string action_name = "Action" + std::to_string(actionId);
+        ++actionId;
+        return action_name;
+    }
+
+    void findAuxFunctions (const ast::statement_list& s_list) {          
+        for (auto it = s_list.begin(); it != s_list.end(); ++it) {
+            if ((*it).which() == 4) { // Id 4 is the function_call id inside the statement variant
+                ast::function_call f_call = boost::get<ast::function_call>(*it);
+                std::string f_name = f_call.function_name;
+                agent_aux_functions.push_back(f_name);
+            }
+        }
+    }
 
     struct FindAgentAction : boost::static_visitor<void> {
         FindAgentAction() {}
@@ -31,31 +43,28 @@ namespace processor {
         void operator()(const ast::if_statement& e) const { }
         void operator()(const ast::while_statement& e) const { }
         void operator()(const ast::statement_list& e) const { }
-        void operator()(const ast::function_call& e) const {
-            func_queue.push(e.function_name);
-        }
+        void operator()(const ast::function_call& e) const { }
         void operator()(const ast::ask_agentset& e) const { 
-            std::string action_name = "Action" + std::to_string(actionId);
+            std::string action_name = getNewActionId();
             agent_actions[action_name] = e;
-            ++actionId;
-            std::cout << "Action: " << actionId << std::endl;
+            findAuxFunctions(e.body);
         }
         void operator()(const ast::ask_agent& e) const { 
-            std::cout << "Action 2: " << actionId << std::endl;
+            // TODO
+            findAuxFunctions(e.body);
         }
     };
 
-    void findAgentActions(ast::main& e) {
+    void findAgentActions(ast::function& go_function) {
         FindAgentAction findAgentAction;
-        func_queue.push("go");
-        while (!func_queue.empty()) {
-            std::string f_name = func_queue.front();
-            ast::function f = e.functions[f_name];
-            for (auto it = f.body.begin(); it != f.body.end(); ++it) {
-                boost::apply_visitor(findAgentAction, *it);
-            }
-            func_queue.pop();
+        for (auto it = go_function.body.begin(); it != go_function.body.end(); ++it) {
+            boost::apply_visitor(findAgentAction, *it);
         }
+    }
+
+    void scanAgentActions(ast::main& e) {
+        // Create identifiers for new actions to be generated later
+        findAgentActions(e.functions["go"]);
     }
 }
 

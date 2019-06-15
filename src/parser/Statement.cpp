@@ -5,7 +5,7 @@
 #include "Expression.cpp"
 #include "FunctionCall.cpp"
 #include "Variable.cpp"
-#include "Globals.cpp"
+#include "../Globals.cpp"
 #include "AST.hpp"
 
 namespace parser {

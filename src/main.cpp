@@ -64,9 +64,9 @@ int main (int argc, char **argv)
     try
     {
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
-        parser::f_list = ast.functions;
+        f_list = ast.functions;
         inferer(ast);
-        processor::findAgentActions(ast);
+        processor::scanAgentActions(ast);
         generator::generate(ast);
  /*
         std::cout << type << std::endl;

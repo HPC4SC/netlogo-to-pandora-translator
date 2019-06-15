@@ -6,11 +6,11 @@
 namespace processor {
 
     enum Types {
+        undefined_type,
+        void_type,
         string_type,
         double_type,
-        bool_type,
-        undefined_type,
-        void_type
+        bool_type
     };
 
     std::map<std::string, enum Types> function_types;
@@ -146,6 +146,7 @@ namespace processor {
         }
 
         Types operator()(const ast::function& expr) const {
+            std::cout << expr.function_name << std::endl;
             variable_types.clear();
 
             if (expr.args) {
@@ -156,6 +157,7 @@ namespace processor {
             if (expr.return_.expr) {
                 Types ret_type = (*this)(*(expr.return_.expr));
                 function_types[expr.function_name] = ret_type;
+                std::cout << expr.function_name << " : " << ret_type << std::endl;
                 return ret_type;
             }
             function_types[expr.function_name] = void_type;

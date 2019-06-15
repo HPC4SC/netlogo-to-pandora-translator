@@ -53,8 +53,8 @@ namespace generator {
     }
 
     std::string getString(ast::function& e) {
+        processor::Types f_type = processor::function_types[e.function_name];
         std::string f_name = removeInvalidChars(e.function_name);
-        processor::Types f_type = processor::function_types[f_name];
 
         std::string res = getString(f_type) + " " + f_name + getString(f_name, e.args);
         res += " {\n";

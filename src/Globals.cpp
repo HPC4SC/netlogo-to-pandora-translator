@@ -1,7 +1,7 @@
 #ifndef GLOBALS_CPP
 #define GLOBALS_CPP
 
-#include "AST.hpp"
+#include "parser/AST.hpp"
 
 #include <boost/spirit/include/qi.hpp>
 
@@ -14,8 +14,14 @@ namespace parser {
     qi::symbols<char, ast::agent_type> agent, agentset;
     qi::symbols<char, ast::move_dir> direction;
     qi::symbols<char, ast::callback_keyword> single_word_callback;
-
-    ast::function_list f_list;
 }
+
+namespace processor {
+    int actionId = 0;
+    std::map<std::string, ast::ask_agentset> agent_actions;
+    std::list<std::string> agent_aux_functions;
+}
+
+ast::function_list f_list;
 
 #endif
