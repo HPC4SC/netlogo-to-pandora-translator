@@ -23,5 +23,7 @@ namespace processor {
 }
 
 ast::function_list f_list;
+std::string context = "";
+std::list<std::string> agentAttributes;
 
 #endif

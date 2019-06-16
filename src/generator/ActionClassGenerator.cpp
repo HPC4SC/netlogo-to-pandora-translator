@@ -7,7 +7,11 @@ namespace generator {
 
     std::string generateExecute (ast::statement_list body) {
         std::string ret = "void execute( Engine::Agent & agent ) {\n";
+
+        context = "agent.";
         ret += getString(body);
+        context = "";
+
         return ret + "}\n";
     }
 

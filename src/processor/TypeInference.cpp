@@ -146,7 +146,6 @@ namespace processor {
         }
 
         Types operator()(const ast::function& expr) const {
-            std::cout << expr.function_name << std::endl;
             variable_types.clear();
 
             if (expr.args) {
@@ -157,7 +156,6 @@ namespace processor {
             if (expr.return_.expr) {
                 Types ret_type = (*this)(*(expr.return_.expr));
                 function_types[expr.function_name] = ret_type;
-                std::cout << expr.function_name << " : " << ret_type << std::endl;
                 return ret_type;
             }
             function_types[expr.function_name] = void_type;
@@ -173,6 +171,7 @@ namespace processor {
         Types operator()(const ast::agent& expr) const {
             for (auto it = expr.attributes.begin(); it != expr.attributes.end(); ++it) {
                 global_variable_types[*it] = undefined_type;
+                agentAttributes.push_back(*it);
             }
 
             return void_type;

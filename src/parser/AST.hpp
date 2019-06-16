@@ -27,7 +27,8 @@ namespace ast
     enum move_dir {
         left,
         right,
-        forward
+        forward,
+        backward
     };
 
     enum callback_keyword {
@@ -126,12 +127,12 @@ namespace ast
             single_word_statement,
             setxy_statement,
             boost::recursive_wrapper<function_call>,
+            boost::recursive_wrapper<if_statement>,
+            boost::recursive_wrapper<while_statement>,
             boost::recursive_wrapper<ask_agentset>,
             boost::recursive_wrapper<ask_agent>,
             boost::recursive_wrapper<create_agentset>,
             boost::recursive_wrapper<move_statement>,
-            boost::recursive_wrapper<if_statement>,
-            boost::recursive_wrapper<while_statement>,
             boost::recursive_wrapper<statement_list>
         >
     statement;

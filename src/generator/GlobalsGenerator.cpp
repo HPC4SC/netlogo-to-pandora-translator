@@ -8,9 +8,16 @@
 
 namespace generator {
 
-    void generate(ast::global_list& globals) {
-        std::string result =    "#ifndef __Globals_hxx__\n"
-                                "#define __Globals_hxx__\n";
+    std::string generateGlobalFunctions () {
+        std::string res = "";
+
+        res += "int random(int max) { return rand() % (max + 1); }\n";
+
+        return res;
+    }
+
+    std::string generateGlobalVars (ast::global_list& globals) {
+        std::string result = "";
         for (auto it = globals.begin(); it != globals.end(); ++it) {
             std::string name = removeInvalidChars(*it);
 
@@ -22,6 +29,17 @@ namespace generator {
                 default: result += "auto " + name + ";\n"; break;
             }
         }
+        return result;
+    }
+
+    void generate(ast::global_list& globals) {
+        std::string result =    "#ifndef __Globals_hxx__\n"
+                                "#define __Globals_hxx__\n"
+                                "#include <stdlib.h>\n";
+        
+        result += generateGlobalVars(globals);
+        result += generateGlobalFunctions();
+
         result += "#endif\n";
 
         std::ofstream myfile;

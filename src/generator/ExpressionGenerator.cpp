@@ -32,11 +32,16 @@ namespace generator {
         std::string operator()(double& v) const { return boost::lexical_cast<std::string>(v); }
         std::string operator()(bool& b) const { return b ? "true" : "false"; }
         std::string operator()(std::string& v) const { return  "\"" + v + "\""; }
-        std::string operator()(ast::variable& e) const { return removeInvalidChars(e.name); }
         std::string operator()(ast::unary& e) const { return getString(e); }
         std::string operator()(ast::expression& e) const { return getString(e); }
-        std::string operator()(ast::function_call& e) const { return getString(e); }
+        std::string operator()(ast::function_call& e) const { return context + getString(e); }
         std::string operator()(ast::random_statement& e) const { return getString(e); }
+        std::string operator()(ast::variable& e) const { 
+            auto it = std::find(agentAttributes.begin(), agentAttributes.end(), e.name);
+            std::string ctx = "";
+            if (it != agentAttributes.end()) ctx = context;
+            return ctx + removeInvalidChars(e.name); 
+        }
     };
 
     std::string getString(ast::expression& e) {
@@ -58,7 +63,10 @@ namespace generator {
     }
 
     std::string getString(ast::variable& op) {
-        return op.name;
+        std::cout << op.name << std::endl;
+        auto it = std::find(agentAttributes.begin(), agentAttributes.end(), op.name);
+
+        return (it != agentAttributes.end()) ? context + op.name : op.name;
     }
     
     std::string getString(ast::function_call& op) {
@@ -71,7 +79,7 @@ namespace generator {
                 args += ", " + getString(*it);
             }
         }
-        return removeInvalidChars(op.function_name) + "(" + args + ")";
+        return context + removeInvalidChars(op.function_name) + "(" + args + ")";
     }
 
     std::string getString(ast::random_statement& op) {

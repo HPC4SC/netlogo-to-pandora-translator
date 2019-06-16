@@ -21,12 +21,40 @@ namespace processor {
         return action_name;
     }
 
+    void findAuxFunctions (const ast::expression& expr) {
+
+    }
+
     void findAuxFunctions (const ast::statement_list& s_list) {          
         for (auto it = s_list.begin(); it != s_list.end(); ++it) {
             if ((*it).which() == 4) { // Id 4 is the function_call id inside the statement variant
                 ast::function_call f_call = boost::get<ast::function_call>(*it);
                 std::string f_name = f_call.function_name;
+                std::cout << f_name << std::endl;
                 agent_aux_functions.push_back(f_name);
+
+                ast::function f = f_list[f_name];
+                findAuxFunctions(f.body);
+                if (f.return_.expr) {
+                    ast::expression ret_expr = *(f.return_.expr);
+                    findAuxFunctions(ret_expr);
+                }
+            }
+
+            if ((*it).which() == 5) { // if
+                ast::if_statement if_st = boost::get<ast::if_statement>(*it);
+                findAuxFunctions(if_st.condition);
+                findAuxFunctions(if_st.then);
+                if (if_st.else_) {
+                    findAuxFunctions(*(if_st.else_));
+                }
+            }
+
+
+            if ((*it).which() == 6) { // while
+                ast::while_statement while_st = boost::get<ast::while_statement>(*it);
+                findAuxFunctions(while_st.condition);
+                findAuxFunctions(while_st.body);
             }
         }
     }

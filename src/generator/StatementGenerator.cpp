@@ -50,22 +50,27 @@ namespace generator {
         return result + ";\n";
     }
 
-    std::string statement_visitor::operator()(ast::assignment& e) const {  
-        return removeInvalidChars(e.name.name) + " = " + getString(e.value) + ";\n";
+    std::string statement_visitor::operator()(ast::assignment& e) const {
+        std::string v_name = e.name.name;
+        auto it = std::find(agentAttributes.begin(), agentAttributes.end(), v_name);
+
+        std::string ctx = "";
+        if (it != agentAttributes.end()) ctx += context;
+        return ctx + removeInvalidChars(v_name) + " = " + getString(e.value) + ";\n";
     }
 
     std::string statement_visitor::operator()(ast::single_word_statement& e) const {
         switch(e.keyword) {
-            case ast::die: return "die();\n";
-            case ast::clear_all: return "clear_all();\n";
-            case ast::tick: return "tick();\n";
-            case ast::reset_ticks: return "reset_ticks();\n";
+            case ast::die: return context + "kill();\n";
+            case ast::clear_all: return ""; // Doesn't exist
+            case ast::tick: return ""; // Doesn't exist
+            case ast::reset_ticks: return ""; // Doesn't exist
         }
         return "";
     }
 
     std::string statement_visitor::operator()(ast::setxy_statement& e) const {
-        return "setxy(" + getString(e.x) + ", " + getString(e.y) + ");\n";
+        return context + "setxy(" + getString(e.x) + ", " + getString(e.y) + ");\n";
     }
 
     std::string statement_visitor::operator()(ast::function_call& e) const {
@@ -85,7 +90,8 @@ return "";
     }
 
     std::string statement_visitor::operator()(ast::move_statement& e) const {
-return "";
+        int dir = static_cast<int>(e.direction);
+        return context + "mv(" + std::to_string(e.direction) + ", " + getString(e.quantity) + ");\n";
     }
 
     std::string statement_visitor::operator()(ast::if_statement& e) const {

@@ -8,6 +8,7 @@ namespace generator {
     std::string getClassInit() {
         std::string output =    "#ifndef __TurtleAgent_hxx__\n"
                                 "#define __TurtleAgent_hxx__\n"
+                                "#include <Globals.hxx>\n"
                                 "#include <Agent.hxx>\n"
                                 "#include <string>\n";
         
@@ -24,6 +25,11 @@ namespace generator {
 
     std::string getAttributes(ast::agent myAgent) {
         std::string result = "";
+
+        // Common attributes
+        result += "int angle = 0;\n";
+
+        // Defined attributes
         for (auto it = myAgent.attributes.begin(); it != myAgent.attributes.end(); ++it) {
             std::string name = removeInvalidChars(*it);
 
@@ -49,6 +55,29 @@ namespace generator {
         return ret + "}\n";
     }
 
+    std::string getCommonActions () {
+        std::string ret = "";
+
+        ret +=  "void setxy(int x, int y) {\n"
+                "   Engine::Point2D<int> pos = getPosition();\n"
+                "   pos._x = x;\n"
+                "   pos._y = y;\n"
+                "   setPosition(pos);\n"
+                "}\n";
+
+        ret +=  "void mv(int dir, int dist) {\n"
+                "   Engine::Point2D<int> pos = getPosition();\n"
+                "   switch(dir) {\n"
+                "       case 0: angle -= dist; angle %= 360; break;\n"
+                "       case 1: angle += dist; angle %= 360; break;\n"
+                "       case 3: pos._x += cos(angle) * dist; pos._y += sin(angle) * dist; break;\n"
+                "       case 4: pos._x -= cos(angle) * dist; pos._y -= sin(angle) * dist; break;\n"
+                "   setPosition(pos);\n"
+                "}\n";
+
+        return ret;
+    }
+
     std::string getAuxFunctions() {
         std::string ret = "";
         for (auto it = processor::agent_aux_functions.begin(); it != processor::agent_aux_functions.end(); ++it) {
@@ -66,6 +95,7 @@ namespace generator {
         ret += "Turtle(const std::string & id) : Agent(id) {}\n";
         ret += "~Turtle() {}\n";
         ret += getSelectActions();
+        ret += getCommonActions();
         ret += getAuxFunctions();
         ret += "};\n";
         return ret;
