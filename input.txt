@@ -101,11 +101,16 @@ to get-older ;; turtle procedure
   if sick? [ set sick-time sick-time + 1 ]
 end
 
+to-report asd
+  set age age + 1
+  report 5
+end
+
 to go
   ask turtles [
     get-older
     move
-    if sick? [ recover-or-die ]
+    if asd [ recover-or-die ]
     ifelse sick? [ infect ] [ reproduce ]
   ]
 end

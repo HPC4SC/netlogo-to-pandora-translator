@@ -14,6 +14,28 @@
 #include <queue>
 
 namespace processor {
+    void findAuxFunctions (const ast::operation& op);
+    void findAuxFunctions (const ast::expression& expr);
+
+    struct expression_visitor : boost::static_visitor<void>
+    {
+        void operator()(const double& e) const { }
+        void operator()(const bool& e) const { }
+        void operator()(const std::string& e) const { }
+        void operator()(const ast::variable& e) const { }
+        void operator()(const ast::unary& e) const { }
+        void operator()(const ast::random_statement& e) const {
+            findAuxFunctions(e.value);
+        }
+        void operator()(const ast::expression& e) const {
+            findAuxFunctions(e);
+        }
+        void operator()(const ast::function_call& e) const {
+            std::string f_name = e.function_name;
+            std::cout << f_name << std::endl;
+            agent_aux_functions.push_back(f_name);
+        }
+    };
 
     std::string getNewActionId () {
         std::string action_name = "Action" + std::to_string(actionId);
@@ -21,8 +43,15 @@ namespace processor {
         return action_name;
     }
 
-    void findAuxFunctions (const ast::expression& expr) {
+    void findAuxFunctions (const ast::operation& op) {
+        boost::apply_visitor(expression_visitor(), op.operand_);
+    }
 
+    void findAuxFunctions (const ast::expression& expr) {
+        boost::apply_visitor(expression_visitor(), expr.first);
+        for (auto it = expr.rest.begin(); it != expr.rest.end(); ++it) {
+            findAuxFunctions(*it);
+        }
     }
 
     void findAuxFunctions (const ast::statement_list& s_list) {          

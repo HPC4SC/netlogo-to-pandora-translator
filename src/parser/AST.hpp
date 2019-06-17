@@ -48,10 +48,10 @@ namespace ast
         double,
         bool,
         std::string,
+        boost::recursive_wrapper<function_call>,
         boost::recursive_wrapper<variable>,
         boost::recursive_wrapper<unary>,
         boost::recursive_wrapper<expression>,
-        boost::recursive_wrapper<function_call>,
         boost::recursive_wrapper<random_statement>
     > operand;
 
