@@ -12,13 +12,13 @@
 #include "../parser/AST.hpp"
 
 namespace generator {
-    std::string getString(ast::expression& e);
-    std::string getString(ast::operation& op);
-    std::string getString(ast::unary& op);
-    std::string getString(ast::optoken& opt);
-    std::string getString(ast::function_call& op);
-    std::string getString(ast::random_statement& op);
-    std::string getString(ast::variable& op);
+    std::string getString(const ast::expression& e);
+    std::string getString(const ast::operation& op);
+    std::string getString(const ast::unary& op);
+    std::string getString(const ast::optoken& opt);
+    std::string getString(const ast::function_call& op);
+    std::string getString(const ast::random_statement& op);
+    std::string getString(const ast::variable& op);
 
     std::string removeInvalidChars (std::string name) {
         name.erase(std::remove(name.begin(), name.end(), '-'), name.end());
@@ -29,14 +29,14 @@ namespace generator {
 
     struct expression_visitor : boost::static_visitor<std::string>
     {
-        std::string operator()(double& v) const { return boost::lexical_cast<std::string>(v); }
-        std::string operator()(bool& b) const { return b ? "true" : "false"; }
-        std::string operator()(std::string& v) const { return  "\"" + v + "\""; }
-        std::string operator()(ast::unary& e) const { return getString(e); }
-        std::string operator()(ast::expression& e) const { return getString(e); }
-        std::string operator()(ast::function_call& e) const { return context + getString(e); }
-        std::string operator()(ast::random_statement& e) const { return getString(e); }
-        std::string operator()(ast::variable& e) const { 
+        std::string operator()(const double& v) const { return boost::lexical_cast<std::string>(v); }
+        std::string operator()(const bool& b) const { return b ? "true" : "false"; }
+        std::string operator()(const std::string& v) const { return  "\"" + v + "\""; }
+        std::string operator()(const ast::unary& e) const { return getString(e); }
+        std::string operator()(const ast::expression& e) const { return getString(e); }
+        std::string operator()(const ast::function_call& e) const { return context + getString(e); }
+        std::string operator()(const ast::random_statement& e) const { return getString(e); }
+        std::string operator()(const ast::variable& e) const { 
             auto it = std::find(agentAttributes.begin(), agentAttributes.end(), e.name);
             std::string ctx = "";
             if (it != agentAttributes.end()) ctx = context;
@@ -44,7 +44,7 @@ namespace generator {
         }
     };
 
-    std::string getString(ast::expression& e) {
+    std::string getString(const ast::expression& e) {
         std::string result;
         std::string s = boost::apply_visitor(expression_visitor(), e.first);
 
@@ -62,14 +62,14 @@ namespace generator {
         return result;
     }
 
-    std::string getString(ast::variable& op) {
+    std::string getString(const ast::variable& op) {
         std::cout << op.name << std::endl;
         auto it = std::find(agentAttributes.begin(), agentAttributes.end(), op.name);
 
         return (it != agentAttributes.end()) ? context + op.name : op.name;
     }
     
-    std::string getString(ast::function_call& op) {
+    std::string getString(const ast::function_call& op) {
         auto it = op.args.begin();
         std::string args = "";
         if (it != op.args.end()) {
@@ -82,21 +82,21 @@ namespace generator {
         return context + removeInvalidChars(op.function_name) + "(" + args + ")";
     }
 
-    std::string getString(ast::random_statement& op) {
+    std::string getString(const ast::random_statement& op) {
         return "random(" + getString(op.value) + ")";
     }
 
-    std::string getString(ast::unary& op) {
+    std::string getString(const ast::unary& op) {
         std::string s = boost::apply_visitor(expression_visitor(), op.operand_);
         return getString(op.operator_) + s;
     }
 
-    std::string getString(ast::operation& op) {
+    std::string getString(const ast::operation& op) {
         std::string s = boost::apply_visitor(expression_visitor(), op.operand_);
         return " " + getString(op.operator_) + " " + s;
     }
 
-    std::string getString(ast::optoken& opt) {
+    std::string getString(const ast::optoken& opt) {
         switch(opt) {
             case ast::op_plus: return "+";
             case ast::op_minus: return "-";

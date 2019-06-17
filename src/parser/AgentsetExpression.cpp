@@ -24,20 +24,20 @@ namespace parser {
             agentset.add("links", ast::link);
 
             agentset_expr = 
-                        agentset_with_reporter |
                         n_of_agentset |
                         other_agentset |
+                        agentset_with_reporter |
                         agentset_here |
                         base_agentset;
 
-            agentset_with_reporter = (n_of_agentset | base_agentset) >> lit("with") > '[' > expr > ']';
+            agentset_with_reporter = (n_of_agentset | other_agentset | agentset_here | base_agentset) >> lit("with") > '[' > expr > ']';
 
             n_of_agentset = "n-of" > expr > agentset_expr;
 
             other_agentset = "other" > agentset_expr;
 
-            agentset_here = agentset >> "-here";
 
+            agentset_here = agentset >> "-here";
             base_agentset = agentset;
         }
 
