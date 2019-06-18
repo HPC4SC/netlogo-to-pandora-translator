@@ -5,6 +5,13 @@
 
 #include <boost/spirit/include/qi.hpp>
 
+std::string removeInvalidChars (std::string name) {
+    name.erase(std::remove(name.begin(), name.end(), '-'), name.end());
+    name.erase(std::remove(name.begin(), name.end(), '?'), name.end());
+    name.erase(std::remove(name.begin(), name.end(), '%'), name.end());
+    return name;
+}
+
 namespace parser {
     namespace qi = boost::spirit::qi;
 
@@ -20,6 +27,8 @@ namespace processor {
     int actionId = 0;
     std::map<std::string, ast::ask_agentset> agent_actions;
     std::list<std::string> agent_aux_functions;
+    std::list<std::string> setup_aux_functions;
+    ast::create_agentset agentset_setup;
 }
 
 ast::function_list f_list;

@@ -52,25 +52,25 @@ namespace parser {
                         if_statement |
                         while_statement;
 
-            variable_declaration = lit("let") > var >> -(expr);
+            variable_declaration = lexeme[lit("let") >> " "] > var >> -(expr);
 
-            assignment = lit("set") > var > expr;
+            assignment = lexeme[lit("set") >> " "] > var > expr;
 
             if_statement = 
-                    "if" >> expr >> '[' > +statement_ > ']' > -( "else" > +statement_ )
-                |   "ifelse" >> expr >> '[' > +statement_ > ']' > '[' > +statement_ > ']';
+                    lexeme[lit("if") >> " "] >> expr >> '[' > +statement_ > ']' > -( "else" > +statement_ )
+                |   lexeme[lit("ifelse") >> " "] >> expr >> '[' > +statement_ > ']' > '[' > +statement_ > ']';
 
 
-            while_statement = lit("while") > '[' > expr > ']' > '[' > +statement_ > ']';
+            while_statement = lexeme[lit("while") >> " "] > '[' > expr > ']' > '[' > +statement_ > ']';
 
-            ask_agent = "ask" >> agent > expr > '[' > +statement_ > ']';
-            ask_agentset = lit("ask") >> agentset_expression_ > '[' > +statement_ > ']';
+            ask_agent = lexeme[lit("ask") >> " "] >> agent > expr > '[' > +statement_ > ']';
+            ask_agentset = lexeme[lit("ask") >> " "] >> agentset_expression_ > '[' > +statement_ > ']';
 
             create_agentset = "create-" > agentset > expr > -('[' > +statement_ > ']');
 
             move_statement = direction >> expr;
 
-            setxy_statement = "setxy" >> expr >> expr;
+            setxy_statement = lexeme[lit("setxy") >> " "] >> expr >> expr;
 
             single_word_statement = single_word_callback;
         }

@@ -20,13 +20,6 @@ namespace generator {
     std::string getString(const ast::random_statement& op);
     std::string getString(const ast::variable& op);
 
-    std::string removeInvalidChars (std::string name) {
-        name.erase(std::remove(name.begin(), name.end(), '-'), name.end());
-        name.erase(std::remove(name.begin(), name.end(), '?'), name.end());
-        name.erase(std::remove(name.begin(), name.end(), '%'), name.end());
-        return name;
-    }
-
     struct expression_visitor : boost::static_visitor<std::string>
     {
         std::string operator()(const double& v) const { return boost::lexical_cast<std::string>(v); }

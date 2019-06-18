@@ -8,9 +8,11 @@
 #include <boost/variant/recursive_wrapper.hpp>
 #include <string>
 
+#include "Turtle.cpp"
+#include "MainFileGenerator.cpp"
+#include "WorldClassGenerator.cpp"
 #include "FunctionGenerator.cpp"
 #include "GlobalsGenerator.cpp"
-#include "TurtleClassGenerator.cpp"
 #include "ActionClassGenerator.cpp"
 #include "../processor/TypeInference.cpp"
 #include "../processor/AgentActions.cpp"
@@ -18,19 +20,22 @@
 
 namespace generator {
 
-    void generate_config(ast::configuration& e) {
+    void generate_config(ast::configuration& e, Turtle& turtle) {
         generate(e.globals);
 
         for (auto it = e.agents.begin(); it != e.agents.end(); ++it) {
             switch(it->type) {
-                case ast::turtle: generateTurtle(*it); break;
+                case ast::turtle: {
+                    turtle.generateAttributes(*it);
+                    break;
+                }
                 case ast::patch: break;
             }
         }
     }
 
     void generate_setup(ast::function& f) {
-        
+        generate_main(getString(f.body));
     }
 
     void generate_go(ast::function& f) {
@@ -41,13 +46,22 @@ namespace generator {
     }
 
     void generate(ast::main& e) {
-        generate_config(e.config);
+        Turtle turtle;
+        turtle.generateIncludes();
+        turtle.generateConstructor(processor::agentset_setup);
+        turtle.generateSelectActions();
+        turtle.generateAuxFunctions();
+
+        generate_world();
+        generate_config(e.config, turtle);
 
         if (e.functions.find("setup") != e.functions.end())
             generate_setup(e.functions["setup"]);
 
         if (e.functions.find("go") != e.functions.end())
             generate_go(e.functions["go"]);
+
+        turtle.generate();
     }
 
 }

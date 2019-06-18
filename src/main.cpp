@@ -9,6 +9,7 @@
 
 #include "processor/TypeInference.cpp"
 #include "processor/AgentActions.cpp"
+#include "processor/ScanSetupFunction.cpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <fstream>
@@ -67,6 +68,7 @@ int main (int argc, char **argv)
         f_list = ast.functions;
         inferer(ast);
         processor::scanAgentActions(ast);
+        processor::scanSetupFunction(ast);
         generator::generate(ast);
  /*
         std::cout << type << std::endl;
