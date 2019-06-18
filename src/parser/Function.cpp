@@ -14,6 +14,7 @@ namespace parser {
     namespace phx = boost::phoenix;
 
     ast::function store_function (std::string name, ast::function_args args, ast::statement_list body, ast::return_statement return_) {
+        std::cout << name << std::endl;
         int num_args = args ? (*args).size() : 0;
         f_args.add(name, num_args);
         
@@ -28,14 +29,14 @@ namespace parser {
         {
             using namespace qi;
 
-            name = !(keywords >> ' ') >> !(f_args >> ' ') >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '%')]];
+            name = !(keywords >> ' ') >> !(f_args >> ' ') >> raw[lexeme[(alpha | '_') >> *(alnum | '_' | '-' | '%' | '?')]];
 
             identifier = name;
             argument_list = -('[' > *identifier > ']');
 
             return_statement = -(lit("report") > expr);
 
-            body_ = +statement_;
+            body_ = *statement_;
 
             function_ = (
                     (lit("to-report") | lit("to") )

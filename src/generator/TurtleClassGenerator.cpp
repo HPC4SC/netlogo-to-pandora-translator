@@ -72,6 +72,7 @@ namespace generator {
                 "       case 1: angle += dist; angle %= 360; break;\n"
                 "       case 3: pos._x += cos(angle) * dist; pos._y += sin(angle) * dist; break;\n"
                 "       case 4: pos._x -= cos(angle) * dist; pos._y -= sin(angle) * dist; break;\n"
+                "   }\n"
                 "   setPosition(pos);\n"
                 "}\n";
 

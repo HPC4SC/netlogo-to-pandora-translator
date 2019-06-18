@@ -60,12 +60,14 @@ namespace generator {
             ret += "Engine::AgentsVector neighbours = getWorld()->getNeighbours(this,1);\n";
             ret += "if (neighbours.size() > 0) {\n";
             ret += "random_shuffle(neighbours.begin(),neighbours.end());\n";
-            ret += "int count = 0;";
+            ret += "int count = 0;\n";
             ret += "while (neighbour != neighbours.end()) {\n";
 
             if (expr_data.b_n_of) {
-                ret +=" if (count >=" + getString(expr_data.n_of) + ") break;";
+                ret +=" if (count >=" + getString(expr_data.n_of) + ") break;\n";
             }
+
+            context = "(*neighbour).";
 
             if (expr_data.b_with) {
                 ret += "if (" + getString(expr_data.with) + ") {\n";
@@ -77,7 +79,9 @@ namespace generator {
                 ret += "}\n";
             }
 
-            ret += "++count;";
+            context = "";
+
+            ret += "++count;\n";
             ret += "}\n";
             ret += "}\n";
         }

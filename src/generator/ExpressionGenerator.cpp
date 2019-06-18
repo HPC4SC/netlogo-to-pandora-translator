@@ -34,7 +34,7 @@ namespace generator {
         std::string operator()(const std::string& v) const { return  "\"" + v + "\""; }
         std::string operator()(const ast::unary& e) const { return getString(e); }
         std::string operator()(const ast::expression& e) const { return getString(e); }
-        std::string operator()(const ast::function_call& e) const { return context + getString(e); }
+        std::string operator()(const ast::function_call& e) const { return getString(e); }
         std::string operator()(const ast::random_statement& e) const { return getString(e); }
         std::string operator()(const ast::variable& e) const { 
             auto it = std::find(agentAttributes.begin(), agentAttributes.end(), e.name);

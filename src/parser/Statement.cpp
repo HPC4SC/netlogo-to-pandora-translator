@@ -63,8 +63,8 @@ namespace parser {
 
             while_statement = lit("while") > '[' > expr > ']' > '[' > +statement_ > ']';
 
-            ask_agent = "ask" >> agent >> expr >> '[' >> +statement_ >> ']';
-            ask_agentset = "ask" >> agentset_expression_ >> '[' >> +statement_ >> ']';
+            ask_agent = "ask" >> agent > expr > '[' > +statement_ > ']';
+            ask_agentset = lit("ask") >> agentset_expression_ > '[' > +statement_ > ']';
 
             create_agentset = "create-" > agentset > expr > -('[' > +statement_ > ']');
 
