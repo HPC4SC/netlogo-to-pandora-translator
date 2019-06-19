@@ -12,6 +12,8 @@ namespace generator {
         std::string res = "";
 
         res += "int random(int max) { return rand() % (max + 1); }\n";
+        res += "int randomxcor() { return rand() % 101; }\n";
+        res += "int randomycor() { return rand() % 101; }\n";
 
         return res;
     }

@@ -52,7 +52,7 @@ namespace generator {
         turtle.generateSelectActions();
         turtle.generateAuxFunctions();
 
-        generate_world();
+        generate_world(processor::agentset_setup);
         generate_config(e.config, turtle);
 
         if (e.functions.find("setup") != e.functions.end())

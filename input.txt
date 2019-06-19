@@ -6,8 +6,6 @@ turtles-own
 
 globals
   [ infectiousness
-    %infected            ;; what % of the population is infectious
-    %immune              ;; what % of the population is immune
     lifespan             ;; the lifespan of a turtle
     chance-reproduce     ;; the probability of a turtle generating an offspring each tick
     carrying-capacity    ;; the number of turtles that can be in the world at one time
@@ -51,7 +49,6 @@ to setup-turtles
       set age random lifespan
       set sick-time 0
       set remaining-immunity 0
-      set size 1.5  ;; easier to see
       get-healthy ]
   ask n-of 10 turtles
     [ get-sick ]

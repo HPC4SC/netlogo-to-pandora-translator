@@ -7,7 +7,7 @@ namespace generator {
 
     std::string generateExecute (ast::statement_list body) {
         std::string ret = "void execute( Engine::Agent & agent ) {\n";
-
+        ret += "Turtle& turtleAgent = (Turtle&)agent;\n";
         context = "agent.";
         ret += getString(body);
         context = "";
@@ -18,7 +18,7 @@ namespace generator {
     std::string generateClass(std::string actionName, ast::statement_list body) {
         std::string ret = "class " + actionName + " : public Engine::Action {\n";
         ret += "public:\n";
-        ret += actionName + "(const std::string & id) : Agent(id) {}\n";
+        ret += actionName + "() {}\n";
         ret += "~" + actionName + "() {}\n";
 
         /*
@@ -42,6 +42,7 @@ namespace generator {
                                 "#define __" + actionName + "_hxx__\n"
                                 "#include <Action.hxx>\n"
                                 "#include <Agent.hxx>\n"
+                                "#include <Turtle.cxx>\n"
                                 "#include <string>\n";
 
         output += "namespace Engine { class Agent; }\n";

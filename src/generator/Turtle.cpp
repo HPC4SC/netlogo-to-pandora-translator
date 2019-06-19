@@ -48,7 +48,7 @@ public:
     ~Turtle () {}
 
     void generateIncludes() {
-        includes =  "#include <Globals.hxx>\n"
+        includes =  "#include <Globals.cxx>\n"
                     "#include <Agent.hxx>\n"
                     "#include <string>\n";
         for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
@@ -113,6 +113,7 @@ public:
         output += selectActions;
         output += commonActions;
         output += auxFunctions;
+        output += "};\n";
         output += endDefinition;
 
         std::ofstream myfile;
