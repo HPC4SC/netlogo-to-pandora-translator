@@ -29,7 +29,7 @@ namespace generator {
         result += 
             "        std::string fileName(\"config.xml\");\n"
 
-            "        Generated::World world( new Generated::WorldConfig(fileName), world.useOpenMPSingleNode());\n"
+            "        Examples::World world( new Examples::WorldConfig(fileName), world.useOpenMPSingleNode());\n"
 
             "        world.initialize(argc,argv);\n"
             "        world.run();\n"

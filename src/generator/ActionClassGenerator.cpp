@@ -8,7 +8,7 @@ namespace generator {
     std::string generateExecute (ast::statement_list body) {
         std::string ret = "void execute( Engine::Agent & agent ) {\n";
         ret += "Turtle& turtleAgent = (Turtle&)agent;\n";
-        context = "agent.";
+        context = "turtleAgent.";
         ret += getString(body);
         context = "";
 
@@ -46,9 +46,11 @@ namespace generator {
                                 "#include <string>\n";
 
         output += "namespace Engine { class Agent; }\n";
+        output += "namespace Examples {\n";
 
         output += generateClass(actionName, body);
 
+        output += "}\n";
         output += "#endif\n";
 
         std::ofstream myfile;

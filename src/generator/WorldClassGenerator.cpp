@@ -17,7 +17,7 @@ namespace generator {
         std::string res = 
             "for(int i = 0; i < " + getString(quantity) + "; ++i) {\n"
             "   std::string agentId = \"Turtle_\" + std::to_string(getId());\n"
-            "   RandomAgent * agent = new RandomAgent(agentId);\n"
+            "   Turtle * agent = new Turtle(agentId);\n"
             "   addAgent(agent);\n"
             "}\n";
 
@@ -36,9 +36,9 @@ namespace generator {
             "#ifndef __World_hxx__\n"
             "#define __World_hxx__\n"
 
-            "#include <World.hxx>\n"
+            "#include <Turtle.cxx>\n"
 
-            "namespace Generated \n"
+            "namespace Examples \n"
             "{\n"
 
             "class WorldConfig;\n"

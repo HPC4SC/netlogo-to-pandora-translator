@@ -105,15 +105,17 @@ public:
 
         output += startDefinition;
         output += includes;
+        output += "namespace Examples {\n";
         output += "class Turtle : public Engine::Agent {\n";
         output += "public:\n";
         output += attributes;
-        output += constructor;
-        output += "~Turtle() {}\n";
         output += selectActions;
         output += commonActions;
         output += auxFunctions;
+        output += constructor;
+        output += "~Turtle() {}\n";
         output += "};\n";
+        output += "}\n";
         output += endDefinition;
 
         std::ofstream myfile;

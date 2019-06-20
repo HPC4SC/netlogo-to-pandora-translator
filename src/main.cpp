@@ -67,8 +67,8 @@ int main (int argc, char **argv)
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
         f_list = ast.functions;
         inferer(ast);
-        processor::scanAgentActions(ast);
         processor::scanSetupFunction(ast);
+        processor::scanAgentActions(ast);
         generator::generate(ast);
  /*
         std::cout << type << std::endl;

@@ -39,8 +39,10 @@ namespace generator {
                                 "#define __Globals_hxx__\n"
                                 "#include <stdlib.h>\n";
         
+        result += "namespace Examples {\n";
         result += generateGlobalVars(globals);
         result += generateGlobalFunctions();
+        result += "}\n";
 
         result += "#endif\n";
 

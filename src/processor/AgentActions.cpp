@@ -16,6 +16,7 @@
 namespace processor {
     void findAuxFunctions (const ast::operation& op);
     void findAuxFunctions (const ast::expression& expr);
+    void findAuxFunctions (const ast::statement_list& s_list);
 
     struct expression_visitor : boost::static_visitor<void>
     {
@@ -53,38 +54,52 @@ namespace processor {
             findAuxFunctions(*it);
         }
     }
+    
+    struct FindAuxFunction : boost::static_visitor<void> {
+        FindAuxFunction() {}
 
-    void findAuxFunctions (const ast::statement_list& s_list) {          
+        void operator()(const ast::variable_declaration& e) const { }
+        void operator()(const ast::assignment& e) const { }
+        void operator()(const ast::single_word_statement& e) const { }
+        void operator()(const ast::setxy_statement& e) const { }
+        void operator()(const ast::create_agentset& e) const { }
+        void operator()(const ast::move_statement& e) const { }
+        void operator()(const ast::if_statement& if_st) const {
+            findAuxFunctions(if_st.condition);
+            findAuxFunctions(if_st.then);
+            if (if_st.else_) {
+                findAuxFunctions(*(if_st.else_));
+            }
+        }
+        void operator()(const ast::while_statement& while_st) const {
+            findAuxFunctions(while_st.condition);
+            findAuxFunctions(while_st.body);
+        }
+        void operator()(const ast::statement_list& e) const { }
+        void operator()(const ast::function_call& f_call) const {
+            std::string f_name = f_call.function_name;
+            std::cout << f_name << std::endl;
+            agent_aux_functions.push_back(f_name);
+
+            ast::function f = f_list[f_name];
+            findAuxFunctions(f.body);
+            if (f.return_.expr) {
+                ast::expression ret_expr = *(f.return_.expr);
+                findAuxFunctions(ret_expr);
+            }
+        }
+        void operator()(const ast::ask_agentset& e) const {
+            findAuxFunctions(e.body);
+        }
+        void operator()(const ast::ask_agent& e) const {
+            findAuxFunctions(e.body);
+        }
+    };
+
+    void findAuxFunctions (const ast::statement_list& s_list) {
+        FindAuxFunction findAuxF;          
         for (auto it = s_list.begin(); it != s_list.end(); ++it) {
-            if ((*it).which() == 4) { // Id 4 is the function_call id inside the statement variant
-                ast::function_call f_call = boost::get<ast::function_call>(*it);
-                std::string f_name = f_call.function_name;
-                std::cout << f_name << std::endl;
-                agent_aux_functions.push_back(f_name);
-
-                ast::function f = f_list[f_name];
-                findAuxFunctions(f.body);
-                if (f.return_.expr) {
-                    ast::expression ret_expr = *(f.return_.expr);
-                    findAuxFunctions(ret_expr);
-                }
-            }
-
-            if ((*it).which() == 5) { // if
-                ast::if_statement if_st = boost::get<ast::if_statement>(*it);
-                findAuxFunctions(if_st.condition);
-                findAuxFunctions(if_st.then);
-                if (if_st.else_) {
-                    findAuxFunctions(*(if_st.else_));
-                }
-            }
-
-
-            if ((*it).which() == 6) { // while
-                ast::while_statement while_st = boost::get<ast::while_statement>(*it);
-                findAuxFunctions(while_st.condition);
-                findAuxFunctions(while_st.body);
-            }
+            boost::apply_visitor(findAuxF, *it);
         }
     }
 
@@ -122,6 +137,7 @@ namespace processor {
     void scanAgentActions(ast::main& e) {
         // Create identifiers for new actions to be generated later
         findAgentActions(e.functions["go"]);
+        findAuxFunctions(agentset_setup.body);
     }
 }
 
