@@ -65,6 +65,13 @@ namespace generator {
         return res;
     }
 
+    std::string getFunctionHeader(ast::function& e) {
+        processor::Types f_type = processor::function_types[e.function_name];
+        std::string f_name = removeInvalidChars(e.function_name);
+
+        return getString(f_type) + " " + f_name + getString(f_name, e.args) + ";\n";
+    }
+
     std::string getString(ast::function_list& e) {
 
         std::string res = "";

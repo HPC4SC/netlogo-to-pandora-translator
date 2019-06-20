@@ -31,12 +31,12 @@ namespace generator {
         return "";
     }
 
-    void generate_world(ast::create_agentset& agentset_setup) {
+    void generateHeader () {
         std::string result = 
             "#ifndef __World_hxx__\n"
             "#define __World_hxx__\n"
 
-            "#include <Turtle.cxx>\n"
+            "#include <Turtle.hxx>\n"
 
             "namespace Examples \n"
             "{\n"
@@ -46,19 +46,14 @@ namespace generator {
             "class World : public Engine::World\n"
             "{\n";
 
-        result += "    void createRasters() {\n";
-        result += createRasters();
-        result += "}\n";
-
-        result += "    void createAgents() {\n";
-        result += createAgents(agentset_setup);
-        result += "}\n";
+        result += "void createRasters();\n";
+        result += "void createAgents();\n";
 
         result +=
-            "    void stepEnvironment();\n"
+            "void stepEnvironment();\n"
             "public:\n"
-            "    Earth( EarthConfig * config, Engine::Scheduler * scheduler = 0);\n"
-            "    virtual ~Earth();\n"
+            "Earth( EarthConfig * config, Engine::Scheduler * scheduler = 0);\n"
+            "virtual ~Earth();\n"
             "};\n"
 
             "}\n"
@@ -67,9 +62,38 @@ namespace generator {
 
 
         std::ofstream myfile;
+        myfile.open("build/World.hxx");
+        myfile << result;
+        myfile.close();
+    }
+
+    void generateSource (ast::create_agentset& agentset_setup) {
+        std::string result = 
+            "#include <Turtle.hxx>\n"
+            "namespace Examples \n"
+            "{\n"
+            "class WorldConfig;\n";
+
+        result += "void World::createRasters() {\n";
+            result += createRasters();
+        result += "}\n";
+
+        result += "void World::createAgents() {\n";
+            result += createAgents(agentset_setup);
+        result += "}\n";
+        
+        result += "}\n";
+
+
+        std::ofstream myfile;
         myfile.open("build/World.cxx");
         myfile << result;
         myfile.close();
+    }
+
+    void generate_world(ast::create_agentset& agentset_setup) {
+        generateHeader();
+        generateSource(agentset_setup);
     }
 }
 

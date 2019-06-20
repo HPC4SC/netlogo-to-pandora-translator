@@ -7,6 +7,8 @@
 
 class Turtle {
 private:
+    std::string functions;
+
     // Definitions
     std::string startDefinition;
     std::string endDefinition;
@@ -24,17 +26,20 @@ private:
 
 public:
     Turtle () {
+        functions = "void setxy(int x, int y);\n"
+                    "void mv(int dir, int dist);\n";
+
         startDefinition =   "#ifndef __TurtleAgent_hxx__\n"
                             "#define __TurtleAgent_hxx__\n";
         endDefinition = "#endif";
 
-        commonActions = "void setxy(int x, int y) {\n"
+        commonActions = "void Turtle::setxy(int x, int y) {\n"
                         "   Engine::Point2D<int> pos = getPosition();\n"
                         "   pos._x = x;\n"
                         "   pos._y = y;\n"
                         "   setPosition(pos);\n"
                         "}\n"
-                        "void mv(int dir, int dist) {\n"
+                        "void Turtle::mv(int dir, int dist) {\n"
                         "   Engine::Point2D<int> pos = getPosition();\n"
                         "   switch(dir) {\n"
                         "       case 0: angle -= dist; angle %= 360; break;\n"
@@ -75,13 +80,13 @@ public:
     }
 
     void generateConstructor (ast::create_agentset& create) {
-        constructor = "Turtle(const std::string & id) : Agent(id) {\n";
+        constructor = "Turtle::Turtle(const std::string & id) : Agent(id) {\n";
         constructor += generator::getString(create.body);
         constructor += "}\n";
     }
 
     void generateSelectActions() {
-        selectActions = "void selectActions() {\n";
+        selectActions = "void Turtle::selectActions() {\n";
 
         // for each element on the actions list:
         for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
@@ -91,16 +96,30 @@ public:
         selectActions += "}\n";
     }
 
+    std::string generateFunction(ast::function& e) {
+        processor::Types f_type = processor::function_types[e.function_name];
+        std::string f_name = removeInvalidChars(e.function_name);
+
+        std::string res = generator::getString(f_type) + " Turtle::" + f_name + generator::getString(f_name, e.args);
+        res += " {\n";
+        res += generator::getString(e.body);
+        res += generator::getString(e.return_);
+        res += "}\n";
+
+        return res;
+    }
+
     void generateAuxFunctions() {
         auxFunctions = "";
         for (auto it = processor::agent_aux_functions.begin(); it != processor::agent_aux_functions.end(); ++it) {
             std::string f_name = *it;
             ast::function f = f_list[f_name];
-            auxFunctions += generator::getString(f);
+            auxFunctions += generateFunction(f);
+            functions += generator::getFunctionHeader(f);
         }
     }
 
-    void generate () {
+    void generateHeaderFile () {
         std::string output = "";
 
         output += startDefinition;
@@ -108,20 +127,42 @@ public:
         output += "namespace Examples {\n";
         output += "class Turtle : public Engine::Agent {\n";
         output += "public:\n";
+        output += "Turtle();\n";
+        output += "~Turtle();\n";
         output += attributes;
-        output += selectActions;
-        output += commonActions;
-        output += auxFunctions;
-        output += constructor;
-        output += "~Turtle() {}\n";
+        output += functions;
         output += "};\n";
         output += "}\n";
         output += endDefinition;
 
         std::ofstream myfile;
+        myfile.open("build/Turtle.hxx");
+        myfile << output;
+        myfile.close();
+    }
+
+    void generateSourceFile () {
+        std::string output = "";
+
+        output += "#include <Turtle.hxx>\n";
+        output += includes;
+        output += "namespace Examples {\n";
+        output += constructor;
+        output += "Turtle::~Turtle() {}\n";
+        output += selectActions;
+        output += commonActions;
+        output += auxFunctions;
+        output += "}\n";
+
+        std::ofstream myfile;
         myfile.open("build/Turtle.cxx");
         myfile << output;
         myfile.close();
+    }
+
+    void generate () {
+        generateHeaderFile();
+        generateSourceFile();
     }
 };
 
