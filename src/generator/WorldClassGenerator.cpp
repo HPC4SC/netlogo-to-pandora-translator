@@ -16,8 +16,7 @@ namespace generator {
     std::string createTurtles(ast::expression quantity) {
         std::string res = 
             "for(int i = 0; i < " + getString(quantity) + "; ++i) {\n"
-            "   std::string agentId = \"Turtle_\" + std::to_string(getId());\n"
-            "   Turtle * agent = new Turtle(agentId);\n"
+            "   Turtle * agent = new Turtle();\n"
             "   addAgent(agent);\n"
             "}\n";
 
@@ -33,17 +32,17 @@ namespace generator {
 
     void generateHeader () {
         std::string result = 
-            "#ifndef __World_hxx__\n"
-            "#define __World_hxx__\n"
+            "#ifndef __Gen_World_hxx__\n"
+            "#define __Gen_World_hxx__\n"
 
             "#include <Turtle.hxx>\n"
 
             "namespace Examples \n"
             "{\n"
 
-            "class WorldConfig;\n"
+            "class GeneratedWorldConfig;\n"
 
-            "class World : public Engine::World\n"
+            "class GeneratedWorld : public Engine::World\n"
             "{\n";
 
         result += "void createRasters();\n";
@@ -52,8 +51,8 @@ namespace generator {
         result +=
             "void stepEnvironment();\n"
             "public:\n"
-            "Earth( EarthConfig * config, Engine::Scheduler * scheduler = 0);\n"
-            "virtual ~Earth();\n"
+            "GeneratedWorld( Engine::Config * config, Engine::Scheduler * scheduler = 0);\n"
+            "virtual ~GeneratedWorld();\n"
             "};\n"
 
             "}\n"
@@ -62,23 +61,26 @@ namespace generator {
 
 
         std::ofstream myfile;
-        myfile.open("build/World.hxx");
+        myfile.open("build/GeneratedWorld.hxx");
         myfile << result;
         myfile.close();
     }
 
     void generateSource (ast::create_agentset& agentset_setup) {
         std::string result = 
+            "#include <GeneratedWorld.hxx>\n"
             "#include <Turtle.hxx>\n"
+            "#include <Globals.hxx>\n"
             "namespace Examples \n"
-            "{\n"
-            "class WorldConfig;\n";
+            "{\n";
+        result += "GeneratedWorld::GeneratedWorld (Engine::Config * config, Engine::Scheduler * scheduler ) : World(config, scheduler, false) {}\n";
+        result += "GeneratedWorld::~GeneratedWorld() {}\n";
 
-        result += "void World::createRasters() {\n";
+        result += "void GeneratedWorld::createRasters() {\n";
             result += createRasters();
         result += "}\n";
 
-        result += "void World::createAgents() {\n";
+        result += "void GeneratedWorld::createAgents() {\n";
             result += createAgents(agentset_setup);
         result += "}\n";
         
@@ -86,7 +88,7 @@ namespace generator {
 
 
         std::ofstream myfile;
-        myfile.open("build/World.cxx");
+        myfile.open("build/GeneratedWorld.cxx");
         myfile << result;
         myfile.close();
     }

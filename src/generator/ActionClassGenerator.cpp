@@ -29,7 +29,7 @@ namespace generator {
         std::string ret = "class " + actionName + " : public Engine::Action {\n";
         ret += "public:\n";
         ret += actionName + "();\n";
-        ret += actionName + "();\n";
+        ret += "~" + actionName + "();\n";
         ret += "void execute( Engine::Agent & agent );";
         ret += "};\n";
         return ret;
@@ -40,7 +40,7 @@ namespace generator {
                                 "#define __" + actionName + "_hxx__\n"
                                 "#include <Action.hxx>\n"
                                 "#include <Agent.hxx>\n"
-                                "#include <Turtle.cxx>\n"
+                                "#include <Turtle.hxx>\n"
                                 "#include <string>\n";
 
         output += "namespace Engine { class Agent; }\n";
@@ -60,7 +60,7 @@ namespace generator {
     void generateActionSource (std::string actionName, ast::statement_list body) {
         std::string output =    "#include <Action.hxx>\n"
                                 "#include <Agent.hxx>\n"
-                                "#include <Turtle.cxx>\n"
+                                "#include <Turtle.hxx>\n"
                                 "#include <string>\n";
 
         output += "namespace Engine { class Agent; }\n";

@@ -53,11 +53,11 @@ public:
     ~Turtle () {}
 
     void generateIncludes() {
-        includes =  "#include <Globals.cxx>\n"
+        includes =  "#include <Globals.hxx>\n"
                     "#include <Agent.hxx>\n"
                     "#include <string>\n";
         for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
-            includes += "#include <" + it->first + ".cxx>\n";
+            includes += "#include <" + it->first + ".hxx>\n";
         }
     }
 
@@ -80,7 +80,7 @@ public:
     }
 
     void generateConstructor (ast::create_agentset& create) {
-        constructor = "Turtle::Turtle(const std::string & id) : Agent(id) {\n";
+        constructor = "Turtle::Turtle() {\n";
         constructor += generator::getString(create.body);
         constructor += "}\n";
     }

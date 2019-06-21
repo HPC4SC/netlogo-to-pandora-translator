@@ -47,7 +47,7 @@ namespace generator {
         result += "#endif\n";
 
         std::ofstream myfile;
-        myfile.open("build/Globals.cxx");
+        myfile.open("build/Globals.hxx");
         myfile << result;
         myfile.close();
     }
