@@ -13,7 +13,10 @@ namespace generator {
             "#include <iostream>\n"
             "#include <cstdlib>\n"
 
-            "#include <World.hxx>\n";
+            "#include <GeneratedWorld.hxx>\n"
+            "#include <GeneratedWorldConfig.hxx>\n"
+            "#include <Globals.hxx>\n"
+            "using namespace Examples;\n";
 
         for (auto it = processor::setup_aux_functions.begin(); it != processor::setup_aux_functions.end(); ++it) {
             ast::function f = f_list[*it];
@@ -29,7 +32,7 @@ namespace generator {
         result += 
             "        std::string fileName(\"config.xml\");\n"
 
-            "        Examples::World world( new Examples::WorldConfig(fileName), world.useOpenMPSingleNode());\n"
+            "        Examples::GeneratedWorld world( new Examples::GeneratedWorldConfig(fileName), world.useOpenMPSingleNode());\n"
 
             "        world.initialize(argc,argv);\n"
             "        world.run();\n"

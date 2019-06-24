@@ -6,6 +6,7 @@ turtles-own
 
 globals
   [ infectiousness
+    number-people
     duration
     chance-recover
     lifespan             ;; the lifespan of a turtle
@@ -15,6 +16,7 @@ globals
 
 ;; This sets up basic constants of the model.
 to setup-constants
+  set number-people 150
   set infectiousness 65
   set lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
   set carrying-capacity 300
