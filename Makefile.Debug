@@ -225,6 +225,12 @@ debug/moc_MainWindow.cpp: src/interface/MainWindow.hpp \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QLabel \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qlabel.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qframe.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QLineEdit \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qlineedit.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextcursor.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextformat.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qpen.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextoption.h \
 		debug/moc_predefs.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/bin/moc
 	/usr/src/mxe/usr/i686-w64-mingw32.static/qt5/bin/moc $(DEFINES) --include /usr/src/tfg/debug/moc_predefs.h -I/usr/src/mxe/usr/i686-w64-mingw32.static/qt5/mkspecs/win32-g++ -I/usr/src/tfg -I/usr/src/mxe/usr/i686-w64-mingw32.static/qt5/include -I/usr/src/mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets -I/usr/src/mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui -I/usr/src/mxe/usr/i686-w64-mingw32.static/qt5/include/QtCore -I/usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++ -I/usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++/i686-w64-mingw32.static -I/usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++/backward -I/usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include -I/usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include-fixed -I/usr/src/mxe/usr/i686-w64-mingw32.static/include src/interface/MainWindow.hpp -o debug/moc_MainWindow.cpp
@@ -364,7 +370,13 @@ debug/main.o: src/interface/main.cpp src/interface/MainWindow.hpp \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qicon.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QLabel \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qlabel.h \
-		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qframe.h
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qframe.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QLineEdit \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qlineedit.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextcursor.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextformat.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qpen.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextoption.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/main.o src/interface/main.cpp
 
 debug/MainWindow.o: src/interface/MainWindow.cpp src/interface/MainWindow.hpp \
@@ -485,6 +497,12 @@ debug/MainWindow.o: src/interface/MainWindow.cpp src/interface/MainWindow.hpp \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QLabel \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qlabel.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qframe.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QLineEdit \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qlineedit.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextcursor.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextformat.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qpen.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtGui/qtextoption.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QGridLayout \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qgridlayout.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qlayout.h \
@@ -494,7 +512,9 @@ debug/MainWindow.o: src/interface/MainWindow.cpp src/interface/MainWindow.hpp \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qfiledialog.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtCore/qdir.h \
 		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtCore/qfileinfo.h \
-		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qdialog.h
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qdialog.h \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/QGroupBox \
+		../mxe/usr/i686-w64-mingw32.static/qt5/include/QtWidgets/qgroupbox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/MainWindow.o src/interface/MainWindow.cpp
 
 debug/translator_plugin_import.o: /usr/src/tfg/translator_plugin_import.cpp 

@@ -3,25 +3,36 @@
 #include <QFileDialog>
 #include <QGroupBox>
 #include <QLineEdit>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent) {
 
-    QFont font("Roboto");
-    font.setStyleHint(QFont::Monospace);
-    QApplication::setFont(font);
+    QFont appFont("Montserrat");
+    appFont.setStyleHint(QFont::Monospace);
 
-    this->setContentsMargins(20, 20, 20, 20);
+    QFont titleFont("Scada");
+    titleFont.setStyleHint(QFont::Monospace);
 
-    this->setStyleSheet("QPushButton {"
+    QApplication::setFont(appFont);
+
+    this->setContentsMargins(20, 0, 20, 20);
+
+    this->setStyleSheet(
+                    "QWidget {"
+                        "background-color: white;"
+                    "}"
+                    "QPushButton {"
                         "background-color: white;"
                         "border: 1px solid black;"
+                        "border-radius: 2px;"
                         "padding: 10px;"
                         "font-size: 18px"
                     "}"
                     "QPushButton:hover {"
                         "background-color: white;"
                         "border: 2px solid black;"
+                        "border-radius: 2px;"
                         "padding: 10px;"
                     "}"
                     "QLineEdit {"
@@ -33,6 +44,22 @@ MainWindow::MainWindow(QWidget *parent)
  
     QGroupBox *group = new QGroupBox(tr("Echo"));
         
+    QLabel *title = new QLabel(this);
+    title->setText("NetLogo to Pandora\nTranslator");
+    title->setStyleSheet(   "font-size: 24px;"
+                            "font-width: 700;");
+    title->setAlignment(Qt::AlignCenter);
+    title->setFont(titleFont);
+    title->show();
+
+    QLabel *upc = new QLabel(this);
+    upc->setPixmap(QPixmap("upc.png"));
+    upc->show();
+
+    QLabel *bsc = new QLabel(this);
+    bsc->setPixmap(QPixmap("bsc.png"));
+    bsc->show();
+
     QPushButton *inputBtn = new QPushButton("Select NetLogo model file", this);
     modelFileTextBox = new QLineEdit;
     modelFileTextBox->setPlaceholderText("No model file selected");
@@ -41,31 +68,53 @@ MainWindow::MainWindow(QWidget *parent)
     outputDirectoryTextBox = new QLineEdit;
     outputDirectoryTextBox->setPlaceholderText("No output directory selected");
 
+    QPushButton *translateBtn = new QPushButton("Translate", this);
+    translateBtn->setStyleSheet("background-color: #007AC1;"
+                                "border-color: white;"
+                                "border-radius: 4px;"
+                                "color: white;"
+                                "font-size: 22px;"
+                                "font-width: bold;");
+
     QGridLayout *grid = new QGridLayout(this);
-    grid->addWidget(inputBtn, 0, 0);
-    grid->addWidget(modelFileTextBox, 0, 1, 1, 2);
-    grid->addWidget(outputBtn, 1, 0);
-    grid->addWidget(outputDirectoryTextBox, 1, 1, 1, 2);
+
+    grid->addWidget(title, 0, 0);
+    grid->addWidget(upc, 0, 1);
+    grid->addWidget(bsc, 0, 2);
+    grid->addWidget(inputBtn, 1, 0);
+    grid->addWidget(modelFileTextBox, 1, 1, 1, 2);
+    grid->addWidget(outputBtn, 2, 0);
+    grid->addWidget(outputDirectoryTextBox, 2, 1, 1, 2);
+    grid->addWidget(translateBtn, 3, 0, 1, 3);
     group->setLayout(grid);
 
     setLayout(grid);  
 
     connect(inputBtn, &QPushButton::clicked, this, &MainWindow::OpenFile);
-    connect(outputBtn, &QPushButton::clicked, this, &MainWindow::OpenFile);
+    connect(outputBtn, &QPushButton::clicked, this, &MainWindow::OpenDir);
+    connect(translateBtn, &QPushButton::clicked, this, &MainWindow::Translate);
 }
 
 void MainWindow::OpenFile() {
     
     inputFileName = QFileDialog::getOpenFileName(this,
-        tr("Open Address Book"), "",
-        tr("Address Book (*.abk);;All Files (*)"));
+        tr("Open model source"), "",
+        tr("NetLogo Model (*.nlogo);;All Files (*)"));
     modelFileTextBox->setText(inputFileName);
 }
 
 void MainWindow::OpenDir() {
     
-    outputDirectory = QFileDialog::getOpenFileName(this,
-        tr("Open Address Book"), "",
-        tr("Address Book (*.abk);;All Files (*)"));
+    outputDirectory = QFileDialog::getExistingDirectory(this,
+        tr("Open output directory"), "",
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     outputDirectoryTextBox->setText(outputDirectory);
+}
+
+void MainWindow::Translate() {
+    QString program = "generator";
+    QStringList arguments;
+    arguments << inputFileName;
+    QProcess *myProcess = new QProcess(this);
+    myProcess->start(program, arguments);
 }

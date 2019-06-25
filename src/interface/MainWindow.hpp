@@ -16,6 +16,7 @@ class MainWindow : public QWidget {
     private slots:
         void OpenFile();
         void OpenDir();
+        void Translate();
 
     private:
         QString inputFileName;
