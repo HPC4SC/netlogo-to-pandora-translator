@@ -18,19 +18,20 @@ namespace generator {
             "#include <cstdlib>\n"
             
             "using namespace Examples;\n";
-/*
-        for (auto it = processor::setup_aux_functions.begin(); it != processor::setup_aux_functions.end(); ++it) {
-            ast::function f = f_list[*it];
+
+        //for (auto it = processor::setup_aux_functions.begin(); it != processor::setup_aux_functions.end(); ++it) {
+        //    ast::function f = f_list[*it];
+            ast::function f = f_list["setup-constants"];
             result += getString(f);
-        }*/
+        //}
 
         result +=
             "int main(int argc, char *argv[])\n"
             "{\n"
             "    try\n"
             "    {\n";
-        //result += setup;
         result += 
+            "        setupconstants();"
             "        std::string fileName(\"config.xml\");\n"
 
             "        Examples::GeneratedWorld world( new Examples::GeneratedWorldConfig(fileName), world.useOpenMPSingleNode());\n"

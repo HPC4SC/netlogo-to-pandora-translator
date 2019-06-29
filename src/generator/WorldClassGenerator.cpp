@@ -9,6 +9,22 @@
 
 namespace generator {
 
+    struct world_statement_visitor : boost::static_visitor<std::string>
+    {
+        std::string operator()(const ast::variable_declaration& e) const { return getString(e); }
+        std::string operator()(const ast::assignment& e) const { return getString(e); }
+        std::string operator()(const ast::single_word_statement& e) const { return getString(e); }
+        std::string operator()(const ast::setxy_statement& e) const { return getString(e); }
+        std::string operator()(const ast::function_call& e) const { return getString(e); }
+        std::string operator()(const ast::ask_agentset& e) const { return generateTurtleExprFromWorld(e); }
+        std::string operator()(const ast::ask_agent& e) const { return getString(e); }
+        std::string operator()(const ast::create_agentset& e) const { return getString(e); }
+        std::string operator()(const ast::move_statement& e) const { return getString(e); }
+        std::string operator()(const ast::if_statement& e) const { return getString(e); }
+        std::string operator()(const ast::while_statement& e) const { return getString(e); }
+        std::string operator()(const ast::statement_list& e) const { return getString(e); }
+    };
+
     std::string createRasters() {
         return "";
     }
@@ -28,6 +44,14 @@ namespace generator {
             case ast::turtle: return createTurtles(agentset_setup.quantity);
         }
         return "";
+    }
+
+    std::string getTurtleExtraInitialization(const ast::statement_list& st) {
+        std::string result = "";
+        for (auto it = st.begin(); it != st.end(); ++it) {
+            result += boost::apply_visitor(world_statement_visitor(), *it);
+        }
+        return result;
     }
 
     void generateHeader () {
@@ -67,6 +91,8 @@ namespace generator {
     }
 
     void generateSource (ast::create_agentset& agentset_setup) {
+        ast::function turtles_setup = f_list["setup-turtles"];
+
         std::string result = 
             "#include <GeneratedWorld.hxx>\n"
             "#include <Turtle.hxx>\n"
@@ -82,6 +108,7 @@ namespace generator {
 
         result += "void GeneratedWorld::createAgents() {\n";
             result += createAgents(agentset_setup);
+            result += getTurtleExtraInitialization(turtles_setup.body);
         result += "}\n";
         
         result += "void GeneratedWorld::stepEnvironment() {}\n";

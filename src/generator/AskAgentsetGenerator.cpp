@@ -91,6 +91,42 @@ namespace generator {
         return ret;
     }
 
+    std::string generateTurtleExprFromWorld (const ast::ask_agentset& expr) {
+        std::string ret = "";
+
+        if (expr_data.here) {
+            ret += "if (this->_agents.size() > 0) {\n";
+            ret += "int count = 0;\n";
+		    ret += "auto it = this->_agents.begin();\n";
+            ret += "while (it != this->_agents.end()) {\n";
+
+            if (expr_data.b_n_of) {
+                ret +=" if (count >=" + getString(expr_data.n_of) + ") break;\n";
+            }
+
+            ret += "Turtle* turtle = dynamic_cast<Turtle*>(it->get());\n";
+            context = "turtle->";
+
+            if (expr_data.b_with) {
+                ret += "if (" + getString(expr_data.with) + ") {\n";
+            }
+
+            ret += getString(expr.body);
+
+            if (expr_data.b_with) {
+                ret += "}\n";
+            }
+
+            context = "";
+
+            ret += "++count;\n";
+            ret += "}\n";
+            ret += "}\n";
+        }
+
+        return ret;
+    }
+
     std::string getString (const ast::ask_agentset& ask) {
         boost::apply_visitor(agentset_expression_visitor(), ask.type);
 
