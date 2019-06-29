@@ -68,8 +68,16 @@ MainWindow::MainWindow(QWidget *parent)
     outputDirectoryTextBox = new QLineEdit;
     outputDirectoryTextBox->setPlaceholderText("No output directory selected");
 
-    QPushButton *translateBtn = new QPushButton("Translate", this);
+    QPushButton *translateBtn = new QPushButton("Translate to C++", this);
     translateBtn->setStyleSheet("background-color: #007AC1;"
+                                "border-color: white;"
+                                "border-radius: 4px;"
+                                "color: white;"
+                                "font-size: 22px;"
+                                "font-width: bold;");
+
+    QPushButton *translatePandoraBtn = new QPushButton("Translate to Pandora", this);
+    translatePandoraBtn->setStyleSheet("background-color: #007AC1;"
                                 "border-color: white;"
                                 "border-radius: 4px;"
                                 "color: white;"
@@ -85,7 +93,8 @@ MainWindow::MainWindow(QWidget *parent)
     grid->addWidget(modelFileTextBox, 1, 1, 1, 2);
     grid->addWidget(outputBtn, 2, 0);
     grid->addWidget(outputDirectoryTextBox, 2, 1, 1, 2);
-    grid->addWidget(translateBtn, 3, 0, 1, 3);
+    grid->addWidget(translateBtn, 3, 1);
+    grid->addWidget(translatePandoraBtn, 3, 2);
     group->setLayout(grid);
 
     setLayout(grid);  
@@ -93,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(inputBtn, &QPushButton::clicked, this, &MainWindow::OpenFile);
     connect(outputBtn, &QPushButton::clicked, this, &MainWindow::OpenDir);
     connect(translateBtn, &QPushButton::clicked, this, &MainWindow::Translate);
+    connect(translatePandoraBtn, &QPushButton::clicked, this, &MainWindow::TranslatePandora);
 }
 
 void MainWindow::OpenFile() {
@@ -114,7 +124,15 @@ void MainWindow::OpenDir() {
 void MainWindow::Translate() {
     QString program = "generator";
     QStringList arguments;
-    arguments << inputFileName;
+    arguments << "cpp" << inputFileName;
+    QProcess *myProcess = new QProcess(this);
+    myProcess->start(program, arguments);
+}
+
+void MainWindow::TranslatePandora() {
+    QString program = "generator";
+    QStringList arguments;
+    arguments << "pandora" << inputFileName;
     QProcess *myProcess = new QProcess(this);
     myProcess->start(program, arguments);
 }

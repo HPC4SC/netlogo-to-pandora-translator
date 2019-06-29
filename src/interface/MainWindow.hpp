@@ -17,6 +17,7 @@ class MainWindow : public QWidget {
         void OpenFile();
         void OpenDir();
         void Translate();
+        void TranslatePandora();
 
     private:
         QString inputFileName;
