@@ -17,3 +17,41 @@ QMAKE_CXX.INCDIRS = \
 QMAKE_CXX.LIBDIRS = \
     /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0 \
     /usr/src/mxe/usr/i686-w64-mingw32.static/lib
+QMAKE_CXX.QT_COMPILER_STDCXX = 199711L
+QMAKE_CXX.QMAKE_GCC_MAJOR_VERSION = 5
+QMAKE_CXX.QMAKE_GCC_MINOR_VERSION = 5
+QMAKE_CXX.QMAKE_GCC_PATCH_VERSION = 0
+QMAKE_CXX.COMPILER_MACROS = \
+    QT_COMPILER_STDCXX \
+    QMAKE_GCC_MAJOR_VERSION \
+    QMAKE_GCC_MINOR_VERSION \
+    QMAKE_GCC_PATCH_VERSION
+QMAKE_CXX.INCDIRS = \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++ \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++/i686-w64-mingw32.static \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++/backward \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include-fixed \
+    /usr/src/mxe/usr/i686-w64-mingw32.static/include
+QMAKE_CXX.LIBDIRS = \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0 \
+    /usr/src/mxe/usr/i686-w64-mingw32.static/lib
+QMAKE_CXX.QT_COMPILER_STDCXX = 199711L
+QMAKE_CXX.QMAKE_GCC_MAJOR_VERSION = 5
+QMAKE_CXX.QMAKE_GCC_MINOR_VERSION = 5
+QMAKE_CXX.QMAKE_GCC_PATCH_VERSION = 0
+QMAKE_CXX.COMPILER_MACROS = \
+    QT_COMPILER_STDCXX \
+    QMAKE_GCC_MAJOR_VERSION \
+    QMAKE_GCC_MINOR_VERSION \
+    QMAKE_GCC_PATCH_VERSION
+QMAKE_CXX.INCDIRS = \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++ \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++/i686-w64-mingw32.static \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include/c++/backward \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0/include-fixed \
+    /usr/src/mxe/usr/i686-w64-mingw32.static/include
+QMAKE_CXX.LIBDIRS = \
+    /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0 \
+    /usr/src/mxe/usr/i686-w64-mingw32.static/lib

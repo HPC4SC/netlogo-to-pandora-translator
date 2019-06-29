@@ -10,25 +10,26 @@ namespace generator {
 
     void generate_main(std::string setup) {
         std::string result = 
-            "#include <iostream>\n"
-            "#include <cstdlib>\n"
-
             "#include <GeneratedWorld.hxx>\n"
             "#include <GeneratedWorldConfig.hxx>\n"
-            "#include <Globals.hxx>\n"
-            "using namespace Examples;\n";
+            "#include <Config.hxx>\n"
 
+            "#include <iostream>\n"
+            "#include <cstdlib>\n"
+            
+            "using namespace Examples;\n";
+/*
         for (auto it = processor::setup_aux_functions.begin(); it != processor::setup_aux_functions.end(); ++it) {
             ast::function f = f_list[*it];
             result += getString(f);
-        }
+        }*/
 
         result +=
             "int main(int argc, char *argv[])\n"
             "{\n"
             "    try\n"
             "    {\n";
-        result += setup;
+        //result += setup;
         result += 
             "        std::string fileName(\"config.xml\");\n"
 

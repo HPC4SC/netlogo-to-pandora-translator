@@ -53,8 +53,7 @@ public:
     ~Turtle () {}
 
     void generateIncludes() {
-        includes =  "#include <Globals.hxx>\n"
-                    "#include <Agent.hxx>\n"
+        includes =  "#include <Agent.hxx>\n"
                     "#include <string>\n";
         for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
             includes += "#include <" + it->first + ".hxx>\n";
@@ -80,7 +79,7 @@ public:
     }
 
     void generateConstructor (ast::create_agentset& create) {
-        constructor = "Turtle::Turtle() {\n";
+        constructor = "Turtle::Turtle(const std::string & id) : Agent(id) {\n";
         constructor += generator::getString(create.body);
         constructor += "}\n";
     }
@@ -124,13 +123,18 @@ public:
 
         output += startDefinition;
         output += includes;
+        output += "#include <Globals.hxx>\n";
         output += "namespace Examples {\n";
         output += "class Turtle : public Engine::Agent {\n";
         output += "public:\n";
-        output += "Turtle();\n";
+        output += "Turtle(const std::string & id);\n";
         output += "~Turtle();\n";
+        output += "void selectActions();\n";
         output += attributes;
         output += functions;
+        output +=   "void* fillPackage();\n"
+                    "void sendVectorAttributes(int target);\n"
+                    "void receiveVectorAttributes(int origin);\n";
         output += "};\n";
         output += "}\n";
         output += endDefinition;
@@ -152,6 +156,9 @@ public:
         output += selectActions;
         output += commonActions;
         output += auxFunctions;
+        output +=   "void* Turtle::fillPackage() {}\n"
+                    "void Turtle::sendVectorAttributes(int target) {}\n"
+                    "void Turtle::receiveVectorAttributes(int origin) {}\n";
         output += "}\n";
 
         std::ofstream myfile;

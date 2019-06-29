@@ -16,7 +16,7 @@ namespace generator {
     std::string createTurtles(ast::expression quantity) {
         std::string res = 
             "for(int i = 0; i < " + getString(quantity) + "; ++i) {\n"
-            "   Turtle * agent = new Turtle();\n"
+            "   Turtle * agent = new Turtle(\"Agent_\" + std::to_string(i));\n"
             "   addAgent(agent);\n"
             "}\n";
 
@@ -84,7 +84,9 @@ namespace generator {
             result += createAgents(agentset_setup);
         result += "}\n";
         
+        result += "void GeneratedWorld::stepEnvironment() {}\n";
         result += "}\n";
+
 
 
         std::ofstream myfile;

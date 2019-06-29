@@ -11,9 +11,9 @@ namespace generator {
     std::string generateGlobalFunctions () {
         std::string res = "";
 
-        res += "int random(int max) { return rand() % (max + 1); }\n";
-        res += "int randomxcor() { return rand() % 101; }\n";
-        res += "int randomycor() { return rand() % 101; }\n";
+        res += "static int random(int max) { return rand() % (max + 1); }\n";
+        res += "static int randomxcor() { return rand() % 101; }\n";
+        res += "static int randomycor() { return rand() % 101; }\n";
 
         return res;
     }
@@ -25,10 +25,10 @@ namespace generator {
 
             processor::Types t = processor::global_variable_types[*it];
             switch(t) {
-                case processor::string_type: result += "std::string " + name + ";\n"; break;
-                case processor::double_type: result += "double " + name + ";\n"; break;
-                case processor::bool_type: result += "bool " + name + ";\n"; break;
-                default: result += "auto " + name + ";\n"; break;
+                case processor::string_type: result += "static std::string " + name + ";\n"; break;
+                case processor::double_type: result += "static double " + name + ";\n"; break;
+                case processor::bool_type: result += "static bool " + name + ";\n"; break;
+                default: result += "static auto " + name + ";\n"; break;
             }
         }
         return result;

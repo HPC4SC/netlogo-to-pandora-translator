@@ -21,7 +21,6 @@ namespace generator {
         ret += actionName + "::" + actionName + "() {}\n";
         ret += actionName + "::~" + actionName + "() {}\n";
         ret += generateExecute(actionName, body);
-        ret += "};\n";
         return ret;
     }
 
@@ -40,7 +39,6 @@ namespace generator {
                                 "#define __" + actionName + "_hxx__\n"
                                 "#include <Action.hxx>\n"
                                 "#include <Agent.hxx>\n"
-                                "#include <Turtle.hxx>\n"
                                 "#include <string>\n";
 
         output += "namespace Engine { class Agent; }\n";
@@ -58,8 +56,7 @@ namespace generator {
     }
 
     void generateActionSource (std::string actionName, ast::statement_list body) {
-        std::string output =    "#include <Action.hxx>\n"
-                                "#include <Agent.hxx>\n"
+        std::string output =    "#include <Action0.hxx>\n"
                                 "#include <Turtle.hxx>\n"
                                 "#include <string>\n";
 
