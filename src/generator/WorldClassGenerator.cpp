@@ -29,19 +29,22 @@ namespace generator {
         return "";
     }
 
-    std::string createTurtles(ast::expression quantity) {
+    std::string createTurtles(ast::create_agentset& agentset_setup) {
         std::string res = 
-            "for(int i = 0; i < " + getString(quantity) + "; ++i) {\n"
+            "for(int i = 0; i < " + getString(agentset_setup.quantity) + "; ++i) {\n"
             "   Turtle * agent = new Turtle(\"Agent_\" + std::to_string(i));\n"
-            "   addAgent(agent);\n"
-            "}\n";
+            "   addAgent(agent);\n";
+        context = "agent->";
+        res += generator::getString(agentset_setup.body);
+        context = "agent->";
+        res += "}\n";
 
         return res;
     }
 
     std::string createAgents(ast::create_agentset& agentset_setup) {
         switch(agentset_setup.type) {
-            case ast::turtle: return createTurtles(agentset_setup.quantity);
+            case ast::turtle: return createTurtles(agentset_setup);
         }
         return "";
     }
@@ -59,12 +62,16 @@ namespace generator {
             "#ifndef __Gen_World_hxx__\n"
             "#define __Gen_World_hxx__\n"
 
-            "#include <Turtle.hxx>\n"
+            "#include <World.hxx>\n"
+            "#include \"Globals.hxx\"\n"
+
+            "namespace Engine\n"
+            "{\n"
+            "    class Config;\n"
+            "}\n"
 
             "namespace Examples \n"
             "{\n"
-
-            "class GeneratedWorldConfig;\n"
 
             "class GeneratedWorld : public Engine::World\n"
             "{\n";
@@ -73,7 +80,6 @@ namespace generator {
         result += "void createAgents();\n";
 
         result +=
-            "void stepEnvironment();\n"
             "public:\n"
             "GeneratedWorld( Engine::Config * config, Engine::Scheduler * scheduler = 0);\n"
             "virtual ~GeneratedWorld();\n"
@@ -94,8 +100,10 @@ namespace generator {
         ast::function turtles_setup = f_list["setup-turtles"];
 
         std::string result = 
-            "#include <GeneratedWorld.hxx>\n"
-            "#include <Turtle.hxx>\n"
+            "#include \"GeneratedWorld.hxx\"\n"
+            
+            "#include <Config.hxx>\n"
+            "#include \"Turtle.hxx\"\n"
             "#include <Globals.hxx>\n"
             "namespace Examples \n"
             "{\n";
@@ -111,7 +119,6 @@ namespace generator {
             result += getTurtleExtraInitialization(turtles_setup.body);
         result += "}\n";
         
-        result += "void GeneratedWorld::stepEnvironment() {}\n";
         result += "}\n";
 
 

@@ -11,9 +11,9 @@ namespace generator {
     std::string generateGlobalFunctions () {
         std::string res = "";
 
-        res += "static int random(int max) { return rand() % (max + 1); }\n";
-        res += "static int randomxcor() { return rand() % 101; }\n";
-        res += "static int randomycor() { return rand() % 101; }\n";
+        res += "extern int random(int max);\n";
+        res += "extern int randomxcor();\n";
+        res += "extern int randomycor();\n";
 
         return res;
     }
@@ -25,24 +25,22 @@ namespace generator {
 
             processor::Types t = processor::global_variable_types[*it];
             switch(t) {
-                case processor::string_type: result += "static std::string " + name + ";\n"; break;
-                case processor::double_type: result += "static double " + name + ";\n"; break;
-                case processor::bool_type: result += "static bool " + name + ";\n"; break;
-                default: result += "static auto " + name + ";\n"; break;
+                case processor::string_type: result += "extern std::string " + name + ";\n"; break;
+                case processor::double_type: result += "extern double " + name + ";\n"; break;
+                case processor::bool_type: result += "extern bool " + name + ";\n"; break;
+                default: result += "extern auto " + name + ";\n"; break;
             }
         }
         return result;
     }
 
-    void generate(ast::global_list& globals) {
+    void generateHeader (ast::global_list& globals) {
         std::string result =    "#ifndef __Globals_hxx__\n"
                                 "#define __Globals_hxx__\n"
                                 "#include <stdlib.h>\n";
         
-        result += "namespace Examples {\n";
         result += generateGlobalVars(globals);
         result += generateGlobalFunctions();
-        result += "}\n";
 
         result += "#endif\n";
 
@@ -50,6 +48,26 @@ namespace generator {
         myfile.open("build/Globals.hxx");
         myfile << result;
         myfile.close();
+    }
+
+    void generateSource () {
+        std::string source = 
+            "#include \"Globals.hxx\"\n"
+            "#include <stdlib.h>\n"
+
+            "extern int random(int max) { return rand() % (max + 1); }\n"
+            "extern int randomxcor() { return rand() % 101; }\n"
+            "extern int randomycor() { return rand() % 101; }\n";
+
+        std::ofstream myfile;
+        myfile.open("build/Globals.cxx");
+        myfile << source;
+        myfile.close();
+    }
+
+    void generate(ast::global_list& globals) {
+        generateHeader(globals);
+        generateSource();
     }
 }
 

@@ -34,8 +34,8 @@ namespace generator {
         }
     }
 
-    void generate_setup(ast::function& f) {
-        generate_main(getString(f.body));
+    void generate_setup(ast::global_list& globals) {
+        generate_main(globals);
     }
 
     void generate_go(ast::function& f) {
@@ -48,7 +48,7 @@ namespace generator {
     void generate(ast::main& e) {
         Turtle turtle;
         turtle.generateIncludes();
-        turtle.generateConstructor(processor::agentset_setup);
+        turtle.generateConstructor();
         turtle.generateSelectActions();
         turtle.generateAuxFunctions();
 
@@ -56,7 +56,7 @@ namespace generator {
         generate_config(e.config, turtle);
 
         if (e.functions.find("setup") != e.functions.end())
-            generate_setup(e.functions["setup"]);
+            generate_setup(e.config.globals);
 
         if (e.functions.find("go") != e.functions.end())
             generate_go(e.functions["go"]);

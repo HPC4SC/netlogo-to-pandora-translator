@@ -72,7 +72,12 @@ namespace generator {
                 args += ", " + getString(*it);
             }
         }
-        return context + removeInvalidChars(op.function_name) + "(" + args + ")";
+        if (f_list.find(op.function_name) != f_list.end()) { // Evita afegir context a les funcions globals
+            return context + removeInvalidChars(op.function_name) + "(" + args + ")";
+        }
+        else {
+            return removeInvalidChars(op.function_name) + "(" + args + ")";
+        }
     }
 
     std::string getString(const ast::random_statement& op) {

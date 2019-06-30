@@ -59,10 +59,10 @@ namespace generator {
         if (expr_data.here) {
             ret += "Engine::AgentsVector neighbours = getWorld()->getNeighbours(this,1);\n";
             ret += "if (neighbours.size() > 0) {\n";
-            ret += "random_shuffle(neighbours.begin(),neighbours.end());\n";
-            ret += "int count = 0;\n";
-		    ret += "Engine::AgentsVector::iterator neighbour = neighbours.begin();\n";
-            ret += "while (neighbour != neighbours.end()) {\n";
+            ret += "    random_shuffle(neighbours.begin(),neighbours.end());\n";
+            ret += "    int count = 0;\n";
+		    ret += "    Engine::AgentsVector::iterator neighbour = neighbours.begin();\n";
+            ret += "    while (neighbour != neighbours.end()) {\n";
 
             if (expr_data.b_n_of) {
                 ret +=" if (count >=" + getString(expr_data.n_of) + ") break;\n";
@@ -84,6 +84,7 @@ namespace generator {
             context = "";
 
             ret += "++count;\n";
+            ret += "++neighbour;\n";
             ret += "}\n";
             ret += "}\n";
         }
@@ -92,6 +93,7 @@ namespace generator {
     }
 
     std::string generateTurtleExprFromWorld (const ast::ask_agentset& expr) {
+        boost::apply_visitor(agentset_expression_visitor(), expr.type);
         std::string ret = "";
 
         if (expr_data.here) {
@@ -120,6 +122,7 @@ namespace generator {
             context = "";
 
             ret += "++count;\n";
+            ret += "++it;\n";
             ret += "}\n";
             ret += "}\n";
         }

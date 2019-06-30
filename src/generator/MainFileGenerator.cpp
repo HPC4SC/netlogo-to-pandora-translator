@@ -8,22 +8,32 @@
 
 namespace generator {
 
-    void generate_main(std::string setup) {
+    std::string generateGlobalVarsInitialization (ast::global_list& globals) {
+        std::string result = "";
+        for (auto it = globals.begin(); it != globals.end(); ++it) {
+            std::string name = removeInvalidChars(*it);
+
+            processor::Types t = processor::global_variable_types[*it];
+            switch(t) {
+                case processor::string_type: result += "std::string " + name + ";\n"; break;
+                case processor::double_type: result += "double " + name + ";\n"; break;
+                case processor::bool_type: result += "bool " + name + ";\n"; break;
+                default: result += "auto " + name + ";\n"; break;
+            }
+        }
+        return result;
+    }
+
+    void generate_main(ast::global_list& globals) {
         std::string result = 
-            "#include <GeneratedWorld.hxx>\n"
-            "#include <GeneratedWorldConfig.hxx>\n"
-            "#include <Config.hxx>\n"
-
+            "#include <Exception.hxx>\n"
             "#include <iostream>\n"
-            "#include <cstdlib>\n"
-            
-            "using namespace Examples;\n";
+            "#include \"GeneratedWorld.hxx\"\n"
+            "#include \"Globals.hxx\"\n"
+            "#include <Config.hxx>\n";
 
-        //for (auto it = processor::setup_aux_functions.begin(); it != processor::setup_aux_functions.end(); ++it) {
-        //    ast::function f = f_list[*it];
-            ast::function f = f_list["setup-constants"];
-            result += getString(f);
-        //}
+            result += generateGlobalVarsInitialization(globals);
+            result += getString(f_list["setup-constants"]);
 
         result +=
             "int main(int argc, char *argv[])\n"
@@ -32,9 +42,9 @@ namespace generator {
             "    {\n";
         result += 
             "        setupconstants();"
-            "        std::string fileName(\"config.xml\");\n"
 
-            "        Examples::GeneratedWorld world( new Examples::GeneratedWorldConfig(fileName), world.useOpenMPSingleNode());\n"
+            "        Engine::Config *worldConfig = new Engine::Config(Engine::Size<int>(100, 100), 100);\n"
+            "        Examples::GeneratedWorld world(worldConfig);\n"
 
             "        world.initialize(argc,argv);\n"
             "        world.run();\n"

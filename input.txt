@@ -76,7 +76,7 @@ to infect
 end
 
 to reproduce
-  die
+  set sick-time 0
 end
 
 to become-immune ;; turtle procedure

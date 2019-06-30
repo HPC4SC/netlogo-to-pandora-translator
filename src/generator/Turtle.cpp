@@ -34,20 +34,26 @@ public:
         endDefinition = "#endif";
 
         commonActions = "void Turtle::setxy(int x, int y) {\n"
-                        "   Engine::Point2D<int> pos = getPosition();\n"
-                        "   pos._x = x;\n"
-                        "   pos._y = y;\n"
-                        "   setPosition(pos);\n"
+                        "   Engine::Point2D<int> newPos = _position;\n"
+                        "   newPos._x = x;\n"
+                        "   newPos._y = y;\n"
+                        "   if (_world->checkPosition(newPos))\n"
+                        "   {\n"
+                        "       setPosition(newPos);\n"
+                        "   }\n"
                         "}\n"
                         "void Turtle::mv(int dir, int dist) {\n"
-                        "   Engine::Point2D<int> pos = getPosition();\n"
+                        "   Engine::Point2D<int> pos = _position;\n"
                         "   switch(dir) {\n"
-                        "       case 0: angle -= dist; angle %= 360; break;\n"
+                        "       case 0: angle -= dist; if(angle < 0) angle = 360 - angle; break;"
                         "       case 1: angle += dist; angle %= 360; break;\n"
-                        "       case 3: pos._x += cos(angle) * dist; pos._y += sin(angle) * dist; break;\n"
-                        "       case 4: pos._x -= cos(angle) * dist; pos._y -= sin(angle) * dist; break;\n"
+                        "       case 2: pos._x += std::round(cos(angle*3.14/180) * dist); pos._y += std::round(sin(angle*3.14/180) * dist); break;\n"
+                        "       case 3: pos._x -= std::round(cos(angle*3.14/180) * dist); pos._y -= std::round(sin(angle*3.14/180) * dist); break;\n"
                         "   }\n"
-                        "   setPosition(pos);\n"
+                        "   if (_world->checkPosition(pos))\n"
+                        "   {\n"
+                        "       setPosition(pos);\n"
+                        "   }\n"
                         "}\n";
     }
     ~Turtle () {}
@@ -55,9 +61,12 @@ public:
     void generateIncludes() {
         includes =  "#include <Agent.hxx>\n"
                     "#include <string>\n";
-        for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
-            includes += "#include <" + it->first + ".hxx>\n";
-        }
+
+    }
+
+    void generateConstructor () {
+        constructor = "Turtle::Turtle(const std::string & id) : Agent(id) {\n";
+        constructor += "}\n";
     }
 
     void generateAttributes(ast::agent& myAgent) {
@@ -76,12 +85,6 @@ public:
                 default: attributes += "auto " + name + ";\n"; break;
             }
         }
-    }
-
-    void generateConstructor (ast::create_agentset& create) {
-        constructor = "Turtle::Turtle(const std::string & id) : Agent(id) {\n";
-        constructor += generator::getString(create.body);
-        constructor += "}\n";
     }
 
     void generateSelectActions() {
@@ -122,19 +125,17 @@ public:
         std::string output = "";
 
         output += startDefinition;
-        output += includes;
-        output += "#include <Globals.hxx>\n";
-        output += "namespace Examples {\n";
-        output += "class Turtle : public Engine::Agent {\n";
+        output += "#include <Agent.hxx>\n";
+        output += "#include \"Globals.hxx\"\n";
+        output += "#include <string>\n";
+        output += "namespace Examples \n{\n";
+        output += "class Turtle : public Engine::Agent \n{\n";
         output += "public:\n";
         output += "Turtle(const std::string & id);\n";
         output += "~Turtle();\n";
         output += "void selectActions();\n";
         output += attributes;
         output += functions;
-        output +=   "void* fillPackage();\n"
-                    "void sendVectorAttributes(int target);\n"
-                    "void receiveVectorAttributes(int origin);\n";
         output += "};\n";
         output += "}\n";
         output += endDefinition;
@@ -148,17 +149,17 @@ public:
     void generateSourceFile () {
         std::string output = "";
 
-        output += "#include <Turtle.hxx>\n";
+        output += "#include \"Turtle.hxx\"\n";
         output += includes;
+        for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
+            output += "#include \"" + it->first + ".hxx\"\n";
+        }
         output += "namespace Examples {\n";
         output += constructor;
         output += "Turtle::~Turtle() {}\n";
         output += selectActions;
         output += commonActions;
         output += auxFunctions;
-        output +=   "void* Turtle::fillPackage() {}\n"
-                    "void Turtle::sendVectorAttributes(int target) {}\n"
-                    "void Turtle::receiveVectorAttributes(int origin) {}\n";
         output += "}\n";
 
         std::ofstream myfile;
