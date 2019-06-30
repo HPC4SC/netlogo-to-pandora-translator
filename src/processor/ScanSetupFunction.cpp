@@ -64,6 +64,10 @@ namespace processor {
             agentset_setup = e;
         }
         void operator()(const ast::move_statement& e) const { }
+        void operator()(const ast::hatch_statement& e) const {
+            findSetupAuxFunctions(e.quantity);
+            scanStatementList(e.body);
+        }
         void operator()(const ast::if_statement& e) const { 
             findSetupAuxFunctions(e.condition);
             

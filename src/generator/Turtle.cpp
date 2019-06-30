@@ -54,7 +54,30 @@ public:
                         "   {\n"
                         "       setPosition(pos);\n"
                         "   }\n"
-                        "}\n";
+                        "   else {\n"
+                        "       if (pos._x < 0) pos._x = 100 + pos._x;\n"
+                        "       if (pos._x > 100) pos._x %= 100;\n"
+                        "       if (pos._y < 0) pos._y = 100 + pos._y;\n"
+                        "       if (pos._y > 100) pos._y %= 100;\n"
+                            
+                        "       setPosition(pos);\n"
+                        "   }\n"
+                        "}\n"
+                        "void Turtle::reproduce()\n"
+                        "{\n"
+                        "    if (_world->getNumberOfAgents() < carryingcapacity && random(100) < chancereproduce)\n"
+                        "    {\n"
+                        "        for (int i = 0; i < 2; ++i)\n"
+                        "        {\n"
+                        "            Turtle *child = new Turtle(_id + \"_\" + std::to_string(i));\n"
+                        "            _world->addAgent(child);\n"
+                        "            child->age = 1;\n"
+                        "            child->mv(0, 45);\n"
+                        "            child->mv(2, 1);\n"
+                        "            child->gethealthy();\n"
+                        "        }\n"
+                        "    }\n"
+                        "};\n";
     }
     ~Turtle () {}
 
@@ -66,6 +89,8 @@ public:
 
     void generateConstructor () {
         constructor = "Turtle::Turtle(const std::string & id) : Agent(id) {\n";
+        constructor += "    _exists = true;\n";
+        constructor += "    angle = random(360);\n";
         constructor += "}\n";
     }
 
@@ -115,6 +140,7 @@ public:
         auxFunctions = "";
         for (auto it = processor::agent_aux_functions.begin(); it != processor::agent_aux_functions.end(); ++it) {
             std::string f_name = *it;
+            if (f_name == "reproduce") continue;
             ast::function f = f_list[f_name];
             auxFunctions += generateFunction(f);
             functions += generator::getFunctionHeader(f);
@@ -134,6 +160,7 @@ public:
         output += "Turtle(const std::string & id);\n";
         output += "~Turtle();\n";
         output += "void selectActions();\n";
+        output += "void reproduce();\n";
         output += attributes;
         output += functions;
         output += "};\n";

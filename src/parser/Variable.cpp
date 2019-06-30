@@ -19,8 +19,8 @@ namespace parser {
             using namespace qi;
 
             start =
-                !lexeme[keywords >> !(alnum | '_' | '-' | '?' | '%')] >> 
-                !lexeme[f_args >> !(alnum | '_' | '-' | '?' | '%')] >>
+                !lexeme[keywords >> " "] >> 
+                !lexeme[f_args >> " "] >>
                 raw[lexeme[*(alnum | '_' | '-' | '?' | '%')]];
         }
 

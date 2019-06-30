@@ -20,6 +20,7 @@ namespace generator {
         std::string operator()(const ast::ask_agent& e) const { return getString(e); }
         std::string operator()(const ast::create_agentset& e) const { return getString(e); }
         std::string operator()(const ast::move_statement& e) const { return getString(e); }
+        std::string operator()(const ast::hatch_statement& e) const { return getString(e); }
         std::string operator()(const ast::if_statement& e) const { return getString(e); }
         std::string operator()(const ast::while_statement& e) const { return getString(e); }
         std::string operator()(const ast::statement_list& e) const { return getString(e); }

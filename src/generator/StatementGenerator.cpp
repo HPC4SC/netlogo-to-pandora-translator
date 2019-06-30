@@ -27,6 +27,7 @@ namespace generator {
         std::string operator()(const ast::ask_agent& e) const;
         std::string operator()(const ast::create_agentset& e) const;
         std::string operator()(const ast::move_statement& e) const;
+        std::string operator()(const ast::hatch_statement& e) const;
         std::string operator()(const ast::if_statement& e) const;
         std::string operator()(const ast::while_statement& e) const;
         std::string operator()(const ast::statement_list& e) const;
@@ -93,6 +94,17 @@ return "";
     std::string statement_visitor::operator()(const ast::move_statement& e) const {
         int dir = static_cast<int>(e.direction);
         return context + "mv(" + std::to_string(e.direction) + ", " + getString(e.quantity) + ");\n";
+    }
+
+    std::string statement_visitor::operator()(const ast::hatch_statement& e) const {
+        std::string ret = "for (int i = 0; i < " + getString(e.quantity) + "; ++i) {\n";
+        ret += "Turtle *child = new Turtle(_id + \"_\" + std::to_string(i));\n";
+        ret += "_world->addAgent(child);\n";
+        context = "child->";
+        ret += getString(e.body);
+        context = "";
+        ret += "}\n";
+        return ret;
     }
 
     std::string statement_visitor::operator()(const ast::if_statement& e) const {

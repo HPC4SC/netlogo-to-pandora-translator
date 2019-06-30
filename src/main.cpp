@@ -58,9 +58,11 @@ int main (int argc, char **argv)
 
     parser::f_args.add("random-xcor", 0);
     parser::f_args.add("random-ycor", 0);
+    parser::f_args.add("reproduce", 0);
 
     processor::function_types["random-xcor"] = processor::double_type;
     processor::function_types["random-ycor"] = processor::double_type;
+    processor::function_types["reproduce"] = processor::void_type;
 
     try
     {

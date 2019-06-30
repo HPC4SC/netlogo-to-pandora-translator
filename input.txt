@@ -16,7 +16,7 @@ globals
 
 ;; This sets up basic constants of the model.
 to setup-constants
-  set number-people 150
+  set number-people 500
   set infectiousness 65
   set lifespan 50 * 52      ;; 50 times 52 weeks = 50 years = 2600 weeks old
   set carrying-capacity 300
@@ -73,10 +73,6 @@ to infect
   [
     if (random 100) < 65 [ get-sick ]
   ]
-end
-
-to reproduce
-  set sick-time 0
 end
 
 to become-immune ;; turtle procedure

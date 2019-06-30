@@ -118,6 +118,7 @@ namespace ast
     struct ask_agent;
     struct create_agentset;
     struct move_statement;
+    struct hatch_statement;
     struct setxy_statement;
     struct single_word_statement;
 
@@ -133,6 +134,7 @@ namespace ast
             boost::recursive_wrapper<ask_agent>,
             boost::recursive_wrapper<create_agentset>,
             boost::recursive_wrapper<move_statement>,
+            boost::recursive_wrapper<hatch_statement>,
             boost::recursive_wrapper<statement_list>
         >
     statement;
@@ -246,6 +248,11 @@ namespace ast
         statement_list body;
     };
 
+    struct hatch_statement {
+        expression quantity;
+        statement_list body;
+    };
+
     struct random_statement {
         expression value;
     };
@@ -276,6 +283,15 @@ namespace ast
         function_list functions;
     };
 }
+
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    ast::hatch_statement,
+    (ast::expression, quantity)
+    (ast::statement_list, body)
+)  
+
 
 BOOST_FUSION_ADAPT_STRUCT(
     ast::n_of_agentset,

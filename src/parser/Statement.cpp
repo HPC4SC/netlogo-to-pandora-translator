@@ -43,6 +43,7 @@ namespace parser {
                         ask_agentset |
                         ask_agent |
                         create_agentset |
+                        hatch_statement |
                         move_statement |
                         setxy_statement |
                         single_word_statement |
@@ -70,6 +71,8 @@ namespace parser {
 
             move_statement = direction >> expr;
 
+            hatch_statement = lexeme[lit("hatch") >> " "] >> expr > '[' > +statement_ > ']';
+
             setxy_statement = lexeme[lit("setxy") >> " "] >> expr >> expr;
 
             single_word_statement = single_word_callback;
@@ -89,6 +92,7 @@ namespace parser {
         qi::rule<It, ast::while_statement(), skipper<It> > while_statement;
         qi::rule<It, ast::create_agentset(), skipper<It> > create_agentset;
         qi::rule<It, ast::move_statement(), skipper<It> > move_statement;
+        qi::rule<It, ast::hatch_statement(), skipper<It> > hatch_statement;
         qi::rule<It, ast::setxy_statement(), skipper<It> > setxy_statement;
         qi::rule<It, ast::single_word_statement(), skipper<It> > single_word_statement;
     };

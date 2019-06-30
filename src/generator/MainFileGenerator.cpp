@@ -43,7 +43,7 @@ namespace generator {
         result += 
             "        setupconstants();"
 
-            "        Engine::Config *worldConfig = new Engine::Config(Engine::Size<int>(100, 100), 100);\n"
+            "        Engine::Config *worldConfig = new Engine::Config(Engine::Size<int>(100, 100), 500);\n"
             "        Examples::GeneratedWorld world(worldConfig);\n"
 
             "        world.initialize(argc,argv);\n"

@@ -64,6 +64,9 @@ namespace processor {
         void operator()(const ast::setxy_statement& e) const { }
         void operator()(const ast::create_agentset& e) const { }
         void operator()(const ast::move_statement& e) const { }
+        void operator()(const ast::hatch_statement& e) const {
+            findAuxFunctions(e.body);
+        }
         void operator()(const ast::if_statement& if_st) const {
             findAuxFunctions(if_st.condition);
             findAuxFunctions(if_st.then);
@@ -112,6 +115,7 @@ namespace processor {
         void operator()(const ast::setxy_statement& e) const { }
         void operator()(const ast::create_agentset& e) const { }
         void operator()(const ast::move_statement& e) const { }
+        void operator()(const ast::hatch_statement& e) const { }
         void operator()(const ast::if_statement& e) const { }
         void operator()(const ast::while_statement& e) const { }
         void operator()(const ast::statement_list& e) const { }
