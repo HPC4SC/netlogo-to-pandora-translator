@@ -4,6 +4,7 @@
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QProcess>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent) {
@@ -122,17 +123,19 @@ void MainWindow::OpenDir() {
 }
 
 void MainWindow::Translate() {
-    QString program = "generator";
+    QString program = QDir::currentPath() + "/generator";
+    std::cout << program.toStdString() << std::endl;
     QStringList arguments;
-    arguments << "cpp" << inputFileName;
+    arguments << "cpp" << inputFileName << outputDirectory;
     QProcess *myProcess = new QProcess(this);
     myProcess->start(program, arguments);
 }
 
 void MainWindow::TranslatePandora() {
-    QString program = "generator";
+    QString program = QDir::currentPath() + "/generator";
+    std::cout << program.toStdString() << std::endl;
     QStringList arguments;
-    arguments << "pandora" << inputFileName;
+    arguments << "pandora" << inputFileName << outputDirectory;
     QProcess *myProcess = new QProcess(this);
     myProcess->start(program, arguments);
 }

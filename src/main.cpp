@@ -20,10 +20,12 @@ int main (int argc, char **argv)
 {
     char const* filename;
     std::string outputDir;
-    if (argc > 2)
+    std::string type;
+    if (argc > 3)
     {
-        filename = argv[1];
-        outputDir = argv[2];
+        type = argv[1];
+        filename = argv[2];
+        outputDir = argv[3];
     }
     else
     {
@@ -71,9 +73,22 @@ int main (int argc, char **argv)
         bool ok = qi::phrase_parse(iter, end, parser, skipper, ast);
         f_list = ast.functions;
         inferer(ast);
-        processor::scanSetupFunction(ast);
-        processor::scanAgentActions(ast);
-        generator::generate(ast, outputDir);
+        std::cout << "type: " << type << std::endl;
+        if (type == "cpp") {
+            std::string output = "";
+            for (auto it = f_list.begin(); it != f_list.end(); ++it) {
+                output += generator::getString(it->second);
+            }
+            std::ofstream myfile;
+            myfile.open(outputDir + "/netlogo_model.cxx");
+            myfile << output;
+            myfile.close();
+        }
+        else {
+            processor::scanSetupFunction(ast);
+            processor::scanAgentActions(ast);
+            generator::generate(ast, outputDir);
+        }
 
     } catch (const qi::expectation_failure<iterator_type>& e)
     {

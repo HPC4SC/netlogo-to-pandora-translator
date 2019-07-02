@@ -55,3 +55,21 @@ QMAKE_CXX.INCDIRS = \
 QMAKE_CXX.LIBDIRS = \
     /usr/src/mxe/usr/lib/gcc/i686-w64-mingw32.static/5.5.0 \
     /usr/src/mxe/usr/i686-w64-mingw32.static/lib
+QMAKE_DEFAULT_INCDIRS = \
+    /usr/local/include/c++/8.2.0 \
+    /usr/local/include/c++/8.2.0/x86_64-linux-gnu \
+    /usr/local/include/c++/8.2.0/backward \
+    /usr/local/lib/gcc/x86_64-linux-gnu/8.2.0/include \
+    /usr/local/include \
+    /usr/local/lib/gcc/x86_64-linux-gnu/8.2.0/include-fixed \
+    /usr/include/x86_64-linux-gnu \
+    /usr/include
+QMAKE_DEFAULT_LIBDIRS = \
+    /usr/local/lib/gcc/x86_64-linux-gnu/8.2.0 \
+    /usr/local/lib64 \
+    /lib/x86_64-linux-gnu \
+    /lib64 \
+    /usr/lib/x86_64-linux-gnu \
+    /usr/local/lib \
+    /lib \
+    /usr/lib
