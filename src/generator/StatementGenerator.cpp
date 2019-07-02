@@ -63,7 +63,7 @@ namespace generator {
 
     std::string statement_visitor::operator()(const ast::single_word_statement& e) const {
         switch(e.keyword) {
-            case ast::die: return context + "remove();\n";
+            case ast::die: return "if(_exists) " + context + "remove();\n";
             case ast::clear_all: return ""; // Doesn't exist
             case ast::tick: return ""; // Doesn't exist
             case ast::reset_ticks: return ""; // Doesn't exist

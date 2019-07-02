@@ -20,6 +20,9 @@ private:
 
     std::string constructor;
 
+    std::string registers;
+    std::string serializers;
+
     std::string selectActions;
     std::string commonActions;
     std::string auxFunctions;
@@ -42,6 +45,7 @@ public:
                         "       setPosition(newPos);\n"
                         "   }\n"
                         "}\n"
+
                         "void Turtle::mv(int dir, int dist) {\n"
                         "   Engine::Point2D<int> pos = _position;\n"
                         "   switch(dir) {\n"
@@ -71,6 +75,7 @@ public:
                         "        {\n"
                         "            Turtle *child = new Turtle(_id + \"_\" + std::to_string(i));\n"
                         "            _world->addAgent(child);\n"
+                        "            child->setPosition(_position);\n"
                         "            child->age = 1;\n"
                         "            child->mv(0, 45);\n"
                         "            child->mv(2, 1);\n"
@@ -97,6 +102,8 @@ public:
     void generateAttributes(ast::agent& myAgent) {
         // Common attributes
         attributes = "int angle = 0;\n";
+        registers = "void Turtle::registerAttributes() {\n";
+        serializers = "void Turtle::serialize() {\n";
 
         // Defined attributes
         for (auto it = myAgent.attributes.begin(); it != myAgent.attributes.end(); ++it) {
@@ -104,12 +111,26 @@ public:
 
             processor::Types t = processor::global_variable_types[*it];
             switch(t) {
-                case processor::string_type: attributes += "std::string " + name + ";\n"; break;
-                case processor::double_type: attributes += "double " + name + ";\n"; break;
-                case processor::bool_type: attributes += "bool " + name + ";\n"; break;
+                case processor::string_type: 
+                    attributes += "std::string " + name + ";\n";
+                    registers += "registerStringAttribute(\"" + name + "\");\n";
+                    serializers += "serializeAttribute(\"" + name + "\", " + name + ");\n";
+                    break;
+                case processor::double_type: 
+                    attributes += "double " + name + ";\n";
+                    registers += "registerFloatAttribute(\"" + name + "\");\n";
+                    serializers += "serializeAttribute(\"" + name + "\", (float)(" + name + "));\n";
+                    break;
+                case processor::bool_type: 
+                    attributes += "bool " + name + ";\n";
+                    registers += "registerIntAttribute(\"" + name + "\");\n";
+                    serializers += "serializeAttribute(\"" + name + "\", (int)(" + name + "));\n";
+                    break;
                 default: attributes += "auto " + name + ";\n"; break;
             }
         }
+        registers += "}\n";
+        serializers += "}\n";
     }
 
     void generateSelectActions() {
@@ -159,6 +180,8 @@ public:
         output += "public:\n";
         output += "Turtle(const std::string & id);\n";
         output += "~Turtle();\n";
+        output += "void registerAttributes();\n";
+        output += "void serialize();\n";
         output += "void selectActions();\n";
         output += "void reproduce();\n";
         output += attributes;
@@ -184,6 +207,8 @@ public:
         output += "namespace Examples {\n";
         output += constructor;
         output += "Turtle::~Turtle() {}\n";
+        output += registers;
+        output += serializers;
         output += selectActions;
         output += commonActions;
         output += auxFunctions;
