@@ -34,7 +34,7 @@ namespace generator {
         return result;
     }
 
-    void generateHeader (ast::global_list& globals) {
+    void generateHeader (ast::global_list& globals, std::string outputDir) {
         std::string result =    "#ifndef __Globals_hxx__\n"
                                 "#define __Globals_hxx__\n"
                                 "#include <stdlib.h>\n";
@@ -45,12 +45,12 @@ namespace generator {
         result += "#endif\n";
 
         std::ofstream myfile;
-        myfile.open("build/Globals.hxx");
+        myfile.open(outputDir + "/Globals.hxx");
         myfile << result;
         myfile.close();
     }
 
-    void generateSource () {
+    void generateSource (std::string outputDir) {
         std::string source = 
             "#include \"Globals.hxx\"\n"
             "#include <stdlib.h>\n"
@@ -60,14 +60,14 @@ namespace generator {
             "extern int randomycor() { return rand() % 101; }\n";
 
         std::ofstream myfile;
-        myfile.open("build/Globals.cxx");
+        myfile.open(outputDir + "/Globals.cxx");
         myfile << source;
         myfile.close();
     }
 
-    void generate(ast::global_list& globals) {
-        generateHeader(globals);
-        generateSource();
+    void generate(ast::global_list& globals, std::string outputDir) {
+        generateHeader(globals, outputDir);
+        generateSource(outputDir);
     }
 }
 

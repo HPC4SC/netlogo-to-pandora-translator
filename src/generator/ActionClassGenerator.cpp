@@ -34,7 +34,7 @@ namespace generator {
         return ret;
     }
 
-    void generateActionHeader (std::string actionName) {
+    void generateActionHeader (std::string actionName, std::string outputDir) {
         std::string output =    "#ifndef __" + actionName + "_hxx__\n"
                                 "#define __" + actionName + "_hxx__\n"
                                 "#include <Action.hxx>\n"
@@ -50,12 +50,12 @@ namespace generator {
         output += "#endif\n";
 
         std::ofstream myfile;
-        myfile.open("build/" + actionName + ".hxx");
+        myfile.open(outputDir + "/" + actionName + ".hxx");
         myfile << output;
         myfile.close();
     }
 
-    void generateActionSource (std::string actionName, ast::statement_list body) {
+    void generateActionSource (std::string actionName, ast::statement_list body, std::string outputDir) {
         std::string output =    "#include <Action0.hxx>\n"
                                 "#include <Turtle.hxx>\n"
                                 "#include <string>\n";
@@ -68,15 +68,15 @@ namespace generator {
         output += "}\n";
 
         std::ofstream myfile;
-        myfile.open("build/" + actionName + ".cxx");
+        myfile.open(outputDir + "/" + actionName + ".cxx");
         myfile << output;
         myfile.close();
     }
 
 
-    void generateAction (std::string actionName, ast::statement_list body) {
-        generateActionHeader(actionName);
-        generateActionSource(actionName, body);
+    void generateAction (std::string actionName, ast::statement_list body, std::string outputDir) {
+        generateActionHeader(actionName, outputDir);
+        generateActionSource(actionName, body, outputDir);
     }
 }
 

@@ -7,6 +7,8 @@
 
 class Turtle {
 private:
+    std::string outputDir;
+
     std::string functions;
 
     // Definitions
@@ -28,7 +30,9 @@ private:
     std::string auxFunctions;
 
 public:
-    Turtle () {
+    Turtle (std::string outputDir) {
+        this->outputDir = outputDir;
+
         functions = "void setxy(int x, int y);\n"
                     "void mv(int dir, int dist);\n";
 
@@ -191,7 +195,7 @@ public:
         output += endDefinition;
 
         std::ofstream myfile;
-        myfile.open("build/Turtle.hxx");
+        myfile.open(outputDir + "/Turtle.hxx");
         myfile << output;
         myfile.close();
     }
@@ -215,7 +219,7 @@ public:
         output += "}\n";
 
         std::ofstream myfile;
-        myfile.open("build/Turtle.cxx");
+        myfile.open(outputDir + "/Turtle.cxx");
         myfile << output;
         myfile.close();
     }

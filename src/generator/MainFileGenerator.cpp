@@ -24,7 +24,7 @@ namespace generator {
         return result;
     }
 
-    void generate_main(ast::global_list& globals) {
+    void generate_main(ast::global_list& globals, std::string outputDir) {
         std::string result = 
             "#include <Exception.hxx>\n"
             "#include <iostream>\n"
@@ -57,7 +57,7 @@ namespace generator {
             "}\n";
 
         std::ofstream myfile;
-        myfile.open("build/main.cxx");
+        myfile.open(outputDir + "/main.cxx");
         myfile << result;
         myfile.close();
     }

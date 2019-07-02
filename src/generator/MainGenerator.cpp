@@ -20,8 +20,8 @@
 
 namespace generator {
 
-    void generate_config(ast::configuration& e, Turtle& turtle) {
-        generate(e.globals);
+    void generate_config(ast::configuration& e, Turtle& turtle, std::string outputDir) {
+        generate(e.globals, outputDir);
 
         for (auto it = e.agents.begin(); it != e.agents.end(); ++it) {
             switch(it->type) {
@@ -34,32 +34,32 @@ namespace generator {
         }
     }
 
-    void generate_setup(ast::global_list& globals) {
-        generate_main(globals);
+    void generate_setup(ast::global_list& globals, std::string outputDir) {
+        generate_main(globals, outputDir);
     }
 
-    void generate_go(ast::function& f) {
+    void generate_go(ast::function& f, std::string outputDir) {
 
         for (auto it = processor::agent_actions.begin(); it != processor::agent_actions.end(); ++it) {
-            generateAction(it->first, (it->second).body);
+            generateAction(it->first, (it->second).body, outputDir);
         }
     }
 
-    void generate(ast::main& e) {
-        Turtle turtle;
+    void generate(ast::main& e, std::string outputDir) {
+        Turtle turtle(outputDir);
         turtle.generateIncludes();
         turtle.generateConstructor();
         turtle.generateSelectActions();
         turtle.generateAuxFunctions();
 
-        generate_world(processor::agentset_setup);
-        generate_config(e.config, turtle);
+        generate_world(processor::agentset_setup, outputDir);
+        generate_config(e.config, turtle, outputDir);
 
         if (e.functions.find("setup") != e.functions.end())
-            generate_setup(e.config.globals);
+            generate_setup(e.config.globals, outputDir);
 
         if (e.functions.find("go") != e.functions.end())
-            generate_go(e.functions["go"]);
+            generate_go(e.functions["go"], outputDir);
 
         turtle.generate();
     }

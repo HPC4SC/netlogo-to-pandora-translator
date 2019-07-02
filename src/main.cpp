@@ -19,13 +19,15 @@ namespace qi = boost::spirit::qi;
 int main (int argc, char **argv)
 {
     char const* filename;
-    if (argc > 1)
+    std::string outputDir;
+    if (argc > 2)
     {
         filename = argv[1];
+        outputDir = argv[2];
     }
     else
     {
-        std::cerr << "Error: No input file provided." << std::endl;
+        std::cerr << "Error: No input file or output directory provided." << std::endl;
         return 1;
     }
 
@@ -71,26 +73,8 @@ int main (int argc, char **argv)
         inferer(ast);
         processor::scanSetupFunction(ast);
         processor::scanAgentActions(ast);
-        generator::generate(ast);
- /*
-        std::cout << type << std::endl;
-        std::cout << "Variables:" << std::endl;
-        for (auto it = processor::variable_types.begin(); it != processor::variable_types.end(); ++it) {
-            std::cout << it->first << " -> " << it->second << std::endl;
-        }
-        std::cout << "Functions:" << std::endl;
-        for (auto it = processor::function_types.begin(); it != processor::function_types.end(); ++it) {
-            std::cout << it->first << " -> " << it->second << std::endl;
-        }
-        std::cout << "Function args:" << std::endl;
-        for (auto it = processor::function_args_types.begin(); it != processor::function_args_types.end(); ++it) {
-            std::cout << it->first << " -> ";
-            for (auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
-                std::cout << *it2 << " ";
-            }
-            std::cout << std::endl;
-        }
- */
+        generator::generate(ast, outputDir);
+
     } catch (const qi::expectation_failure<iterator_type>& e)
     {
         std::cerr << "expectation_failure at '" << std::string(e.first, e.last) << "'\n";

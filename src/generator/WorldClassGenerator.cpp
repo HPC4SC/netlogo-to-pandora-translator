@@ -58,7 +58,7 @@ namespace generator {
         return result;
     }
 
-    void generateHeader () {
+    void generateWorldHeader (std::string outputDir) {
         std::string result = 
             "#ifndef __Gen_World_hxx__\n"
             "#define __Gen_World_hxx__\n"
@@ -92,12 +92,12 @@ namespace generator {
 
 
         std::ofstream myfile;
-        myfile.open("build/GeneratedWorld.hxx");
+        myfile.open(outputDir + "/GeneratedWorld.hxx");
         myfile << result;
         myfile.close();
     }
 
-    void generateSource (ast::create_agentset& agentset_setup) {
+    void generateWorldSource (ast::create_agentset& agentset_setup, std::string outputDir) {
         ast::function turtles_setup = f_list["setup-turtles"];
 
         std::string result = 
@@ -125,14 +125,14 @@ namespace generator {
 
 
         std::ofstream myfile;
-        myfile.open("build/GeneratedWorld.cxx");
+        myfile.open(outputDir + "/GeneratedWorld.cxx");
         myfile << result;
         myfile.close();
     }
 
-    void generate_world(ast::create_agentset& agentset_setup) {
-        generateHeader();
-        generateSource(agentset_setup);
+    void generate_world(ast::create_agentset& agentset_setup, std::string outputDir) {
+        generateWorldHeader(outputDir);
+        generateWorldSource(agentset_setup, outputDir);
     }
 }
 
